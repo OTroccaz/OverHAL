@@ -1,0 +1,1 @@
+<?php$EXCLMAILS_LISTE = array(0 => "toto@titi.fr",1 => "titi.toto@univ.com");?>
