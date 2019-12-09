@@ -105,6 +105,8 @@ OverHAL permet de comparer HAL et des listes de publications (Scopus, WoS, SciFi
 <br>
 
 <h2>Paramétrage</h2>
+<a target="_blank" href="./FCGI_construct_import.php">Construire un fichier FCGI à partir d'une liste de PMID</a>, puis l'envoyer à OverHAL avec le formulaire ci-dessous.<br/>
+<br/>
 <b>1. Charger le fichier</b><br/>
 <br/>
 <form enctype="multipart/form-data" action="OverHAL_results.php" method="post" accept-charset="UTF-8">
