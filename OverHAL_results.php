@@ -19,6 +19,7 @@ if (file_exists("./HAL/OverHAL_scifin.bib")) {unlink("./HAL/OverHAL_scifin.bib")
 if (file_exists("./HAL/OverHAL_zotero.bib")) {unlink("./HAL/OverHAL_zotero.bib");}
 if (file_exists("./HAL/OverHAL_pubmed_xml.bib")) {unlink("./HAL/OverHAL_pubmed_xml.bib");}
 if (file_exists("./HAL/OverHAL_pubmed_csv.bib")) {unlink("./HAL/OverHAL_pubmed_csv.bib");}
+if (file_exists("./HAL/OverHAL_pubmed_fcgi.bib")) {unlink("./HAL/OverHAL_pubmed_fcgi.bib");}
 if (file_exists("./HAL/OverHAL_dimensions.bib")) {unlink("./HAL/OverHAL_dimensions.bib");}
 
 //TEI files deletion
@@ -27,6 +28,7 @@ if (file_exists("./HAL/OverHAL_wos_csv.zip")) {unlink("./HAL/OverHAL_wos_csv.zip
 if (file_exists("./HAL/OverHAL_scifin.zip")) {unlink("./HAL/OverHAL_scifin.zip");}
 if (file_exists("./HAL/OverHAL_zotero.zip")) {unlink("./HAL/OverHAL_zotero.zip");}
 if (file_exists("./HAL/OverHAL_pubmed_xml.zip")) {unlink("./HAL/OverHAL_pubmed_xml.zip");}
+if (file_exists("./HAL/OverHAL_pubmed_fcgi.zip")) {unlink("./HAL/OverHAL_pubmed_fcgi.zip");}
 if (file_exists("./HAL/OverHAL_dimensions.zip")) {unlink("./HAL/OverHAL_dimensions.zip");}
 
 //Possibilité de désactiver temporairement SR : = oui ou non
@@ -150,6 +152,37 @@ if (isset($_FILES['pubmed_xml']))
   }
 }
 
+$pubmed_fcgi = 0;
+if (isset($_FILES['pubmed_fcgi']))
+{
+  if ($_FILES['pubmed_fcgi']['error'] != 4)//Is there a pubmed HTML file ?
+  {
+    if ($_FILES['pubmed_fcgi']['error'])
+    {
+      switch ($_FILES['pubmed_fcgi']['error'])
+      {
+         case 1: // UPLOAD_ERR_INI_SIZE
+         Header("Location: "."OverHAL.php?erreur=1");
+         break;
+         case 2: // UPLOAD_ERR_FORM_SIZE
+         Header("Location: "."OverHAL.php?erreur=2");
+         break;
+         case 3: // UPLOAD_ERR_PARTIAL
+         Header("Location: "."OverHAL.php?erreur=3");
+         break;
+      }
+    }
+    $extension = strrchr($_FILES['pubmed_fcgi']['name'], '.');
+    if ($extension != ".fcgi") {
+      Header("Location: "."OverHAL.php?erreur=5");
+    }
+    move_uploaded_file($_FILES['pubmed_fcgi']['tmp_name'], "PubMed.fcgi");
+    include "./FCGI_import.php";
+    //unlink("Pubmed.html");
+    $pubmed_fcgi = 1;
+  }
+}
+
 //Bibliographic sources array -> first key must correspond to form field file name
 $souBib = array(
   "scopus" => array(
@@ -262,13 +295,28 @@ if ($pubmed_xml == 1)
   );
   $souBib["pubmed_xml"] = $pubmedXmlTab;
 }
+
+if ($pubmed_fcgi == 1)
+{
+  $pubmedFCGITab = array(
+    "Maj" => "PubMed (FCGI)",
+    "Sep" => "^",
+    "Year" => "aPub",
+    "Title" => "titPub",
+    "DOI" => "DOI",
+    "Authors" => "tabAut",
+    "Source" => "titRev",
+    "Type" => "Type",
+  );
+  $souBib["pubmed_fcgi"] = $pubmedFCGITab;
+}
 //var_dump($souBib);
 $nbSouBib = count($souBib);
 
 //Tests errors on file submit
 foreach ($souBib as $key => $subTab)
 {
-  if ($key != "wos_html" && $key != "pubmed_html" && $key != "pubmed_xml")
+  if ($key != "wos_html" && $key != "pubmed_html" && $key != "pubmed_xml" && $key != "pubmed_fcgi")
   {
     if (isset($_FILES[$key]['name']) && $_FILES[$key]['name'] != "") //File has been submitted
     {
@@ -1038,8 +1086,13 @@ foreach ($souBib as $key => $subTab)
         {
           $handle = fopen("./HAL/pubmed_xml.csv",'r');
         }else{
-          $handle = fopen($_FILES[$key]['tmp_name'],'r');
-        }
+					if($key == "pubmed_fcgi")
+					{
+						$handle = fopen("./HAL/pubmed_fcgi.csv",'r');
+					}else{
+						$handle = fopen($_FILES[$key]['tmp_name'],'r');
+					}
+				}
       }
     }
     //removing empty lines with creation of a new xml file
@@ -1410,6 +1463,7 @@ foreach ($souBib as $key => $subTab)
           break;
         case "wos_html":
         case "pubmed_xml":
+				case "pubmed_fcgi":
         case "zotero":
           if ($papers[$key][$key2]['ISSN'] != "")
           {
@@ -1751,6 +1805,9 @@ foreach ($souBib as $key => $subTab)
           break;
         case "pubmed_xml":
           $linkSource = "<a target=\"_blank\" href=\"http://www.ncbi.nlm.nih.gov/pubmed/".$papers[$key][$key2]['PMID']."\"><img alt='Pubmed' src=\"./img/pubmed.png\"></a>";
+          break;
+				case "pubmed_fcgi":
+          $linkSource = "<a target=\"_blank\" href=\"http://www.ncbi.nlm.nih.gov/pubmed/".$papers[$key][$key2]['Pubmed']."\"><img alt='Pubmed' src=\"./img/pubmed.png\"></a>";
           break;
         case "zotero":
           $linkSource = "<a target=\"_blank\" href=\"".$papers[$key][$key2]['Link Attachments']."\"><img alt='Zotero' src=\"./img/zotero_128.png\"></a>";
@@ -4500,7 +4557,389 @@ foreach ($souBib as $key => $subTab)
           }
           break;
           
-          
+        case "pubmed_fcgi":
+          $aut = $papers[$key][$key2]['tabAut'];
+          $autTab = explode("~",$aut);
+          if (count($autTab) < $limNbAut)
+          {
+            //affiliation
+            $autTab = array();
+            $labTab = array();
+            $autInd = 0;
+            $docid = 0;
+            $label = "";
+            $code = "";
+            $cuHAL = "";
+            $type = "";
+            $pays = "";
+            $quoi = $papers[$key][$key2]['tabAff'];
+            $quoi = trimUltime($quoi);
+            $validHAL = "";//to privilegy the search by the unit code number rather than acronym
+            //echo "<br>".$j." - ".$quoi."<br>";
+            $diffQuoi = explode("; [", $quoi);
+            //var_dump($diffQuoi);
+            for ($d = 0; $d < count($diffQuoi); $d++)
+            {
+              $urlHAL = "";
+              $docid = 0;
+              $label = "";
+              $code = "";
+              $cuHAL = "";
+              $type = "";
+              $pays = "";
+              //Search for distinctive acronyms
+              //echo $diffQuoi[$d].'<br>';
+              searchAcro($diffQuoi[$d], $cuHAL, $urlHAL, $validHAL, $retTest);
+              //echo $urlHAL.'<br>';
+              if ($urlHAL != "")//affiliation with code unit or acronym found
+              {
+                //echo $diffQuoi[$d].'<br>';
+                idaureHal($urlHAL, $cuHAL, $docid, $label, $code, $type);
+              }
+              //echo $docid.' - '.$urlHAL.'<br>';
+              if($docid != 0)
+              {
+                affilId($diffQuoi[$d], $docid, $label, $code, $type, $pays, $validHAL);//Assigning idAffil to authors
+                while ($retTest != "") {
+                  $aTester = $retTest;
+                  $autInd = 0;
+                  $urlHAL = "";
+                  $docid = 0;
+                  $label = "";
+                  $code = "";
+                  $cuHAL = "";
+                  $type = "";
+                  $pays = "";
+                  //Search for distinctive acronyms
+                  //echo 'toto : '.$aTester.'<br>';
+                  searchAcro($aTester, $cuHAL, $urlHAL, $validHAL, $retTest);
+                  //echo 'titi : '.$urlHAL.'<br>';
+                  if ($urlHAL != "")//affiliation with code unit or acronym found
+                  {
+                    idaureHal($urlHAL, $cuHAL, $docid, $label, $code, $type);
+                  }
+                  //echo $urlHAL.' - '.$docid.'<br>';
+                  if($docid != 0)
+                  {
+                    affilId($aTester, $docid, $label, $code, $type, $pays, $validHAL);
+                  }
+                }
+              }else{//no specific affiliation found > we store whole results
+                //echo $diffQuoi[$d].'<br>';
+                $validHAL = "--";
+                $eltTab = explode("] ",$diffQuoi[$d]);
+                include './OverHAL_affiliation_termes.php';
+                if (isset($eltTab[1])) {$label = supprAmp(trim($eltTab[1]));}
+                //$label = str_ireplace($search, $replace, $label);
+                //echo $label.'<br>';
+                $queTab = explode(",", $label);
+                $quePay = count($queTab) - 1;
+                $labFin = "";
+                $iq = 0;
+                foreach($queTab as $elt)
+                {
+                  $elt = trim($elt);
+                  if ($iq > 0) {$labFin .= ", ";}
+                  $labFin .= $elt;
+                  $iq++;
+                }
+                //$docid = 999999;
+                $docid = $labFin;
+                $code = $labFin;
+                $type = 'institution';
+                affilId($diffQuoi[$d], $docid, $label, $code, $type, $pays, $validHAL);
+              }
+            }
+            //var_dump($autTab);
+            //var_dump($labTab);
+            $strTab = array();
+            $pmid = supprAmp($papers[$key][$key2]['Pubmed']);//PMID
+            mb_internal_encoding('UTF-8');
+            $zip = new ZipArchive();
+            $FnmZ = "./HAL/OverHAL_pubmed_fcgi.zip";
+            if ($zip->open($FnmZ, ZipArchive::CREATE)!==TRUE) {
+              exit("Impossible d'ouvrir le fichier <$FnmZ>\n");
+            }
+            $Fnm = "./HAL/OverHAL_pubmed_fcgi_".$pmid.".xml";
+            $inF = fopen($Fnm,"a+");
+            fseek($inF, 0);
+            //$chaine = "\xEF\xBB\xBF";//UTF-8
+            $chaine = "";//ANSI
+            $chaine .= '<?xml version="1.0" encoding="UTF-8"?>'."\r\n";
+            $chaine .= '<TEI xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.tei-c.org/ns/1.0" xmlns:hal="http://hal.archives-ouvertes.fr/" xsi:schemaLocation="http://www.tei-c.org/ns/1.0 http://api.archives-ouvertes.fr/documents/aofr-sword.xsd">'."\r\n";
+            $chaine .= '  <text>'."\r\n".
+                       '    <body>'."\r\n".
+                       '      <listBibl>'."\r\n".
+                       '        <biblFull>'."\r\n";
+            //if DOI exists searching an OA PDF file
+            if (isset($papers[$key][$key2]['DOI']) && $papers[$key][$key2]['DOI'] != "")
+            {
+              $urlT = "https://api.oadoi.org/v2/".$papers[$key][$key2]['DOI'];
+              $volT = $papers[$key][$key2]['Volume'];
+              $issT = $papers[$key][$key2]['Numero'];
+              $pagT = $papers[$key][$key2]['Pagination'];
+              $datT = $papers[$key][$key2]['aPub'];
+              $pdfCR = "";//Eventual URL PDF file found with crossRef via CrosHAL.php > null here
+
+              testOALic($urlT, $volT, $issT, $pagT, $datT, $pdfCR, $evd, $titLic, $typLic, $compNC, $compND, $compSA, $urlPDF);
+
+              if ($urlPDF != "")//an OA PDF file has benn found
+              {
+                $urlPDF = htmlspecialchars($urlPDF);
+                $chaine .= '          <editionStmt>'."\r\n".
+                           '            <edition>'."\r\n".
+                           '              <ref type="file" subtype="'.$evd.'" n="1" target="'.$urlPDF.'"></ref>'."\r\n".
+                           '            </edition>'."\r\n".
+                           '          </editionStmt>'."\r\n";
+                $avail = 'http://creativecommons.org/licenses/by';
+                if ($compNC != "") {$avail .= '-nc';}
+                if ($compND != "") {$avail .= '-nd';}
+                if ($compSA != "") {$avail .= '-sa';}
+                $avail .= '/';
+                $chaine .= '          <publicationStmt>'."\r\n".
+                           '            <availability>'."\r\n".
+                           '              <licence target="'.$avail.'"/>'."\r\n".
+                           '            </availability>'."\r\n".
+                           '          </publicationStmt>'."\r\n";
+              }
+            }
+            $chaine .= '          <seriesStmt>'."\r\n".
+                       '          </seriesStmt>'."\r\n".
+                       '          <notesStmt>'."\r\n".
+						//Audience
+						$aud = "";
+						if (isset($papers[$key][$key2]['langue']))
+            {
+              if ($papers[$key][$key2]['langue'] == "eng") {
+								$chaine .= '          	<note type="audience" n="2"/>'."\r\n";
+							}else{
+								$chaine .= '          	<note type="audience" n="3"/>'."\r\n";
+							}
+            }
+            $chaine .= '          </notesStmt>'."\r\n".
+                       '          <sourceDesc>'."\r\n".
+                       '            <biblStruct>'."\r\n".
+                       '              <analytic>'."\r\n";
+            $lng = "";
+            //langue + titre
+            if (isset($papers[$key][$key2]['langue']))
+            {
+              if ($papers[$key][$key2]['langue'] == "fre") {$lng = "fr";}
+              if ($papers[$key][$key2]['langue'] == "eng") {$lng = "en";}
+            }
+            $chaine .= '                <title xml:lang="'.$lng.'">'.supprAmp($papers[$key][$key2]['titPub']).'</title>'."\r\n";
+            //auteurs
+            $aut = explode("; ", $papers[$key][$key2]['tabAut']);
+            $iTp = 0;
+            foreach ($aut as $qui) {
+              $quiTab = explode(" ", $qui);
+              $chaine .= '                <author role="aut">'."\r\n";
+              $chaine .= '                  <persName>'."\r\n";
+              if (isset($quiTab[1]))//in case of no comma for one author
+              {
+                $prenom = supprAmp(trim($quiTab[1]));
+              }else{
+                $prenom = " ";
+              }
+              $nom = supprAmp(trim($quiTab[0]));
+              $nompre = $nom ." ".$prenom;
+              $chaine .= '                    <forename type="first">'.$prenom.'</forename>'."\r\n";
+              $chaine .= '                    <surname>'.$nom.'</surname>'."\r\n";
+              $chaine .= '                  </persName>'."\r\n";
+              $kT = array_search($nompre, $autTab);
+              //echo $kT." - ".$nom."<br>";
+              
+              
+              //var_dump($autTab);
+              if ($kT !== FALSE) {
+                foreach ($labTab[$nompre] as $lab) {
+                  //$str = array_search($labTab[$nompre][$kT], $strTab);
+                  $str = array_search($lab, $strTab);
+                  if ($str === FALSE) {
+                    $iTp += 1;
+                    $kTp = $iTp;
+                    array_push($strTab, $lab);
+                  }else{
+                    $kTp = $str + 1;
+                  }
+                  $chaine .= '                  <affiliation ref="#localStruct-Aff'.$kTp.'"/>'."\r\n";
+                  //echo $kTp." - ".$nom." - ".$labTab[$kT]."<br>";
+                }
+              }
+              $chaine .= '                </author>'."\r\n";
+            }
+            //var_dump($strTab);
+            $chaine .= '              </analytic>'."\r\n";
+            //journal
+            $chaine .= '              <monogr>'."\r\n";
+            //ISSN
+            $chaine .= '                <idno type="issn">'.supprAmp($papers[$key][$key2]['ISSN']).'</idno>'."\r\n";
+
+            if (isset($papers[$key][$key2]['Type']))
+            {
+              $typDef = "";
+              $typDoc = "";
+              $typDocp = "";
+              $type = $papers[$key][$key2]['Type'];
+              //if (strpos($type, "Journal Article") !== false) {$typeDef = "Journal Article";}
+              $typeDef = "Journal Article";
+              switch($typeDef)
+              {
+                case "Journal Article"://article
+								case "Editorial"://???
+								case "Case Reports"://???
+                  $chaine .= '                <title level="j">'.supprAmp(minRev($papers[$key][$key2]['titRev'])).'</title>'."\r\n";
+                  $chaine .= '                <imprint>'."\r\n";
+                  $chaine .= '                  <biblScope unit="volume">'.supprAmp($papers[$key][$key2]['Volume']).'</biblScope>'."\r\n";
+                  $chaine .= '                  <biblScope unit="issue">'.supprAmp($papers[$key][$key2]['Numero']).'</biblScope>'."\r\n";
+                  $chaine .= '                  <biblScope unit="pp">'.supprAmp($papers[$key][$key2]['Pagination']).'</biblScope>'."\r\n";
+                  $chaine .= '                  <date type="datePub">'.supprAmp($papers[$key][$key2]['aPub']).'</date>'."\r\n";
+                  //$chaine .= '                  <date type="dateEpub">'.supprAmp($papers[$key][$key2]['aMel']).'</date>'."\r\n";
+                  $chaine .= '                </imprint>'."\r\n";
+                  $typeDoc = "ART";
+                  $typeDocp = "Journal articles";
+                  break;
+              }
+            }
+            $chaine .= '              </monogr>'."\r\n";
+            if (isset($papers[$key][$key2]['DOI']) && $papers[$key][$key2]['DOI'] != "")
+            {
+              $chaine .= '              <idno type="doi">'.supprAmp($papers[$key][$key2]['DOI']).'</idno>'."\r\n";
+            }
+            if (isset($papers[$key][$key2]['Pubmed']) && $papers[$key][$key2]['Pubmed'] != "")
+            {
+              $chaine .= '              <idno type="pubmed">'.supprAmp($papers[$key][$key2]['Pubmed']).'</idno>'."\r\n";
+            }
+            $chaine .= '            </biblStruct>'."\r\n";
+            $chaine .= '          </sourceDesc>'."\r\n";
+            $chaine .= '          <profileDesc>'."\r\n";
+            //langue
+            $chaine .= '            <langUsage>'."\r\n";
+            $codeP = strtoupper(substr(supprAmp($papers[$key][$key2]['langue']), 0, 2));
+            if ($codeP != "EN")
+            {
+              $keyP = ucfirst($countries[$codeP]);
+            }else{
+              $keyP = "English";
+            }
+            $chaine .= '              <language ident="'.$lng.'">'.$keyP.'</language>'."\r\n";
+            $chaine .= '            </langUsage>'."\r\n";
+            $chaine .= '            <textClass>'."\r\n";
+						/*
+            //mots-clés
+            if (isset($papers[$key][$key2]['MC']) && $papers[$key][$key2]['MC'] != "")
+            {
+              $chaine .= '             <keywords scheme="author">'."\r\n";
+              $aut = explode(";", $papers[$key][$key2]['MC']);
+              foreach ($aut as $qui) {
+                $chaine .= '              <term xml:lang="'.$lng.'">'.supprAmp(trim($qui)).'</term>'."\r\n";
+              }
+              $chaine .= '             </keywords>'."\r\n";
+            }
+						*/
+            //domaine HAL
+            //$chaine .= '             <classCode scheme="halDomain" n="">'.supprAmp($papers[$key][$key2]['WC']).'</classCode>'."\r\n";
+            //Typologie
+            $chaine .= '             <classCode scheme="halTypology" n="'.$typeDoc.'">'.$typeDocp.'</classCode>'."\r\n";
+            $chaine .= '            </textClass>'."\r\n";
+            $chaine .= '            <abstract xml:lang="'.$lng.'">'.supprAmp($papers[$key][$key2]['resume']).'</abstract>'."\r\n";
+            $chaine .= '          </profileDesc>'."\r\n";
+            $chaine .= '        </biblFull>'."\r\n";
+            $chaine .= '      </listBibl>'."\r\n";
+            $chaine .= '    </body>'."\r\n";
+            if (count($strTab) > 0) {//Existence of one or more affiliation(s)
+              $chaine .= '      <back>'."\r\n";
+              $chaine .= '        <listOrg type="structures">'."\r\n";
+              $indT = 1;
+              foreach ($strTab as $labElt) {
+                $eltTab = explode("~|~", $labElt);
+                $chaine .= '          <org type="'.$eltTab[3].'" xml:id="localStruct-Aff'.$indT.'">'."\r\n";
+                $orgName = $eltTab[2];
+                $orgName = str_replace(array("UR1", " UR1"), "", $orgName);
+                if ($eltTab[3] == "institution") {//abbreviation between crochet
+                  if (strpos($orgName, "CHU") !== false) {
+                    $nameTab = explode(",", $orgName);
+                    $ville = $nameTab[count($nameTab)-2];
+                    $ville = str_ireplace(" cedex", "", $ville);
+                    $villeTab = explode(" ", $ville);
+                    $orgName = "CHU ".$villeTab[count($villeTab)-1];
+                  }
+                  $nameTab = explode(",", $orgName);
+                  $orgName = "";
+                  $oN = 0;
+                  $iName = 0;
+                  foreach ($nameTab as $name) {
+                    if ($iName != count($nameTab)-2) {//do not insert the penultimate term = address
+                      if ($name == "Universite CHU") {
+                        $ville = $nameTab[count($nameTab)-2];
+                        $ville = str_ireplace(" cedex", "", $ville);
+                        $villeTab = explode(" ", $ville);
+                        $name = $name.' '.$villeTab[count($villeTab)-1];
+                      }
+                      if ($oN == 0) {
+                        $oN = 1;
+                      }else{
+                        $orgName .= ", ";
+                      }
+                      $eltNameTab = explode(" ", trim($name));
+                      $oNE = 0;
+                      foreach ($eltNameTab as $elt) {
+                        if ($oNE == 0) {
+                          $oNE = 1;
+                        }else{
+                          $orgName .= " ";
+                        }
+                        if (ctype_upper(trim($elt)) && !is_numeric(trim($elt)) && strlen(trim($elt)) > 3 && trim($elt) != "CNRS" && trim($elt) != "INSERM" && trim($elt) != "INRA" && trim($elt) != "INRIA" && trim($elt) != "IRSTEA") {
+                        //if (ctype_upper(trim($elt)) && strlen(trim($elt)) > 3 && trim($elt) != "CNRS" && trim($elt) != "INSERM" && trim($elt) != "INRA" && trim($elt) != "INRIA" && trim($elt) != "IRSTEA") {
+                        //if (ctype_upper(trim($elt)) && strlen(trim($elt)) > 3) {
+                          $orgName .= "[".trim($elt)."]";
+                        }else{
+                          $orgName .= "".trim($elt);
+                        }
+                      }
+                    }
+                    $iName += 1;
+                  }
+                }
+                //suppression/remplacement divers
+                $orgName = str_replace(array("(", ")"), "", $orgName);
+                $orgName = str_replace("/", " ", $orgName);
+                //test présence 'Department' ou 'Service d' pour suppression
+                $orgTab = explode(", ", $orgName);
+                if (stripos($orgTab[0], "Department") !== false || stripos($orgTab[0], "Service d") !== false) {
+                  $orgTab[0] = "";
+                  $orgName = "";
+                  for($dpt = 0; $dpt < count($orgTab); $dpt++) {
+                    if ($orgTab[$dpt] != "") {$orgName .= $orgTab[$dpt]. ", ";}
+                  }
+                  $orgName = substr($orgName, 0, (strlen($orgName) - 2));
+                }
+                $chaine .= '            <orgName>'.$orgName.'</orgName>'."\r\n";
+                $pays = str_replace(".", "", strtoupper($eltTab[4]));
+                if ($pays != "")
+                {
+                  $keyP = array_search($pays, $countries, true); 
+                  $chaine .= '            <desc>'."\r\n";
+                  $chaine .= '              <address>'."\r\n";
+                  $chaine .= '                <country key="'.$keyP.'"></country>'."\r\n";
+                  $chaine .= '              </address>'."\r\n";
+                  $chaine .= '            </desc>'."\r\n";
+                }
+                $chaine .= '          </org>'."\r\n";
+                $indT++;
+              }
+              $chaine .= '        </listOrg>'."\r\n";
+              $chaine .= '      </back>'."\r\n";
+            }
+            $chaine .= '  </text>'."\r\n";
+            $chaine .= '</TEI>';
+            fwrite($inF,$chaine);
+            fclose($inF);
+            $zip->addFile($Fnm);
+            $zip->close();
+            unlink($Fnm);
+          }
+          break;		
           
         case "dimensions":
           $aut = $papers[$key][$key2]['Authors'];
@@ -5069,6 +5508,10 @@ if (file_exists("./HAL/OverHAL_zotero.zip"))
 if (file_exists("./HAL/OverHAL_pubmed_xml.zip"))
 {
   echo "<br/><a target=\"_blank\" href=\"./HAL/OverHAL_pubmed_xml.zip\">Exporter les résultats Pubmed au format TEI</a>";
+}
+if (file_exists("./HAL/OverHAL_pubmed_fcgi.zip"))
+{
+  echo "<br/><a target=\"_blank\" href=\"./HAL/OverHAL_pubmed_fcgi.zip\">Exporter les résultats Pubmed au format TEI</a>";
 }
 if (file_exists("./HAL/OverHAL_dimensions.zip"))
 {

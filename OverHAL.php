@@ -117,6 +117,7 @@ Envoyez les fichiers résultat (500 Ko maximum, voir ci-dessus le "mode d'emploi
 <label for="scifin">SciFinder (CSV)</label> : <input class="form-control" id="scifin" style="height: 25px; font-size: 90%; padding: 0px;" name="scifin" type="file" /><br/>
 <label for="pubmed_csv">Pubmed (CSV)</label> : <input class="form-control" id="pubmed_csv" style="height: 25px; font-size: 90%; padding: 0px;" name="pubmed_csv" type="file" /><br/>
 <label for="pubmed_xml">Pubmed (XML)</label> : <input class="form-control" id="pubmed_xml" style="height: 25px; font-size: 90%; padding: 0px;" name="pubmed_xml" type="file" /><br/>
+<label for="pubmed_fcgi">Pubmed (FCGI)</label> : <input class="form-control" id="pubmed_fcgi" style="height: 25px; font-size: 90%; padding: 0px;" name="pubmed_fcgi" type="file" /><br/>
 <?php
 include("./IP_list.php");
 if (in_array($ip, $IP_aut)) {
