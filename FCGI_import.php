@@ -44,6 +44,8 @@ for($j=1; $j<count($tabFCGI); $j++) {
 	//Récupération des auteurs et de leurs affiliations
 	$tabAut = array();
 	$tabAff = array();
+	$tabFCGIaut = array();
+	$tabFCGIaffil = array();
 	$tabFCGIaut = explode('name ml "', $tabFCGIautit[1]);
 	//var_dump($tabFCGIaut);
 
@@ -57,7 +59,8 @@ for($j=1; $j<count($tabFCGI); $j++) {
 	//var_dump($tabFCGIaffil);
 	for($i=1; $i<count($tabFCGIaffil); $i++) {
 		$tabAut[$i-1] = str_replace(array("\r\n", "\n"), "", trim(str_replace(array('"', ","), '', $tabFCGIaffil[$i][0])));//Retirer les sauts de ligne
-		$affil = trim(str_replace(array('"', "}"), '', $tabFCGIaffil[$i][1]));
+		$affil = "";
+		if (isset($tabFCGIaffil[$i][1])) {$affil = trim(str_replace(array('"', "}"), '', $tabFCGIaffil[$i][1]));}
 		if (is_numeric(substr($affil, 0, 1))) {//Si chiffre au début de l'affiliation
 			while (is_numeric(substr($affil, 0, 1))) {//Tant qu'il y a un chiffre au début
 				$affil = substr($affil, 1, (strlen($affil) - 1));//On retire le premier caractère de l'affiliation
