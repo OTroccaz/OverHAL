@@ -2988,6 +2988,8 @@ foreach ($souBib as $key => $subTab)
 								$chaine .= '          	<note type="audience" n="3"/>'."\r\n";
 							}
             }
+						$chaine .= '						<note type="popular" n="0">No</note>'."\r\n";
+						$chaine .= '						<note type="peer" n="1">Yes</note>'."\r\n";
             $chaine .= '          </notesStmt>'."\r\n".
                        '          <sourceDesc>'."\r\n".
                        '            <biblStruct>'."\r\n".
@@ -3612,6 +3614,8 @@ foreach ($souBib as $key => $subTab)
 								$chaine .= '          	<note type="audience" n="3"/>'."\r\n";
 							}
             }
+						$chaine .= '						<note type="popular" n="0">No</note>'."\r\n";
+						$chaine .= '						<note type="peer" n="1">Yes</note>'."\r\n";
             $chaine .= '          </notesStmt>'."\r\n".
                        '          <sourceDesc>'."\r\n".
                        '            <biblStruct>'."\r\n".
@@ -4196,6 +4200,8 @@ foreach ($souBib as $key => $subTab)
 								$chaine .= '          	<note type="audience" n="3"/>'."\r\n";
 							}
             }
+						$chaine .= '						<note type="popular" n="0">No</note>'."\r\n";
+						$chaine .= '						<note type="peer" n="1">Yes</note>'."\r\n";
             $chaine .= '          </notesStmt>'."\r\n".
                        '          <sourceDesc>'."\r\n".
                        '            <biblStruct>'."\r\n".
@@ -4716,6 +4722,8 @@ foreach ($souBib as $key => $subTab)
 								$chaine .= '          	<note type="audience" n="3"/>'."\r\n";
 							}
             }
+						$chaine .= '						<note type="popular" n="0">No</note>'."\r\n";
+						$chaine .= '						<note type="peer" n="1">Yes</note>'."\r\n";
             $chaine .= '          </notesStmt>'."\r\n".
                        '          <sourceDesc>'."\r\n".
                        '            <biblStruct>'."\r\n".
@@ -5098,6 +5106,8 @@ foreach ($souBib as $key => $subTab)
             $chaine .= '          <seriesStmt>'."\r\n".
                        '          </seriesStmt>'."\r\n".
                        '          <notesStmt>'."\r\n".
+											 '						<note type="popular" n="0">No</note>'."\r\n".
+												'						<note type="peer" n="1">Yes</note>'."\r\n".
                        '          </notesStmt>'."\r\n".
                        '          <sourceDesc>'."\r\n".
                        '            <biblStruct>'."\r\n".
