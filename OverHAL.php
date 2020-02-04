@@ -173,5 +173,9 @@ if (in_array($ip, $IP_aut)) {
 <input type="submit" class="form-control btn btn-md btn-primary" value="Envoyer">
 </form>
 </p>
+<br>
+<?php
+include('./bas.php');
+?>
 </body>
 </html>

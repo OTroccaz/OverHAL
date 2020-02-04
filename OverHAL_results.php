@@ -5593,4 +5593,8 @@ echo "<br/>";
   </table>
 <br/><br/>
 <a href="OverHAL.php">Retour à l'accueil du site</a>
+<br>
+<?php
+include('./bas.php');
+?>
 </body></html>
