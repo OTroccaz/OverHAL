@@ -835,6 +835,7 @@ if(isset($_POST['hal']))
 {
    $hal = htmlspecialchars($_POST['hal']);
    $team = htmlspecialchars($_POST['team']);
+	 $teamInit = $team;
    if ($limzot == "non")
    {
      echo "<a name='Chargement de la requête HAL'></a><h2>Chargement de la requête HAL - <a href='#Résultats'><i>Retour aux résultats</i></a></h2>";
@@ -1945,6 +1946,8 @@ foreach ($souBib as $key => $subTab)
               }
           }
         }
+				//Si interrogation sur UNIV-RENNES1, si Zotero (CSV) et si 'Language' = FR, alors, mail en français
+				if ($teamInit == "UNIV-RENNES1" && $key == "zotero" && $papers[$key][$key2]['Language'] == "FR") {$lang = "FR";}
         if ($mailOK == "")
         {
           if ($nouvelEnvoiM == "non")
