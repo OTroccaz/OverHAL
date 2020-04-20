@@ -35,6 +35,7 @@ if (in_array($ip, $IP_aut)) {
       $chaine .= '"type"=>"'.$MAILS_LISTE[$i]["type"].'", ';
       $chaine .= '"file"=>"'.$MAILS_LISTE[$i]["file"].'", ';
       $chaine .= '"lang"=>"'.$MAILS_LISTE[$i]["lang"].'", ';
+			$chaine .= '"labo"=>"'.$MAILS_LISTE[$i]["labo"].'", ';
       $chaine .= '"quand"=>"'.$MAILS_LISTE[$i]["quand"].'")';
       if ($i != $total-1) {$chaine .= ',';}
       $chaine .= chr(13).chr(10);
@@ -53,8 +54,8 @@ if (in_array($ip, $IP_aut)) {
     $quandTab = explode("/", $_POST["quand"]);   
     $MAILS_LISTE[$modif]["quand"] = mktime(0, 0, 0, $quandTab[1], $quandTab[0], $quandTab[2]);
     $qui = str_replace('"','&#039;',$_POST["qui1"]);
-    $qui2 = str_replace('"','&#039;',$_POST["qui2"]);
-    $qui3 = str_replace('"','&#039;',$_POST["qui3"]);
+    if (isset($_POST["qui2"])) {$qui2 = str_replace('"','&#039;',$_POST["qui2"]);}else{$qui2 = "";}
+    if (isset($_POST["qui3"])) {$qui3 = str_replace('"','&#039;',$_POST["qui3"]);}else{$qui3 = "";}
     if ($qui2 != "") {$qui .= ",".$qui2;}
     if ($qui3 != "") {$qui .= ",".$qui3;}
     $MAILS_LISTE[$modif]["qui"] = $qui;
@@ -63,6 +64,7 @@ if (in_array($ip, $IP_aut)) {
     $MAILS_LISTE[$modif]["type"] = str_replace('"','&#039;',$_POST["type"]);
     $MAILS_LISTE[$modif]["file"] = str_replace('"','&#039;',$_POST["file"]);
     $MAILS_LISTE[$modif]["lang"] = str_replace('"','&#039;',$_POST["lang"]);
+		$MAILS_LISTE[$modif]["labo"] = str_replace('"','&#039;',$_POST["labo"]);
     $total = count($MAILS_LISTE);
     //export liste php
     $Fnm = "./OverHAL_mails_envoyes.php";
@@ -79,6 +81,7 @@ if (in_array($ip, $IP_aut)) {
       $chaine .= '"type"=>"'.$MAILS_LISTE[$i]["type"].'", ';
       $chaine .= '"file"=>"'.$MAILS_LISTE[$i]["file"].'", ';
       $chaine .= '"lang"=>"'.$MAILS_LISTE[$i]["lang"].'", ';
+			$chaine .= '"labo"=>"'.$MAILS_LISTE[$i]["labo"].'", ';
       $chaine .= '"quand"=>"'.$MAILS_LISTE[$i]["quand"].'")';
       if ($i != $total) {$chaine .= ',';}
       $chaine .= chr(13).chr(10);
@@ -106,6 +109,7 @@ if (in_array($ip, $IP_aut)) {
     $MAILS_LISTE[$modif]["type"] = str_replace('"','&#039;',$_POST["type"]);
     $MAILS_LISTE[$modif]["file"] = str_replace('"','&#039;',$_POST["file"]);
     $MAILS_LISTE[$modif]["lang"] = str_replace('"','&#039;',$_POST["lang"]);
+		$MAILS_LISTE[$modif]["labo"] = str_replace('"','&#039;',$_POST["labo"]);
     $total = count($MAILS_LISTE);
     //export liste php
     $Fnm = "./OverHAL_mails_envoyes.php";
@@ -122,6 +126,7 @@ if (in_array($ip, $IP_aut)) {
       $chaine .= '"type"=>"'.$MAILS_LISTE[$i]["type"].'", ';
       $chaine .= '"file"=>"'.$MAILS_LISTE[$i]["file"].'", ';
       $chaine .= '"lang"=>"'.$MAILS_LISTE[$i]["lang"].'", ';
+			$chaine .= '"labo"=>"'.$MAILS_LISTE[$i]["labo"].'", ';
       $chaine .= '"quand"=>"'.$MAILS_LISTE[$i]["quand"].'")';
       if ($i != $total) {$chaine .= ',';}
       $chaine .= chr(13).chr(10);
@@ -172,6 +177,7 @@ if (in_array($ip, $IP_aut)) {
     echo('<option value="FR" selected>FR</option>');
     echo('<option value="EN">EN</option>');
     echo('</select><br>');
+		echo('<b>Laboratoire</b> : <input type="text" name="labo"><br>');
     echo('<input type="hidden" value="ajout" name="action">');
     echo('<input type="submit" value="Valider" name="ajout">');
     echo('</form>');
@@ -195,6 +201,8 @@ if (in_array($ip, $IP_aut)) {
       echo('<option '.$txtFR.'value="FR">FR</option>');
       echo('<option '.$txtEN.'value="EN">EN</option>');
       echo('</select><br>');
+			if (isset($MAILS_LISTE[$modif]['labo'])) {$labo = $MAILS_LISTE[$modif]['labo'];}else{$labo = "";}
+			echo('<b>Laboratoire</b> : <input type="text" value="'.$labo.'" name="labo"><br>');
       echo('<input type="hidden" value="'.$MAILS_LISTE[$modif]['quoi1'].'" name="quoi1">');
       echo('<input type="hidden" value="'.$modif.'" name="modif">');
       echo('<input type="submit" value="Valider" name="modification">');
@@ -218,6 +226,7 @@ if (in_array($ip, $IP_aut)) {
       $text .= '<td valign=top><b>Type</b></td>';
       $text .= '<td valign=top><b>Fichier</b></td>';
       $text .= '<td valign=top><b>Langue</b></td>';
+			$text .= '<td valign=top><b>Laboratoire</b></td>';
       $text .= '<td valign=top>&nbsp;</td>';
       $text .= '<td valign=top>&nbsp;</td>';
       $text .= '</tr>';
@@ -242,6 +251,8 @@ if (in_array($ip, $IP_aut)) {
           $text .= '<td valign=top>Aucun</td>';
         }
         $text .= '<td valign=top>'.$MAILS_LISTE[$i]['lang'].'</td>';
+				if (isset($MAILS_LISTE[$i]['labo'])) {$labo = $MAILS_LISTE[$i]['labo'];}else{$labo = "";}
+				$text .= '<td valign=top>'.$labo.'</td>';
         $text .= '<td valign=top><a href="OverHAL_mails_envoyes_listing.php?modif='.$i.'">Modifier</a></td>';
         $text .= '<td valign=top><a href="OverHAL_mails_envoyes_listing.php?suppr='.$i.'" onclick="return confirm(\'Êtes-vous sûr de vouloir supprimer cette entrée ?\');">Supprimer</a></td>';
         $text .= '</tr>';

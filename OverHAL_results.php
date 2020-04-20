@@ -1948,6 +1948,10 @@ foreach ($souBib as $key => $subTab)
         }
 				//Si interrogation sur UNIV-RENNES1, si Zotero (CSV) et si 'Language' = FR, alors, mail en français
 				if ($teamInit == "UNIV-RENNES1" && $key == "zotero" && $papers[$key][$key2]['Language'] == "FR") {$lang = "FR";}
+				//Stats par laboratoire
+				$callNumber = "";
+				if ($key == "zotero" && isset($papers[$key][$key2]['Call Number'])) {$callNumber = $papers[$key][$key2]['Call Number'];}
+				
         if ($mailOK == "")
         {
           if ($nouvelEnvoiM == "non")
@@ -1962,7 +1966,7 @@ foreach ($souBib as $key => $subTab)
             {
               $imgMailM = "./img/bouton-m.jpg";
             }
-            $linkMailM = "<div id=\"".$titreNorm."M\"><a href=\"#".$titreNorm."\" onClick=\"majMailsM('".$adr."','".$titreNorm."','".$refdoi."','M','','".strtoupper($lang)."'); mailto('".$adr."','".$subjectM."','".$bodyM."');\"><img alt='".$adr."' title='".$adr."' src=\"".$imgMailM."\"></a></div>";
+            $linkMailM = "<div id=\"".$titreNorm."M\"><a href=\"#".$titreNorm."\" onClick=\"majMailsM('".$adr."','".$titreNorm."','".$refdoi."','M','','".strtoupper($lang)."','".$callNumber."'); mailto('".$adr."','".$subjectM."','".$bodyM."');\"><img alt='".$adr."' title='".$adr."' src=\"".$imgMailM."\"></a></div>";
           }else{//new solicitation
             if ($lang == "FR")
             {
@@ -1974,7 +1978,7 @@ foreach ($souBib as $key => $subTab)
             {
               $imgMailM = "./img/bouton-m.jpg";
             }
-            $linkMailM = "<div id=\"".$titreNorm."M\"><a href=\"#".$titreNorm."\" onClick=\"majMailsM('".$adr."','".$titreNorm."','".$refdoi."','M','','".strtoupper($lang)."'); mailto('".$adr."','".$subjectM."','".$bodyM."');\"><img alt='".$adr."' title='".$adr."' src=\"".$imgMailM."\"></a></div>";
+            $linkMailM = "<div id=\"".$titreNorm."M\"><a href=\"#".$titreNorm."\" onClick=\"majMailsM('".$adr."','".$titreNorm."','".$refdoi."','M','','".strtoupper($lang)."','".$callNumber."'); mailto('".$adr."','".$subjectM."','".$bodyM."');\"><img alt='".$adr."' title='".$adr."' src=\"".$imgMailM."\"></a></div>";
           }
           if ($nouvelEnvoiP == "non")
           {
@@ -1988,7 +1992,7 @@ foreach ($souBib as $key => $subTab)
             {
               $imgMailP = "./img/bouton-p.jpg";
             }
-            $linkMailP = "<div id=\"".$titreNorm."P\"><a href=\"#".$titreNorm."\" onClick=\"majMailsP('".$adr."','".$titreNorm."','".$refdoi."','P','','".strtoupper($lang)."'); mailto('".$adr."','".$subjectP."','".$bodyP."');\"><img alt='".$adr."' title='".$adr."' src=\"".$imgMailP."\"></a></div>";
+            $linkMailP = "<div id=\"".$titreNorm."P\"><a href=\"#".$titreNorm."\" onClick=\"majMailsP('".$adr."','".$titreNorm."','".$refdoi."','P','','".strtoupper($lang)."','".$callNumber."'); mailto('".$adr."','".$subjectP."','".$bodyP."');\"><img alt='".$adr."' title='".$adr."' src=\"".$imgMailP."\"></a></div>";
           }else{//new solicitation
             if ($lang == "FR")
             {
@@ -2000,7 +2004,7 @@ foreach ($souBib as $key => $subTab)
             {
               $imgMailP = "./img/bouton-p.jpg";
             }
-            $linkMailP = "<div id=\"".$titreNorm."P\"><a href=\"#".$titreNorm."\" onClick=\"majMailsP('".$adr."','".$titreNorm."','".$refdoi."','P','','".strtoupper($lang)."'); mailto('".$adr."','".$subjectP."','".$bodyP."');\"><img alt='".$adr."' title='".$adr."' src=\"".$imgMailP."\"></a></div>";
+            $linkMailP = "<div id=\"".$titreNorm."P\"><a href=\"#".$titreNorm."\" onClick=\"majMailsP('".$adr."','".$titreNorm."','".$refdoi."','P','','".strtoupper($lang)."','".$callNumber."'); mailto('".$adr."','".$subjectP."','".$bodyP."');\"><img alt='".$adr."' title='".$adr."' src=\"".$imgMailP."\"></a></div>";
           }
         }else{
           $linkMailM = "<b>OK</b>";

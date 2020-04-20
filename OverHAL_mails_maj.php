@@ -30,11 +30,12 @@ if ($absent == "oui")
 {
   $ajout = count($MAILS_LISTE);
   $MAILS_LISTE[$ajout]["qui"] = $_POST["qui"];
-  $MAILS_LISTE[$ajout]["quoi1"] = $_POST['quoi1'];
-  $MAILS_LISTE[$ajout]["quoi2"] = $_POST['quoi2'];
-  $MAILS_LISTE[$ajout]["type"] = $_POST['type'];
-  $MAILS_LISTE[$ajout]["file"] = $_POST['fic'];
-  $MAILS_LISTE[$ajout]["lang"] = $_POST['lang'];
+  $MAILS_LISTE[$ajout]["quoi1"] = $_POST["quoi1"];
+  $MAILS_LISTE[$ajout]["quoi2"] = $_POST["quoi2"];
+  $MAILS_LISTE[$ajout]["type"] = $_POST["type"];
+  $MAILS_LISTE[$ajout]["file"] = $_POST["fic"];
+  $MAILS_LISTE[$ajout]["lang"] = $_POST["lang"];
+	$MAILS_LISTE[$ajout]["labo"] = $_POST["labo"];
   $MAILS_LISTE[$ajout]["quand"] = time();
 
   //export liste php
@@ -53,6 +54,7 @@ if ($absent == "oui")
     $chaine .= '"type"=>"'.$MAILS_LISTE[$i]["type"].'", ';
     $chaine .= '"file"=>"'.$MAILS_LISTE[$i]["file"].'", ';
     $chaine .= '"lang"=>"'.$MAILS_LISTE[$i]["lang"].'", ';
+		$chaine .= '"labo"=>"'.$MAILS_LISTE[$i]["labo"].'", ';
     $chaine .= '"quand"=>"'.$MAILS_LISTE[$i]["quand"].'")';
     if ($i != $ajout) {$chaine .= ',';}
     $chaine .= chr(13).chr(10);

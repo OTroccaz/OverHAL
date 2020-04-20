@@ -1,4 +1,4 @@
-function majMailsM(adr,titre,doi,typ,file,lang) {
+function majMailsM(adr,titre,doi,typ,file,lang,labo) {
   alert('Mail envoyé à ' + adr);
   $.post("OverHAL_mails_maj.php", {
     qui: adr,
@@ -6,12 +6,13 @@ function majMailsM(adr,titre,doi,typ,file,lang) {
     quoi2: doi,
     type: typ,
     fic: file,
-    lang: lang
+    lang: lang,
+		labo: labo
   });
   document.getElementById(titre+'M').innerHTML = "<b>OK</b>";
 }
 
-function majMailsP(adr,titre,doi,typ,file,lang) {
+function majMailsP(adr,titre,doi,typ,file,lang,labo) {
   alert('Mail envoyé à ' + adr);
   $.post("OverHAL_mails_maj.php", {
     qui: adr,
@@ -19,7 +20,8 @@ function majMailsP(adr,titre,doi,typ,file,lang) {
     quoi2: doi,
     type: typ,
     fic: file,
-    lang: lang
+    lang: lang,
+		labo: labo
   });
   document.getElementById(titre+'P').innerHTML = "<b>OK</b>";
 }
