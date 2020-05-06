@@ -177,11 +177,11 @@ foreach($xml as $PubmedArticle){
   //Titre abrégé de la revue (ISO)
   extrSimp($PubmedArticle->MedlineCitation->Article->Journal->ISOAbbreviation, $chaine);
   
-  //EISSN
-  extrList($PubmedArticle->MedlineCitation->Article->Journal->ISSN, 'IssnType', 'Electronic', $chaine);
-  
   //ISSN
   extrSimp($PubmedArticle->MedlineCitation->MedlineJournalInfo->ISSNLinking, $chaine);
+	
+	//EISSN
+  extrList($PubmedArticle->MedlineCitation->Article->Journal->ISSN, 'IssnType', 'Electronic', $chaine);
   
   //Titre de l'article
   $titre = "";
