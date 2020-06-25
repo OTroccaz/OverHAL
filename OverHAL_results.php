@@ -3028,12 +3028,13 @@ foreach ($souBib as $key => $subTab)
               $chaine .= '                    <surname>'.$nom.'</surname>'."\r\n";
               $chaine .= '                  </persName>'."\r\n";
               if (isset($papers[$key][$key2]['EM']))
-              {//email
+              {//email > il faut limiter à une seule entrée car il y en a parfois plusieurs et le TEI ne sera alors pas valide
                 $tabMail = explode(";", $papers[$key][$key2]['EM']);
                 foreach ($tabMail as $elt) {
                   if (stripos(trim(normalize($elt)), normalize($nom)) !== false)
                   {
                     $chaine .= '                  <email>'.trim($elt).'</email>'."\r\n";
+										break;//email ajouté > on sort de la boucle
                   }
                 }
               }
