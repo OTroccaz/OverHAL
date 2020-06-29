@@ -3,7 +3,7 @@ if (isset($_GET['css']) && ($_GET['css'] != ""))
 {
   $css = $_GET['css'];
 }else{
-  $css = "./HAL_SCD.css";
+  $css = "https://halur1.univ-rennes1.fr/HAL_SCD.css";
 }
 
 // récupération de l'adresse IP du client (on cherche d'abord à savoir s'il est derrière un proxy)
@@ -48,7 +48,7 @@ if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
   }
   </STYLE>
 </head>
-<body>
+<body style="font-family: Corbel;">
 
 <noscript>
 <div align='center' id='noscript'><font color='red'><b>ATTENTION !!! JavaScript est désactivé ou non pris en charge par votre navigateur : cette procédure ne fonctionnera pas correctement.</b></font><br>
@@ -57,8 +57,8 @@ if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
 
 <table width="100%">
 <tr>
-<td style="text-align: left;"><img alt="OverHAL" title="OverHAL" width="250px" src="./img/logo_OverHAL2.jpg"></td>
-<td style="text-align: right;"><img alt="Université de Rennes 1" title="Université de Rennes 1" width="150px" src="./img/logo_UR1_gris_petit.jpg"></td>
+<th scope="col" style="text-align: left;"><img alt="OverHAL" title="OverHAL" width="250px" src="./img/logo_OverHAL2.jpg"><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Convertissez vos imports éditeurs en TEI</th>
+<th scope="col" style="text-align: right;"><img alt="Université de Rennes 1" title="Université de Rennes 1" width="150px" src="./img/logo_UR1_gris_petit.jpg"></th>
 </tr>
 </table>
 <hr style="color: #467666; height: 1px; border-width: 1px; border-top-color: #467666; border-style: inset;">
