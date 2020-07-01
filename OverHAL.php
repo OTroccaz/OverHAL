@@ -52,7 +52,7 @@ if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
 
 <noscript>
 <div align='center' id='noscript'><font color='red'><b>ATTENTION !!! JavaScript est désactivé ou non pris en charge par votre navigateur : cette procédure ne fonctionnera pas correctement.</b></font><br>
-<b>Pour modifier cette option, voir <a target='_blank' href='http://www.libellules.ch/browser_javascript_activ.php'>ce lien</a>.</b></div><br>
+<b>Pour modifier cette option, voir <a target='_blank' rel='noopener noreferrer' href='http://www.libellules.ch/browser_javascript_activ.php'>ce lien</a>.</b></div><br>
 </noscript>
 
 <table width="100%">
@@ -96,9 +96,9 @@ if (isset($_GET["erreur"]))
 
 ?>
 <div style="background-color:#FFFFFF;width:900px;padding:10px;font-family:calibri,verdana">
-OverHAL permet de comparer HAL et des listes de publications (Scopus, WoS, SciFinder, Zotero, etc), à partir d'un script PHP créé par <a target="_blank" href="http://igm.univ-mlv.fr/~gambette/ExtractionHAL/CouvertureHAL/">Philippe Gambette</a>, repris et modifié par <a target="_blank" href="https://ecobio.univ-rennes1.fr/personnel.php?qui=Olivier_Troccaz">Olivier Troccaz</a> (ECOBIO - OSUR) pour l'Université de Rennes 1.
-<br>Pour tout renseignement, n'hésitez pas à contacter <a target="_blank" href="https://openaccess.univ-rennes1.fr/interlocuteurs/laurent-jonchere">Laurent Jonchère</a> ou <a target="_blank" href="https://ecobio.univ-rennes1.fr/personnel.php?qui=Olivier_Troccaz">Olivier Troccaz</a>.
-<br>Si vous souhaitez utiliser le script PHP pour une autre institution, consultez <a target="_blank" href="https://wiki.ccsd.cnrs.fr/wikis/hal/index.php/Outils_et_services_d%C3%A9velopp%C3%A9s_localement_pour_am%C3%A9liorer_ou_faciliter_l%27utilisation_de_HAL#Autres_outils">le wiki du CCSD</a> (OverHAL).</p>
+OverHAL permet de comparer HAL et des listes de publications (Scopus, WoS, SciFinder, Zotero, etc), à partir d'un script PHP créé par <a target="_blank" rel="noopener noreferrer" href="http://igm.univ-mlv.fr/~gambette/ExtractionHAL/CouvertureHAL/">Philippe Gambette</a>, repris et modifié par <a target="_blank" rel="noopener noreferrer" href="https://ecobio.univ-rennes1.fr/personnel.php?qui=Olivier_Troccaz">Olivier Troccaz</a> (ECOBIO - OSUR) pour l'Université de Rennes 1.
+<br>Pour tout renseignement, n'hésitez pas à contacter <a target="_blank" rel="noopener noreferrer" href="https://openaccess.univ-rennes1.fr/interlocuteurs/laurent-jonchere">Laurent Jonchère</a> ou <a target="_blank" rel="noopener noreferrer" href="https://ecobio.univ-rennes1.fr/personnel.php?qui=Olivier_Troccaz">Olivier Troccaz</a>.
+<br>Si vous souhaitez utiliser le script PHP pour une autre institution, consultez <a target="_blank" rel="noopener noreferrer" href="https://wiki.ccsd.cnrs.fr/wikis/hal/index.php/Outils_et_services_d%C3%A9velopp%C3%A9s_localement_pour_am%C3%A9liorer_ou_faciliter_l%27utilisation_de_HAL#Autres_outils">le wiki du CCSD</a> (OverHAL).</p>
 
 <h2>Mode d'emploi</h2>
 <a href="Manuel-OverHAL.pdf">Télécharger le manuel</a>
@@ -133,7 +133,7 @@ if (in_array($ip, $IP_aut)) {
 <br/>
 <b>2. Construire la requête HAL</b><br/>
 <br/>
-<label for="reqHAL">Requête libre</label> (<a target="_blank" href="https://api.archives-ouvertes.fr/docs/search">consultez l'API de HAL</a>)<br/>
+<label for="reqHAL">Requête libre</label> (<a target="_blank" rel="noopener noreferrer" href="https://api.archives-ouvertes.fr/docs/search">consultez l'API de HAL</a>)<br/>
 <?php
 $reqHAL = "https://api.archives-ouvertes.fr/search/?q=collCode_s:\"IRSET\"&fq=(producedDateY_i:\"".date('Y', time())."\")&rows=10000&fl=docType_s,docid,halId_s,authFullName_s,title_s,subTitle_s,journalTitle_s,volume_s,issue_s,page_s,producedDateY_i,proceedings_s,files_s,label_s,citationFull_s,bookTitle_s,doiId_s,conferenceStartDateY_i";
 ?>

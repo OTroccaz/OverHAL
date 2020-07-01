@@ -41,6 +41,47 @@ function testOALic($url, $vol, $iss, $pag, $dat, $pdfCR, &$evd, &$titLic, &$typL
   $pag = 0;
 
   
+  $url1 = "https://api.oadoi.org/v2/10.1016/j.jenvman.2017.06.040";//404
+  $url2 = 'https://api.oadoi.org/v2/10.1007/s10342-017-1066-z';//oa false
+  $url3 = 'https://api.oadoi.org/v2/10.1002/eco.1765';//is_oa true
+  $url4 = 'https://api.oadoi.org/v2/10.1136/jmedgenet-2015-103302';//license: cc-by-nc
+  $url5 = 'https://api.oadoi.org/v2/10.1016/j.crhy.2016.11.009';//license: cc-by-nc-nd
+  $url6 = 'https://api.oadoi.org/v2/10.1371/journal.pone.0168693';//Plos One > revue oa sous licence cc > retenir racine DOI 10.1371 
+  $url7 = 'https://api.oadoi.org/v2/10.1186/s12864-016-3356-0';//BMC Genomics > revue oa sous licence cc > retenir racine DOI 10.1186
+  $url8 = "https://api.oadoi.org/v2/10.1097/QAD.0000000000001048";
+  //$url = "https://api.oadoi.org/v2/10.1016/j.neulet.2016.02.038";
+  //$url = "https://api.oadoi.org/v2/10.1038/s41598-017-12398-0";//Nature Publishing Group
+  //$url = "https://api.oadoi.org/v2/10.1063/1.4996175";//American Institute of Physics
+  //$url = "https://api.oadoi.org/v2/10.1155/2017/1694671";//Hindawi Publishing Corporation > à supprimer !
+  //$url = "https://api.oadoi.org/v2/10.1088/1361-6595/aa8dcc";//IOP Publishing
+  //$url = "https://api.oadoi.org/v2/10.3847/1538-4357/aa8e41";//American Astronomical Society via IOP Publishing
+  //$url = "https://api.oadoi.org/v2/10.1371/journal.pone.0187019";//Public Library of Science
+  //$url = "https://api.oadoi.org/v2/10.4137/CMO.S19236";//Sage Publications
+  //$url = "https://api.oadoi.org/v2/10.1089/3dp.2016.0052";//Mary Ann Liebert
+  //$url = "https://api.oadoi.org/v2/10.1002/advs.201770048";//Wiley Blackwell (John Wiley & Sons) > ??? > pas de chargement du PDF
+  //$url = "https://api.oadoi.org/v2/10.1111/j.1600-0390.2016.12170.x";//Wiley Blackwell (Blackwell Publishing) > ???
+  //$url = "https://api.oadoi.org/v2/10.1021/acs.accounts.7b00343";//American Chemical Society
+  //$url = "https://api.oadoi.org/v2/10.1021/acs.accounts.7b00343";//The Royal Society of Chemistry
+  //$url = "https://api.oadoi.org/v2/10.4000/sdt.828";//CLEO Revues.org > maintenance quand test > à retester
+  //$url = "https://api.oadoi.org/v2/10.1182/blood-2016-04-709774";$vol = 127;$iss = 23;$pag = 2779;//American Society of Hematology
+  //$url = "https://api.oadoi.org/v2/10.1136/bmj.j4619";$vol = 359;//BMJ Publishing Group
+  //$url = "https://api.oadoi.org/v2/10.3917/docsi.514.0070";//CAIRN > ???
+  //$url = "https://api.oadoi.org/v2/10.1108/IJCS-01-2017-0004";//Emerald (MCB UP)
+  //$url = "https://api.oadoi.org/v2/10.1038/310112a0";$vol = 310;$iss = 5973;//Nature Publishing Group > ???
+  //$url = "https://api.oadoi.org/v2/10.1073/pnas.1709082114";$vol = 114;$iss = 43;$pag = 11476;//Proceedings of the National Academy of Sciences (PNAS)
+  //$url = "https://api.oadoi.org/v2/10.1080/10106049.2016.1195885";//Informa UK (Taylor & Francis)
+  //$url = "https://api.oadoi.org/v2/10.1142/S0218625X16500414";//World Scientific
+  //$url = "https://api.oadoi.org/v2/10.1186/s12862-017-1062-4";//Springer (Biomed Central Ltd.)
+  //$url = "https://api.oadoi.org/v2/10.1103/PhysRevMaterials.1.043401";//American Physical Society> nécessité d'avoir l'acronyme de la revue dans l'URL > trop dur !
+  //$url = "https://api.oadoi.org/v2/10.1007/s11467-017-0728-0";//Springer-Verlag
+  //$url = "https://api.oadoi.org/v2/10.1159/000480289";//S. Karger AG > ok mais est-ce vraiment '000' à remplacer par '' ?
+  //$url = "https://api.oadoi.org/v2/10.1117/12.2223086";//SPIE - International Society for Optical Engineering >ok mais attention : proceedings; journalIssue, etc.
+  //$url = "https://api.oadoi.org/v2/10.1055/s-0043-116661";//Thieme Publishing Group
+
+  //$url = "https://api.oadoi.org/v2/10.1086/687964";
+  //$halID = "hal-01380570";
+  //echo $url.'<br>';
+
   //some variables
   $doi = str_replace("https://api.oadoi.org/v2/", "", $url);
   $entDOITab = explode("/", $doi);
@@ -53,7 +94,7 @@ function testOALic($url, $vol, $iss, $pag, $dat, $pdfCR, &$evd, &$titLic, &$typL
   $numSuf = preg_replace("/[^0-9]/", "", $finURL);//We keep only the number
   //echo $numSuf.'<br>';
 
-$url .= "?email=yourmailadress";
+	$url .= "?email=olivier.troccaz@univ-rennes1.fr";
 
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $url);
@@ -61,12 +102,13 @@ $url .= "?email=yourmailadress";
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, 'SCD (https://halur1.univ-rennes1.fr)');
   curl_setopt($ch, CURLOPT_USERAGENT, 'PROXY (http://siproxy.univ-rennes1.fr)');
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, TRUE);
+	curl_setopt($ch, CURLOPT_CAINFO, "cacert.pem");
   $json = curl_exec($ch);
   //echo $json;
   curl_close($ch);
   $parsed_json = json_decode($json);
-  var_dump($parsed_json);
+  //var_dump($parsed_json);
 
   if (isset($parsed_json->{'HTTP_status_code'}))//invalid DOI?
   {
@@ -103,7 +145,8 @@ $url .= "?email=yourmailadress";
           curl_setopt($doaj, CURLOPT_RETURNTRANSFER, 1);
           curl_setopt($doaj, CURLOPT_USERAGENT, 'SCD (https://halur1.univ-rennes1.fr)');
           curl_setopt($doaj, CURLOPT_USERAGENT, 'PROXY (http://siproxy.univ-rennes1.fr)');
-          curl_setopt($doaj, CURLOPT_SSL_VERIFYPEER, false);
+          curl_setopt($doaj, CURLOPT_SSL_VERIFYPEER, TRUE);
+					curl_setopt($doaj, CURLOPT_CAINFO, "cacert.pem");
           $doajJson = curl_exec($doaj);
           //echo $doajJson;
           curl_close($doaj);

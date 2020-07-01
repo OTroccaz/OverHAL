@@ -1526,7 +1526,8 @@ foreach ($souBib as $key => $subTab)
           curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
           curl_setopt($ch, CURLOPT_USERAGENT, 'SCD (https://halur1.univ-rennes1.fr)');
           curl_setopt($ch, CURLOPT_USERAGENT, 'PROXY (http://siproxy.univ-rennes1.fr)');
-          curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+          curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, TRUE);
+					curl_setopt($ch, CURLOPT_CAINFO, "cacert.pem");
           $resultat = curl_exec($ch);
           curl_close($ch);
           $dom = new DOMDocument();
@@ -1555,7 +1556,8 @@ foreach ($souBib as $key => $subTab)
           curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
           curl_setopt($ch, CURLOPT_USERAGENT, 'SCD (https://halur1.univ-rennes1.fr)');
           curl_setopt($ch, CURLOPT_USERAGENT, 'PROXY (http://siproxy.univ-rennes1.fr)');
-          curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+          curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, TRUE);
+					curl_setopt($ch, CURLOPT_CAINFO, "cacert.pem");
           $resultat = curl_exec($ch);
           curl_close($ch);
           $dom = new DOMDocument();
@@ -1596,7 +1598,8 @@ foreach ($souBib as $key => $subTab)
           curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
           curl_setopt($ch, CURLOPT_USERAGENT, 'SCD (https://halur1.univ-rennes1.fr)');
           curl_setopt($ch, CURLOPT_USERAGENT, 'PROXY (http://siproxy.univ-rennes1.fr)');
-          curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+          curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, TRUE);
+					curl_setopt($ch, CURLOPT_CAINFO, "cacert.pem");
           $resultat = curl_exec($ch);
           curl_close($ch);
           $dom = new DOMDocument();
@@ -1631,7 +1634,8 @@ foreach ($souBib as $key => $subTab)
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_USERAGENT, 'SCD (https://halur1.univ-rennes1.fr)');
         curl_setopt($ch, CURLOPT_USERAGENT, 'PROXY (http://siproxy.univ-rennes1.fr)');
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, TRUE);
+				curl_setopt($ch, CURLOPT_CAINFO, "cacert.pem");
         $resultat = curl_exec($ch);
         curl_close($ch);
         //echo $resultat;
@@ -1724,7 +1728,8 @@ foreach ($souBib as $key => $subTab)
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_USERAGENT, 'SCD (https://halur1.univ-rennes1.fr)');
             curl_setopt($ch, CURLOPT_USERAGENT, 'PROXY (http://siproxy.univ-rennes1.fr)');
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, TRUE);
+						curl_setopt($ch, CURLOPT_CAINFO, "cacert.pem");
             $temp = curl_exec($ch);
             curl_close($ch);
             if (strpos($temp, "DOAJ") !== false)//DOAJ

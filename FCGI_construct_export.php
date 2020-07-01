@@ -55,11 +55,12 @@ if ($fcgi == 1)
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 	curl_setopt($ch, CURLOPT_USERAGENT, 'SCD (https://halur1.univ-rennes1.fr)');
 	curl_setopt($ch, CURLOPT_USERAGENT, 'PROXY (http://siproxy.univ-rennes1.fr)');
-	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, TRUE);
+	curl_setopt($ch, CURLOPT_CAINFO, "cacert.pem");
 	$resultat = curl_exec($ch);
 	fwrite($fp, $resultat);
 	
-	echo ('<a href="./pmid.fcgi">Télécharger le fichier FCGI</a> (clic droit, enregistrer sous');
+	echo ('<a href="./pmid.fcgi">Télécharger le fichier FCGI</a> (clic droit, enregistrer sous)');
 	unlink("./fcgi.csv");
 }
 
