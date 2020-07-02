@@ -1528,7 +1528,7 @@ foreach ($souBib as $key => $subTab)
           curl_setopt($ch, CURLOPT_USERAGENT, 'PROXY (http://siproxy.univ-rennes1.fr)');
           if (isset ($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on")	{
 						curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, TRUE);
-						curl_setopt($ch, CURLOPT_CAINFO, $cstCA);
+						curl_setopt($ch, CURLOPT_CAINFO, "cacert.pem");
 					}
           $resultat = curl_exec($ch);
           curl_close($ch);
@@ -1560,7 +1560,7 @@ foreach ($souBib as $key => $subTab)
           curl_setopt($ch, CURLOPT_USERAGENT, 'PROXY (http://siproxy.univ-rennes1.fr)');
           if (isset ($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on")	{
 						curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, TRUE);
-						curl_setopt($ch, CURLOPT_CAINFO, $cstCA);
+						curl_setopt($ch, CURLOPT_CAINFO, "cacert.pem");
 					}
           $resultat = curl_exec($ch);
           curl_close($ch);
@@ -1604,7 +1604,7 @@ foreach ($souBib as $key => $subTab)
           curl_setopt($ch, CURLOPT_USERAGENT, 'PROXY (http://siproxy.univ-rennes1.fr)');
           if (isset ($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on")	{
 						curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, TRUE);
-						curl_setopt($ch, CURLOPT_CAINFO, $cstCA);
+						curl_setopt($ch, CURLOPT_CAINFO, "cacert.pem");
 					}
           $resultat = curl_exec($ch);
           curl_close($ch);
@@ -1642,7 +1642,7 @@ foreach ($souBib as $key => $subTab)
         curl_setopt($ch, CURLOPT_USERAGENT, 'PROXY (http://siproxy.univ-rennes1.fr)');
         if (isset ($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on")	{
 					curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, TRUE);
-					curl_setopt($ch, CURLOPT_CAINFO, $cstCA);
+					curl_setopt($ch, CURLOPT_CAINFO, "cacert.pem");
 				}
         $resultat = curl_exec($ch);
         curl_close($ch);
@@ -1738,7 +1738,7 @@ foreach ($souBib as $key => $subTab)
             curl_setopt($ch, CURLOPT_USERAGENT, 'PROXY (http://siproxy.univ-rennes1.fr)');
             if (isset ($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on")	{
 							curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, TRUE);
-							curl_setopt($ch, CURLOPT_CAINFO, $cstCA);
+							curl_setopt($ch, CURLOPT_CAINFO, "cacert.pem");
 						}
             $temp = curl_exec($ch);
             curl_close($ch);
