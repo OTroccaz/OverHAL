@@ -227,7 +227,7 @@ if (isset($_GET['css']) && ($_GET['css'] != ""))
 {
   $css = $_GET['css'];
 }else{
-  $css = "./HAL_SCD.css";
+  $css = "https://ecobio.univ-rennes1.fr/HAL_SCD.css";
 }
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
@@ -1244,9 +1244,12 @@ foreach ($souBib as $key => $subTab)
           curl_setopt($ch, CURLOPT_URL, $urlinit);
           curl_setopt($ch, CURLOPT_HEADER, 0);
           curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-          curl_setopt($ch, CURLOPT_USERAGENT, 'SCD (https://url-de-votre-serveur.fr)');
-          curl_setopt($ch, CURLOPT_USERAGENT, 'PROXY (http://url-de-votre-serveur-proxy.fr)');
-          curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+          curl_setopt($ch, CURLOPT_USERAGENT, 'SCD (https://halur1.univ-rennes1.fr)');
+          curl_setopt($ch, CURLOPT_USERAGENT, 'PROXY (http://siproxy.univ-rennes1.fr)');
+          if (isset ($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on")	{
+						curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, TRUE);
+						curl_setopt($ch, CURLOPT_CAINFO, $cstCA);
+					}
           $resultat = curl_exec($ch);
           curl_close($ch);
           $dom = new DOMDocument();
@@ -1273,9 +1276,12 @@ foreach ($souBib as $key => $subTab)
           curl_setopt($ch, CURLOPT_URL, $urlinit);
           curl_setopt($ch, CURLOPT_HEADER, 0);
           curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-          curl_setopt($ch, CURLOPT_USERAGENT, 'SCD (https://url-de-votre-serveur.fr)');
-          curl_setopt($ch, CURLOPT_USERAGENT, 'PROXY (http://url-de-votre-serveur-proxy.fr)');
-          curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+          curl_setopt($ch, CURLOPT_USERAGENT, 'SCD (https://halur1.univ-rennes1.fr)');
+          curl_setopt($ch, CURLOPT_USERAGENT, 'PROXY (http://siproxy.univ-rennes1.fr)');
+          if (isset ($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on")	{
+						curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, TRUE);
+						curl_setopt($ch, CURLOPT_CAINFO, $cstCA);
+					}
           $resultat = curl_exec($ch);
           curl_close($ch);
           $dom = new DOMDocument();
@@ -1314,9 +1320,12 @@ foreach ($souBib as $key => $subTab)
           curl_setopt($ch, CURLOPT_URL, $urlinit);
           curl_setopt($ch, CURLOPT_HEADER, 0);
           curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-          curl_setopt($ch, CURLOPT_USERAGENT, 'SCD (https://url-de-votre-serveur.fr)');
-          curl_setopt($ch, CURLOPT_USERAGENT, 'PROXY (http://url-de-votre-serveur-proxy.fr)');
-          curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+          curl_setopt($ch, CURLOPT_USERAGENT, 'SCD (https://halur1.univ-rennes1.fr)');
+          curl_setopt($ch, CURLOPT_USERAGENT, 'PROXY (http://siproxy.univ-rennes1.fr)');
+          if (isset ($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on")	{
+						curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, TRUE);
+						curl_setopt($ch, CURLOPT_CAINFO, $cstCA);
+					}
           $resultat = curl_exec($ch);
           curl_close($ch);
           $dom = new DOMDocument();
@@ -1342,9 +1351,12 @@ foreach ($souBib as $key => $subTab)
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_USERAGENT, 'SCD (https://url-de-votre-serveur.fr)');
-        curl_setopt($ch, CURLOPT_USERAGENT, 'PROXY (http://url-de-votre-serveur-proxy.fr)');
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_USERAGENT, 'SCD (https://halur1.univ-rennes1.fr)');
+        curl_setopt($ch, CURLOPT_USERAGENT, 'PROXY (http://siproxy.univ-rennes1.fr)');
+        if (isset ($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on")	{
+					curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, TRUE);
+					curl_setopt($ch, CURLOPT_CAINFO, $cstCA);
+				}
         $resultat = curl_exec($ch);
         curl_close($ch);
         //echo $resultat;
@@ -1435,9 +1447,12 @@ foreach ($souBib as $key => $subTab)
             curl_setopt($ch, CURLOPT_URL, $urlisn);
             curl_setopt($ch, CURLOPT_HEADER, 0);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_USERAGENT, 'SCD (https://url-de-votre-serveur.fr)');
-            curl_setopt($ch, CURLOPT_USERAGENT, 'PROXY (http://url-de-votre-serveur-proxy.fr)');
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_USERAGENT, 'SCD (https://halur1.univ-rennes1.fr)');
+            curl_setopt($ch, CURLOPT_USERAGENT, 'PROXY (http://siproxy.univ-rennes1.fr)');
+						if (isset ($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on")	{
+							curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, TRUE);
+							curl_setopt($ch, CURLOPT_CAINFO, $cstCA);
+						}
             $temp = curl_exec($ch);
             curl_close($ch);
             if (strpos($temp, "DOAJ") !== false)//DOAJ
