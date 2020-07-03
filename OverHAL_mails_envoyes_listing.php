@@ -145,16 +145,17 @@ if (in_array($ip, $IP_aut)) {
 ?>
     <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
             "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<html lang="fr">
 <head>
   <title>OverHAL : listing des mails envoyés</title>
   <meta name="Description" content="OverHAL : listing des mails envoyés">
   <meta name="robots" content="noindex">
   <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+	<link rel="stylesheet" href="./OverHAL.css">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <link rel="icon" type="type/ico" href="HAL_favicon.ico" />
 </head>
-<body style="font-family:corbel;font-size:12px;">
+<body style="font-family:corbel, sans-serif;font-size:12px;">
 <h1>OverHAL : listing des mails envoyés</h1>
 <?php
 include("./IP_list.php");

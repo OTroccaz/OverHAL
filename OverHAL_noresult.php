@@ -7,8 +7,7 @@ if (isset($_GET['css']) && ($_GET['css'] != ""))
 }
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
-
+<html lang="fr">
 <head>
   <title>CouvHAL : Comparaison HAL vs Scopus</title>
   <meta name="Description" content="CouvertureHAL : Comparaison HAL vs Scopus">
@@ -19,5 +18,5 @@ if (isset($_GET['css']) && ($_GET['css'] != ""))
 </head>
 
 <body>
-<b>Aucune revue trouvée dans Sherpa-Romeo pour ce titre</b>
+<strong>Aucune revue trouvée dans Sherpa-Romeo pour ce titre</strong>
 </body></html>

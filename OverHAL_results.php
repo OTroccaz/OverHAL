@@ -395,8 +395,8 @@ if ($limzot == "non")
 ?>
 <a name='Résultats'></a><h1>Résultats</h1>
 
-<b>Le script ci-dessous ne se fonde que sur la détection d'un titre identique (après suppression des caractères spéciaux et passage en minuscules)
-ou d'un même DOI pour identifier une référence d'une source bibliographique (Scopus, Pubmed, etc.) avec un dépôt HAL.</b><br/><br/>
+<strong>Le script ci-dessous ne se fonde que sur la détection d'un titre identique (après suppression des caractères spéciaux et passage en minuscules)
+ou d'un même DOI pour identifier une référence d'une source bibliographique (Scopus, Pubmed, etc.) avec un dépôt HAL.</strong><br/><br/>
 <a href='#Chargement de la requête HAL'>Chargement de la requête HAL</a><br />
 <?php
 foreach ($souBib as $key => $subTab)
@@ -810,7 +810,7 @@ function supprAmp($st) {
   $st = str_replace('&', 'and', $st);
   $st = str_replace(array('<bold>', '</bold>'), '', $st);
   $st = str_replace(array('<u>', '</u>'), '', $st);
-  $st = str_replace(array('<i>', '</i>'), '', $st);
+  $st = str_replace(array('<em>', '</em>'), '', $st);
   $st = str_replace(array('<a>', '</a>'), '', $st);
   $st = str_replace(':', '', $st);
   $st = htmlspecialchars($st, ENT_QUOTES, "UTF-8");
@@ -838,7 +838,7 @@ if(isset($_POST['hal']))
 	 $teamInit = $team;
    if ($limzot == "non")
    {
-     echo "<a name='Chargement de la requête HAL'></a><h2>Chargement de la requête HAL - <a href='#Résultats'><i>Retour aux résultats</i></a></h2>";
+     echo "<a name='Chargement de la requête HAL'></a><h2>Chargement de la requête HAL - <a href='#Résultats'><em>Retour aux résultats</em></a></h2>";
      echo "<div style='width: 900px; word-wrap: break-word;'>Requête : ".$hal."</div>";
    }
    $contents = file_get_contents($hal);
@@ -1071,7 +1071,7 @@ foreach ($souBib as $key => $subTab)
     $result[$key] = array();
     if ($limzot == "non")
     {
-      echo "<a name='Chargement du fichier ".$nomSouBib."'></a><h2>Chargement du fichier ".$nomSouBib." - <a href='#Résultats'><i>Retour aux résultats</i></a></h2>";
+      echo "<a name='Chargement du fichier ".$nomSouBib."'></a><h2>Chargement du fichier ".$nomSouBib." - <a href='#Résultats'><em>Retour aux résultats</em></a></h2>";
     }
     ini_set('auto_detect_line_endings',TRUE);
 
@@ -1271,7 +1271,7 @@ foreach ($souBib as $key => $subTab)
         $foundInHAL=FALSE;
         //var_dump($result);
 
-        //echo "<li><span style=\"background-color:#FFEEEE\">"" (".$data[2].") ".$data[1]." - <i>".$data[3]."</i></span>";
+        //echo "<li><span style=\"background-color:#FFEEEE\">"" (".$data[2].") ".$data[1]." - <em>".$data[3]."</em></span>";
 
         // Trying to match with DOI
         if($doi != "" and array_key_exists($doi,$halTitles))
@@ -1364,8 +1364,8 @@ foreach ($souBib as $key => $subTab)
     ini_set('auto_detect_line_endings',FALSE);
 		$limTEI = 30;
     ?>
-    <a name='Références de <?php echo $nomSouBib;?> non trouvées dans HAL'></a><h2>Références de <?php echo $nomSouBib;?> non trouvées dans HAL - <a href='#Résultats'><i>Retour aux résultats</i></a></h2>
-    <p><b>Attention, il est possible que la référence soit présente dans HAL mais qu'elle n'ait pas été trouvée en raison d'une légère différence dans le titre.</b>
+    <a name='Références de <?php echo $nomSouBib;?> non trouvées dans HAL'></a><h2>Références de <?php echo $nomSouBib;?> non trouvées dans HAL - <a href='#Résultats'><em>Retour aux résultats</em></a></h2>
+    <p><strong>Attention, il est possible que la référence soit présente dans HAL mais qu'elle n'ait pas été trouvée en raison d'une légère différence dans le titre.</strong>
 		<br>
 		Par ailleurs, les notices avec plus de <?php echo $limTEI;?> auteurs ne seront pas prises en compte dans l'export TEI et apparaîtront <s>barrées</s>.</p>
     <?php
@@ -1374,7 +1374,7 @@ foreach ($souBib as $key => $subTab)
     {
       echo "<table border='1px' cellpadding='5px' cellspacing='5px' style='border-collapse: collapse' bordercolor='#eeeeee'>";
       echo "<tr>";
-      echo "<td colspan='9'><b>Informations diverses collectées grâce à l'API SHERPA/RoMEO</b></td>";
+      echo "<td colspan='9'><strong>Informations diverses collectées grâce à l'API SHERPA/RoMEO</strong></td>";
       echo "</tr>";
       echo "<tr>";
       echo "<td align='center'><img alt='Emargo 6 mois' src='./img/embargo-6.jpg'></td>";
@@ -1775,9 +1775,9 @@ foreach ($souBib as $key => $subTab)
         echo "<td align='center' valign='top'>";
         if ($resisn != "")
         {
-          echo "<a target=\"_blank\" href='".$urlisn."' onmouseover='return overlib(\"".$rescdt."\",STICKY,CAPTION, \"&nbsp;<i>".$revuePaper."</i> conditions\",WIDTH, 320,HEIGHT, 130,RELX, 150,BORDER, 2,FGCOLOR,\"#FFFFFF\",BGCOLOR,\"#009933\",TEXTCOLOR,\"#000000\",CAPCOLOR,\"#000000\",CLOSECOLOR,\"#FFFFFF\");' onmouseout='return nd();'>".$respar."</a></td>";
+          echo "<a target=\"_blank\" href='".$urlisn."' onmouseover='return overlib(\"".$rescdt."\",STICKY,CAPTION, \"&nbsp;<em>".$revuePaper."</em> conditions\",WIDTH, 320,HEIGHT, 130,RELX, 150,BORDER, 2,FGCOLOR,\"#FFFFFF\",BGCOLOR,\"#009933\",TEXTCOLOR,\"#000000\",CAPCOLOR,\"#000000\",CLOSECOLOR,\"#FFFFFF\");' onmouseout='return nd();'>".$respar."</a></td>";
         }else{
-          echo "<a onmouseover='return overlib(\"".$rescdt."\",STICKY,CAPTION, \"&nbsp;<i>".$revuePaper."</i> conditions\",WIDTH, 320,HEIGHT, 130,RELX, 150,BORDER, 2,FGCOLOR,\"#FFFFFF\",BGCOLOR,\"#009933\",TEXTCOLOR,\"#000000\",CAPCOLOR,\"#000000\",CLOSECOLOR,\"#FFFFFF\");' onmouseout='return nd();'>".$respar."</a></td>";
+          echo "<a onmouseover='return overlib(\"".$rescdt."\",STICKY,CAPTION, \"&nbsp;<em>".$revuePaper."</em> conditions\",WIDTH, 320,HEIGHT, 130,RELX, 150,BORDER, 2,FGCOLOR,\"#FFFFFF\",BGCOLOR,\"#009933\",TEXTCOLOR,\"#000000\",CAPCOLOR,\"#000000\",CLOSECOLOR,\"#FFFFFF\");' onmouseout='return nd();'>".$respar."</a></td>";
         }
         echo "<td align='center' valign='top'>".$respdf."</td>";
         echo "<td align='center' valign='top'>".$resdiv."</td>";
@@ -1803,11 +1803,11 @@ foreach ($souBib as $key => $subTab)
         {
           $affaut .= $nbaut[$i].";";
         }
-        $affaut .= " <i> et al.</i>";
+        $affaut .= " <em> et al.</em>";
       }else{
         $affaut = $data[$colAuthors];
       }
-      echo "<td align='justify' valign='top'>".$deb.$affaut." (".$yearPaper.") <a target=\"_blank\" href=\"https://scholar.google.fr/scholar?hl=fr&q=".netCode($st=strtr($data[$colTitle],'"<>','   '))."\">".$data[$colTitle]."</a> - <i>".$revuePaper."</i>".$refdoiaff.$fin."</td>";
+      echo "<td align='justify' valign='top'>".$deb.$affaut." (".$yearPaper.") <a target=\"_blank\" href=\"https://scholar.google.fr/scholar?hl=fr&q=".netCode($st=strtr($data[$colTitle],'"<>','   '))."\">".$data[$colTitle]."</a> - <em>".$revuePaper."</em>".$refdoiaff.$fin."</td>";
       echo "<td align='center' valign='top'>".$resdoi."</td>";
       //source column
       $linkSource = "";
@@ -2022,8 +2022,8 @@ foreach ($souBib as $key => $subTab)
             $linkMailP = "<div id=\"".$titreNorm."P\"><a href=\"#".$titreNorm."\" onClick=\"majMailsP('".$adr."','".$titreNorm."','".$refdoi."','P','','".strtoupper($lang)."','".$callNumber."'); mailto('".$adr."','".$subjectP."','".$bodyP."');\"><img alt='".$adr."' title='".$adr."' src=\"".$imgMailP."\"></a></div>";
           }
         }else{
-          $linkMailM = "<b>OK</b>";
-          $linkMailP = "<b>OK</b>";
+          $linkMailM = "<strong>OK</strong>";
+          $linkMailP = "<strong>OK</strong>";
         }
         if ($mailValide == "non")
         {
@@ -5472,7 +5472,7 @@ foreach ($souBib as $key => $subTab)
     if ($limzot == "non")
     {
       ?>
-      <a name='Auteurs des références de <?php echo $nomSouBib;?> non trouvées dans HAL'></a><h2>Auteurs des références de <?php echo $nomSouBib;?> non trouvées dans HAL - <a href='#Résultats'><i>Retour aux résultats</i></a></h2>
+      <a name='Auteurs des références de <?php echo $nomSouBib;?> non trouvées dans HAL'></a><h2>Auteurs des références de <?php echo $nomSouBib;?> non trouvées dans HAL - <a href='#Résultats'><em>Retour aux résultats</em></a></h2>
 
       <p>Vous pouvez utiliser le logiciel <a href="http://www.treecloud.org">TreeCloud</a> pour afficher une figure
       résumant les auteurs les plus présents dans cette liste d'articles manquants sur HAL, et les sensibiliser
@@ -5554,7 +5554,7 @@ if (file_exists("./HAL/OverHAL_dimensions.zip"))
 echo "<br/>";
   ?>
 
-  <a name='Bilan quantitatif'></a><h2>Bilan quantitatif - <a href='#Résultats'><i>Retour aux résultats</i></a></h2>
+  <a name='Bilan quantitatif'></a><h2>Bilan quantitatif - <a href='#Résultats'><em>Retour aux résultats</em></a></h2>
 
   <table border=1>
   <?php

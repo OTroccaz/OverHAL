@@ -15,6 +15,7 @@ if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
   $ip = $_SERVER['REMOTE_ADDR'];
 }
 ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang="fr">
 <head>
   <title>OverHAL : Comparaison HAL vs sources bibliographiques</title>
@@ -23,39 +24,17 @@ if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
   <link href="bootstrap.min.css" rel="stylesheet">
   <script type="text/javascript" language="Javascript" src="OverHAL.js"></script>
   <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+	<link rel="stylesheet" href="./OverHAL.css">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <STYLE type="text/css">
-  a.info{
-      position:relative;
-      z-index:24; background-color:#ccc;
-      color:#000;
-      text-decoration:none}
-
-  a.info:hover{z-index:25; background-color:#ff0}
-
-  a.info span{display: none}
-
-  a.info:hover span{
-  /*le contenu de la balise span ne sera visible que pour l'état a:hover */
-  display:block;
-  position:absolute;
-  top:2em; left:2em; width:15em;
-  border:1px solid #6699cc;
-  background-color:#eeeeee; color:#6699cc;
-  text-align: justify;
-  font-weight: normal;
-  padding:1px;
-  }
-  </STYLE>
 </head>
-<body style="font-family: Corbel;">
+<body style="font-family:Corbel,sans-serif;">
 
 <noscript>
-<div align='center' id='noscript'><font color='red'><b>ATTENTION !!! JavaScript est désactivé ou non pris en charge par votre navigateur : cette procédure ne fonctionnera pas correctement.</b></font><br>
-<b>Pour modifier cette option, voir <a target='_blank' rel='noopener noreferrer' href='http://www.libellules.ch/browser_javascript_activ.php'>ce lien</a>.</b></div><br>
+<div class='center, red' id='noscript'><strong>ATTENTION !!! JavaScript est désactivé ou non pris en charge par votre navigateur : cette procédure ne fonctionnera pas correctement.</strong><br>
+<strong>Pour modifier cette option, voir <a target='_blank' rel='noopener noreferrer' href='http://www.libellules.ch/browser_javascript_activ.php'>ce lien</a>.</strong></div><br>
 </noscript>
 
-<table width="100%">
+<table class="table100" aria-describedby="Entêtes">
 <tr>
 <th scope="col" style="text-align: left;"><img alt="OverHAL" title="OverHAL" width="250px" src="./img/logo_OverHAL2.jpg"><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Convertissez vos imports éditeurs en TEI</th>
 <th scope="col" style="text-align: right;"><img alt="Université de Rennes 1" title="Université de Rennes 1" width="150px" src="./img/logo_UR1_gris_petit.jpg"></th>
@@ -95,7 +74,7 @@ if (isset($_GET["erreur"]))
 }
 
 ?>
-<div style="background-color:#FFFFFF;width:900px;padding:10px;font-family:calibri,verdana">
+<div style="background-color:#FFFFFF;width:900px;padding:10px;font-family:calibri,verdana,sans-serif">
 OverHAL permet de comparer HAL et des listes de publications (Scopus, WoS, SciFinder, Zotero, etc), à partir d'un script PHP créé par <a target="_blank" rel="noopener noreferrer" href="http://igm.univ-mlv.fr/~gambette/ExtractionHAL/CouvertureHAL/">Philippe Gambette</a>, repris et modifié par <a target="_blank" rel="noopener noreferrer" href="https://ecobio.univ-rennes1.fr/personnel.php?qui=Olivier_Troccaz">Olivier Troccaz</a> (ECOBIO - OSUR) pour l'Université de Rennes 1.
 <br>Pour tout renseignement, n'hésitez pas à contacter <a target="_blank" rel="noopener noreferrer" href="https://openaccess.univ-rennes1.fr/interlocuteurs/laurent-jonchere">Laurent Jonchère</a> ou <a target="_blank" rel="noopener noreferrer" href="https://ecobio.univ-rennes1.fr/personnel.php?qui=Olivier_Troccaz">Olivier Troccaz</a>.
 <br>Si vous souhaitez utiliser le script PHP pour une autre institution, consultez <a target="_blank" rel="noopener noreferrer" href="https://wiki.ccsd.cnrs.fr/wikis/hal/index.php/Outils_et_services_d%C3%A9velopp%C3%A9s_localement_pour_am%C3%A9liorer_ou_faciliter_l%27utilisation_de_HAL#Autres_outils">le wiki du CCSD</a> (OverHAL).</p>
@@ -107,7 +86,7 @@ OverHAL permet de comparer HAL et des listes de publications (Scopus, WoS, SciFi
 <h2>Paramétrage</h2>
 <a target="_blank" href="./FCGI_construct_import.php">Construire un fichier FCGI à partir d'une liste de PMID</a>, puis l'envoyer à OverHAL avec le formulaire ci-dessous.<br/>
 <br/>
-<b>1. Charger le fichier</b><br/>
+<strong>1. Charger le fichier</strong><br/>
 <br/>
 <form enctype="multipart/form-data" action="OverHAL_results.php" method="post" accept-charset="UTF-8">
 <p class="form-inline">
@@ -127,11 +106,11 @@ if (in_array($ip, $IP_aut)) {
 }
 ?>
 <br/>
-<i>Expérimental (enregistrer des alertes mail en html) :</i><br/>
+<em>Expérimental (enregistrer des alertes mail en html) :</em><br/>
 <label for="wos_html">Web of Science (HTML)</label> : <input class="form-control" id="wos_html" style="height: 25px; font-size: 90%; padding: 0px;" name="wos_html" type="file" /><br/>
 <label for="pubmed_html">Pubmed (HTML)</label> : <input class="form-control" id="pubmed_html" style="height: 25px; font-size: 90%; padding: 0px;" name="pubmed_html" type="file" /><br/>
 <br/>
-<b>2. Construire la requête HAL</b><br/>
+<strong>2. Construire la requête HAL</strong><br/>
 <br/>
 <label for="reqHAL">Requête libre</label> (<a target="_blank" rel="noopener noreferrer" href="https://api.archives-ouvertes.fr/docs/search">consultez l'API de HAL</a>)<br/>
 <?php
@@ -140,9 +119,9 @@ $reqHAL = "https://api.archives-ouvertes.fr/search/?q=collCode_s:\"IRSET\"&fq=(p
 <input type='text' class="form-control" style="height: 25px; width: 800px;" id='reqHAL' name='hal' value='<?php echo $reqHAL;?>'><br/><br/>
 <label for="limzot">Limiter l'affichage des résultats aux seules références non trouvées dans HAL :</label> <input class="form-control" style="height: 15px;" type="checkbox" checked id="limzot" name="limzot" value="ok"><br/>
 <br/>
-<b>ou :</b><br/>
+<strong>ou :</strong><br/>
 <p class="form-inline"><label for="team">Code collection HAL</label> <a class=info onclick='return false' href="#">(qu’est-ce que c’est ?)<span>Code visible dans l’URL d’une collection.
-Exemple : IPR-MOL est le code de la collection http://hal.archives-ouvertes.fr/<b>IPR-PMOL</b> de l’équipe Physique moléculaire
+Exemple : IPR-MOL est le code de la collection http://hal.archives-ouvertes.fr/<strong>IPR-PMOL</strong> de l’équipe Physique moléculaire
 de l’unité IPR UMR CNRS 6251</span></a> :
 <input type="text" class="form-control" style="height: 25px; width: 300px;" id="team" name="team" value="IRSET" onchange="majReqHAL();"><br/>
 <br/>
@@ -151,7 +130,7 @@ de l’unité IPR UMR CNRS 6251</span></a> :
 &nbsp;<label for="year2">à</label>&nbsp;
 <input type="text" class="form-control" style="height: 25px; width: 100px;" id="year2" name="year2" value="<?php echo date('Y', time());?>" size="10" onchange="majReqHAL();"><br/>
 <br/>
-<input type="checkbox" class="form-control" id="aparai" style="height: 15px;" name="aparai" value="ok" onchange="majReqHAL();"> <label for="aparai">inclure les articles <i>"A paraître"</i></label><br/>
+<input type="checkbox" class="form-control" id="aparai" style="height: 15px;" name="aparai" value="ok" onchange="majReqHAL();"> <label for="aparai">inclure les articles <em>"A paraître"</em></label><br/>
 <input type="checkbox" class="form-control" id="txtint" style="height: 15px;" name="txtint" value="ok" onchange="majReqHAL();"> <label for="txtint">requête uniquement sur le texte intégral (dépôt HAL ou lien arxiv ou lien Pubmed Central)</label><br/>
 <input type="checkbox" class="form-control" id="desactSR" style="height: 15px;" checked name="desactSR" value="oui"> <label for="desactSR">désactiver les recherches Sherpa/RoMEO</label><br/>
 <?php
