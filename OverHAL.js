@@ -17,11 +17,10 @@ function majReqHAL() {
     txtint = "%20AND%20(submitType_s:file%20OR%20arxivId_s:?*%20OR%20pubmedcentralId_s:?*)";
     txtintplus = ",arxivId_s,pubmedcentralId_s";
   }
-  var aparai = "";
   if(document.getElementById("aparai").checked == true){
-    aparai = "";
+    var aparai = "";
   }else{
-    aparai = "%20AND%20NOT%20inPress_bool:%22true%22";
+    var aparai = "%20AND%20NOT%20inPress_bool:%22true%22";
   }
   var hal = "https://api.archives-ouvertes.fr/search/?q=collCode_s:";
   hal += '\"'+team+'\"';
