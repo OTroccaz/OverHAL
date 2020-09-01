@@ -3306,7 +3306,7 @@ foreach ($souBib as $key => $subTab)
                     $typeDocp = "Conference papers";
                   }
                   //review, book chapter
-                  if ($papers[$key][$key2]['DT'] == "Book" || $papers[$key][$key2]['DT'] == "Review; Book Chapter" || $papers[$key][$key2]['DT'] == "Editorial Material; Book Chapter") {
+                  if ($papers[$key][$key2]['DT'] == "Book" || $papers[$key][$key2]['DT'] == "Review; Book Chapter" || $papers[$key][$key2]['DT'] == "Editorial Material; Book Chapter" || $papers[$key][$key2]['DT'] == "Article; Book Chapter") {
                     $chaine .= '                <idno type="isbn">'.supprAmp($papers[$key][$key2]['BN']).'</idno>'."\r\n";
                     $chaine .= '                <title level="m">'.supprAmp($papers[$key][$key2]['SE']).'</title>'."\r\n";
                     $chaine .= '                <editor>'.supprAmp($papers[$key][$key2]['BE']).'</editor>'."\r\n";
@@ -3329,8 +3329,13 @@ foreach ($souBib as $key => $subTab)
 											}
 										}
                     $chaine .= '                </imprint>'."\r\n";
-                    $typeDoc = "BOOK";
-                    $typeDocp = "Book";//???
+										if ($papers[$key][$key2]['PT'] == "S") {
+											$typeDoc = "INBOOK";
+											$typeDocp = "Inbook";//???
+										}else{
+											$typeDoc = "BOOK";
+											$typeDocp = "Book";//???
+										}
                   }
                   break;
                 case "P"://patent > il n'y en a pas dans WoS
