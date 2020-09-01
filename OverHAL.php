@@ -90,8 +90,8 @@ OverHAL permet de comparer HAL et des listes de publications (Scopus, WoS, SciFi
 <br/>
 <form enctype="multipart/form-data" action="OverHAL_results.php" method="post" accept-charset="UTF-8">
 <p class="form-inline">
-<input type="hidden" name="MAX_FILE_SIZE" value="500000" />
-Envoyez les fichiers résultat (500 Ko maximum, voir ci-dessus le "mode d'emploi") :<br/>
+<input type="hidden" name="MAX_FILE_SIZE" value="600000" />
+Envoyez les fichiers résultat (600 Ko maximum, voir ci-dessus le "mode d'emploi") :<br/>
 <label for="wos_csv">Web of Science (CSV)</label> : <input class="form-control" id="wos_csv" style="height: 25px; font-size: 90%; padding: 0px;" name="wos_csv" type="file" /><br/>
 <label for="scopus">Scopus (CSV)</label> : <input class="form-control" id="scopus" style="height: 25px; font-size: 90%; padding: 0px;" name="scopus" type="file" /><br/>
 <label for="zotero">Zotero (CSV)</label> : <input class="form-control" id="zotero" style="height: 25px; font-size: 90%; padding: 0px;" name="zotero" type="file" /><br/>
