@@ -1362,7 +1362,7 @@ foreach ($souBib as $key => $subTab)
       echo "</table>";
     }
     ini_set('auto_detect_line_endings',FALSE);
-		$limTEI = 30;
+		$limTEI = 50;
     ?>
     <a name='Références de <?php echo $nomSouBib;?> non trouvées dans HAL'></a><h2>Références de <?php echo $nomSouBib;?> non trouvées dans HAL - <a href='#Résultats'><em>Retour aux résultats</em></a></h2>
     <p><strong>Attention, il est possible que la référence soit présente dans HAL mais qu'elle n'ait pas été trouvée en raison d'une légère différence dans le titre.</strong>
