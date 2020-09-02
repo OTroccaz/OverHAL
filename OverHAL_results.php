@@ -3334,8 +3334,8 @@ foreach ($souBib as $key => $subTab)
 										}
                     $chaine .= '                </imprint>'."\r\n";
 										if ($papers[$key][$key2]['PT'] == "S") {
-											$typeDoc = "INBOOK";
-											$typeDocp = "Inbook";//???
+											$typeDoc = "COUV";
+											$typeDocp = "Book sections";//???
 										}else{
 											$typeDoc = "BOOK";
 											$typeDocp = "Book";//???
