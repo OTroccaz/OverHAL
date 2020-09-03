@@ -3308,7 +3308,7 @@ foreach ($souBib as $key => $subTab)
                   //review, book chapter
                   if ($papers[$key][$key2]['DT'] == "Book" || $papers[$key][$key2]['DT'] == "Review; Book Chapter" || $papers[$key][$key2]['DT'] == "Editorial Material; Book Chapter" || $papers[$key][$key2]['DT'] == "Article; Book Chapter") {
                     $chaine .= '                <idno type="isbn">'.supprAmp($papers[$key][$key2]['BN']).'</idno>'."\r\n";
-										if ($papers[$key][$key2]['PT'] == "S") {
+										if ($papers[$key][$key2]['PT'] == "S" || $papers[$key][$key2]['PT'] == "B") {
 											$chaine .= '                <title level="m">'.supprAmp($papers[$key][$key2]['SO']).'</title>'."\r\n";
 										}else{
 											$chaine .= '                <title level="m">'.supprAmp($papers[$key][$key2]['SE']).'</title>'."\r\n";
@@ -3333,7 +3333,7 @@ foreach ($souBib as $key => $subTab)
 											}
 										}
                     $chaine .= '                </imprint>'."\r\n";
-										if ($papers[$key][$key2]['PT'] == "S") {
+										if ($papers[$key][$key2]['PT'] == "S" || $papers[$key][$key2]['PT'] == "B") {
 											$typeDoc = "COUV";
 											$typeDocp = "Book sections";//???
 										}else{
