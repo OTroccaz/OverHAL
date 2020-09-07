@@ -812,7 +812,7 @@ function supprAmp($st) {
   $st = str_replace(array('<u>', '</u>'), '', $st);
   $st = str_replace(array('<em>', '</em>'), '', $st);
   $st = str_replace(array('<a>', '</a>'), '', $st);
-  $st = str_replace(':', '', $st);
+  //$st = str_replace(':', '', $st);
   $st = htmlspecialchars($st, ENT_QUOTES, "UTF-8");
   return $st;
 }
