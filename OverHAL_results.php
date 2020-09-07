@@ -4,6 +4,7 @@ mb_internal_encoding("UTF-8");
 
 include "./OverHAL_oaDOI.php";
 include './OverHAL_codes_pays.php';
+include './OverHAL_codes_langues.php';
 
 $root = 'http';
 	if ( isset ($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on")	{
@@ -4474,7 +4475,7 @@ foreach ($souBib as $key => $subTab)
             $codeP = strtoupper(substr(supprAmp($papers[$key][$key2]['Langue']), 0, 2));
             if ($codeP != "EN")
             {
-              $keyP = ucfirst($countries[$codeP]);
+							$keyP = array_search(strtolower($codeP), $languages);
             }else{
               $keyP = "English";
             }
@@ -4858,7 +4859,7 @@ foreach ($souBib as $key => $subTab)
             $codeP = strtoupper(substr(supprAmp($papers[$key][$key2]['langue']), 0, 2));
             if ($codeP != "EN")
             {
-              $keyP = ucfirst($countries[$codeP]);
+							array_search(strtolower($codeP), $languages);
             }else{
               $keyP = "English";
             }
