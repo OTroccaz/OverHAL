@@ -3671,40 +3671,42 @@ foreach ($souBib as $key => $subTab)
               $quiTab = explode(" ", trim($qui));
               if (!isset($quiTab[1])) {$prenom = "";}//in case of no comma for one author
               //var_dump($quiTab);
-              $chaine .= '                <author role="aut">'."\r\n";
-              $chaine .= '                  <persName>'."\r\n";
-              foreach($quiTab as $elt) {
-                if (strpos($elt, ".") === false)//no point > part of the name
-                {
-                  $nom .= " ".supprAmp(trim($elt));
-                }else{
-                  $prenom .= supprAmp(trim($elt));
-                }
-              }
-              $nom = trim($nom);
-              $nompre = $nom .", ".$prenom;
-              //echo $nompre.'<br>';
-              $chaine .= '                    <forename type="first">'.$prenom.'</forename>'."\r\n";
-              $chaine .= '                    <surname>'.$nom.'</surname>'."\r\n";
-              $chaine .= '                  </persName>'."\r\n";
-              $kT = array_search($nompre, $autTab);
-              //echo $kT." - ".$nom." - ".$labTab[$nompre][$kT]."<br>";
-              if ($kT !== FALSE) {
-                foreach ($labTab[$nompre] as $lab) {
-                  //$str = array_search($labTab[$nompre][$kT], $strTab);
-                  $str = array_search($lab, $strTab);
-                  if ($str === FALSE) {
-                    $iTp += 1;
-                    $kTp = $iTp;
-                    array_push($strTab, $lab);
-                  }else{
-                    $kTp = $str + 1;
-                  }
-                  $chaine .= '                  <affiliation ref="#localStruct-Aff'.$kTp.'"/>'."\r\n";
-                  //echo $kTp." - ".$nom." - ".$labTab[$kT]."<br>";
-                }
-              }
-              $chaine .= '                </author>'."\r\n";
+							foreach($quiTab as $elt) {
+								if (strpos($elt, ".") === false)//no point > part of the name
+								{
+									$nom .= " ".supprAmp(trim($elt));
+								}else{
+									$prenom .= supprAmp(trim($elt));
+								}
+							}
+							$nom = trim($nom);
+							$nompre = $nom .", ".$prenom;
+							//echo $nompre.'<br>';
+							if ($prenom != "") {
+								$chaine .= '                <author role="aut">'."\r\n";
+								$chaine .= '                  <persName>'."\r\n";
+								$chaine .= '                    <forename type="first">'.$prenom.'</forename>'."\r\n";
+								$chaine .= '                    <surname>'.$nom.'</surname>'."\r\n";
+								$chaine .= '                  </persName>'."\r\n";
+								$kT = array_search($nompre, $autTab);
+								//echo $kT." - ".$nom." - ".$labTab[$nompre][$kT]."<br>";
+								if ($kT !== FALSE) {
+									foreach ($labTab[$nompre] as $lab) {
+										//$str = array_search($labTab[$nompre][$kT], $strTab);
+										$str = array_search($lab, $strTab);
+										if ($str === FALSE) {
+											$iTp += 1;
+											$kTp = $iTp;
+											array_push($strTab, $lab);
+										}else{
+											$kTp = $str + 1;
+										}
+										$chaine .= '                  <affiliation ref="#localStruct-Aff'.$kTp.'"/>'."\r\n";
+										//echo $kTp." - ".$nom." - ".$labTab[$kT]."<br>";
+									}
+								}
+								$chaine .= '                </author>'."\r\n";
+							}
             }
             //var_dump($strTab);
             $chaine .= '              </analytic>'."\r\n";
