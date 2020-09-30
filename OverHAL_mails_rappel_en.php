@@ -1,6 +1,6 @@
 <?php
 //M
-$subjectM = "Copy request for deposit in Nom de votre structure Open Access Repository: new article";
+$subjectM = "Copy request for deposit in Rennes 1 Open Access Repository: new article";
 $body = "<font face='corbel'>Dear Colleague,\
 <br>\
 <br>\
@@ -14,7 +14,7 @@ if ($refdoi != "")
   $body .= "<br><b>".$data[$colTitle]."</b><br>\\";
 }
 
-$body .= "<br><b>Would you please send us <a href=&quot;url ressource&quot;>the final draft post-refereeing</a></b> of your article, that is the <b>final version that hasn’t been formatted by the publisher.</b><br>\
+$body .= "<br><b>Would you please send us <a href=&quot;https://ecm.univ-rennes1.fr/nuxeo/site/esupversions/a4f17fcd-8301-407f-b53b-14053a7362f6&quot;>the final post-refereeing pre-copyedit version (clean copy)</a></b> of your article, that is the <b>final version that hasn’t been formatted by the publisher.</b><br>\
 <br>\
 It is usually a doc file, which does not bear the look and feel of the journal, nor the publisher's copyright notice on it. (2)<br>\
 <br>\
@@ -22,23 +22,23 @@ Making your manuscripts open access will enhance their visibility on the Interne
 <br>\
 Best Regards,<br>\
 <br>\
-Your name<br>\
-Your Institution<br>\
-Tel : + 33 (0)0 00 00 00 00<br>\
-<a href=&quot;https://votre-site-web.fr/&quot;></a><br>\
+Laurent Jonchère<br>\
+University of Rennes 1<br>\
+Tel : + 33 (0)2 23 23 34 78<br>\
+<a href=&quot;https://openaccess.univ-rennes1.fr/&quot;>https://openaccess.univ-rennes1.fr/</a><br>\
 <br>\
 (1) Publisher and journal archiving policies can be checked in the <a href=&quot;http://www.sherpa.ac.uk/romeo/&quot;>Sherpa Romeo</a> database. We always check publisher policies for any deposit. Moreover, no article will be visible before the end of the embargo period, depending on journal policies.<br>\
-(2) If your article was typed in a template, you may easily copy and paste its content into a doc file. Please, do not send the publisher's PDF nor the proof version, since such versions cannot be deposited in a repository.<br>\
+(2) If you need help to <b>get your manuscript from the journal submission system</b> , please check <a href=&quot;https://openaccessbutton.org/direct2aam&quot;>Direct2AAM</a>. Please, do not send the publisher's PDF nor the proof version, since such versions cannot be deposited in a repository.<br>\
 ";
 
 $bodyM = str_replace("'", "\'", $body);
 
 //P
-$subjectP = "POSTPRINT Copy request for deposit in Nom de votre structure Open Access Repository: new article";
+$subjectP = "POSTPRINT Copy request for deposit in Rennes 1 Open Access Repository: new article";
 $body = "<font face='corbel'>Dear Colleague,\
 <br>\
 <br>\
-I am writing to you again as you are the author of an article that was published in a journal allowing deposit of author manuscripts in open access repositories (1):<br>\
+I am writing to you again as you are the author of an article that was published in a journal allowing deposit of author manuscripts in open access repositories (*):<br>\
 ";
 
 //strtr($data[$colTitle],'"<>','   ')
@@ -49,7 +49,7 @@ if ($refdoi != "")
   $body .= "<br><b>".$data[$colTitle]."</b><br>\\";
 }
 
-$body .= "<br>This journal allows use of accepted manuscripts in repositories, ie. <a href=&quot;url ressource&quot;>final drafts post-refereeing</a> that haven’t been formatted by the publisher (2).<br>\
+$body .= "<br>This journal allows use of accepted manuscripts in repositories, ie. <a href=&quot;https://ecm.univ-rennes1.fr/nuxeo/site/esupversions/a4f17fcd-8301-407f-b53b-14053a7362f6&quot;>final drafts post-refereeing (clean copy)</a> that haven’t been formatted by the publisher.<br>\
 <br>\
 <b>I was able to retrieve the accepted manuscript from the publisher's platform.<br>\
 I shall deposit it in our institutional repository, as is authorized by the publisher, unless you tell us otherwise.</b><br>\
@@ -58,13 +58,12 @@ Making your manuscripts open access will enhance their visibility on the Interne
 <br>\
 Best Regards,<br>\
 <br>\
-Your name<br>\
-Your Institution<br>\
-Tel : + 33 (0)0 00 00 00 00<br>\
-<a href=&quot;https://votre-site-web.fr/&quot;></a><br>\
+Laurent Jonchère<br>\
+University of Rennes 1<br>\
+Tel : + 33 (0)2 23 23 34 78<br>\
+<a href=&quot;https://openaccess.univ-rennes1.fr/&quot;>https://openaccess.univ-rennes1.fr/</a><br>\
 <br>\
-(1) Publisher and journal archiving policies can be checked in the <a href=&quot;http://www.sherpa.ac.uk/romeo/&quot;>Sherpa Romeo</a> database. We always check publisher policies for any deposit. Moreover, no article will be visible before the end of the embargo period, depending on journal policies.<br>\
-(2) If your article was typed in a template, you may easily copy and paste its content into a doc file. Please, do not send the publisher's PDF nor the proof version, since such versions cannot be deposited in a repository.<br>\
+(*) Publisher and journal archiving policies can be checked in the <a href=&quot;http://www.sherpa.ac.uk/romeo/&quot;>Sherpa Romeo</a> database. We always check publisher policies for any deposit. Moreover, no article will be visible before the end of the embargo period, depending on journal policies.<br>\
 ";
 
 $bodyP = str_replace("'", "\'", $body);
