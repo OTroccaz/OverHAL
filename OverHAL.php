@@ -1,11 +1,4 @@
 <?php
-if (isset($_GET['css']) && ($_GET['css'] != ""))
-{
-  $css = $_GET['css'];
-}else{
-  $css = "https://halur1.univ-rennes1.fr/HAL_SCD.css";
-}
-
 // récupération de l'adresse IP du client (on cherche d'abord à savoir s'il est derrière un proxy)
 if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
   $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
@@ -15,146 +8,477 @@ if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
   $ip = $_SERVER['REMOTE_ADDR'];
 }
 ?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html lang="fr">
 <head>
-  <title>OverHAL : Comparaison HAL vs sources bibliographiques</title>
-  <meta name="Description" content="OverHAL : Comparaison HAL vs sources bibliographiques">
-  <link rel="stylesheet" href="<?php echo($css);?>" type="text/css">
-  <link href="bootstrap.min.css" rel="stylesheet">
-  <script type="text/javascript" language="Javascript" src="OverHAL.js"></script>
-  <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
-	<link rel="stylesheet" href="./OverHAL.css">
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta charset="utf-8" />
+	<title>OverHAL - HAL - UR1</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta content="" name="description" />
+	<meta content="Coderthemes + Lizuka" name="author" />
+	<!-- App favicon -->
+	<link rel="shortcut icon" href="favicon.ico">
+
+	<!-- third party css -->
+	<!-- <link href="./assets/css/vendor/jquery-jvectormap-1.2.2.css" rel="stylesheet" type="text/css" /> -->
+	<!-- third party css end -->
+
+	<!-- App css -->
+	<link href="./assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+	<link href="./assets/css/app-hal-ur1.min.css" rel="stylesheet" type="text/css" id="light-style" />
+	<!-- <link href="./assets/css/app-creative-dark.min.css" rel="stylesheet" type="text/css" id="dark-style" /> -->
+	
+	<!-- third party js -->
+	<script src="OverHAL.js"></script>
+	<!-- third party js end -->
+	
+	<!-- bundle -->
+	<script src="./assets/js/vendor.min.js"></script>
+	<script src="./assets/js/app.min.js"></script>
+
+	<!-- third party js -->
+	<script src="./assets/js/vendor/Chart.bundle.min.js"></script>
+	<!-- third party js ends -->
+	<script src="./assets/js/pages/hal-ur1.chartjs.js"></script>
+	
 </head>
-<body style="font-family:Corbel,sans-serif;">
+
+<body class="loading" data-layout="topnav" >
 
 <noscript>
-<div class='center, red' id='noscript'><strong>ATTENTION !!! JavaScript est désactivé ou non pris en charge par votre navigateur : cette procédure ne fonctionnera pas correctement.</strong><br>
+<div class='text-primary' id='noscript'><strong>ATTENTION !!! JavaScript est désactivé ou non pris en charge par votre navigateur : cette procédure ne fonctionnera pas correctement.</strong><br>
 <strong>Pour modifier cette option, voir <a target='_blank' rel='noopener noreferrer' href='http://www.libellules.ch/browser_javascript_activ.php'>ce lien</a>.</strong></div><br>
 </noscript>
 
-<table class="table100" aria-describedby="Entêtes">
-<tr>
-<th scope="col" style="text-align: left;"><img alt="OverHAL" title="OverHAL" width="250px" src="./img/logo_OverHAL2.jpg"><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Convertissez vos imports éditeurs en TEI</th>
-<th scope="col" style="text-align: right;"><img alt="Université de Rennes 1" title="Université de Rennes 1" width="150px" src="./img/logo_UR1_gris_petit.jpg"></th>
-</tr>
-</table>
-<hr style="color: #467666; height: 1px; border-width: 1px; border-top-color: #467666; border-style: inset;">
-<?php
+        <!-- Begin page -->
+        <div class="wrapper">
+
+            <!-- ============================================================== -->
+            <!-- Start Page Content here -->
+            <!-- ============================================================== -->
+
+            <div class="content-page">
+                <div class="content">
+								
+								<?php
+								include "./Glob_haut.php";
+								
+								if(isset($_GET["erreur"]))
+								{
+									echo '<div id="warning-alert-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">';
+									echo '    <div class="modal-dialog modal-md modal-center">';
+									echo '        <div class="modal-content">';
+									echo '            <div class="modal-body p-4">';
+									echo '                <div class="text-center">';
+									echo '                    <i class="dripicons-warning h1 text-warning"></i>';
+									echo '                    <h4 class="mt-2">Avertissement</h4>';
+									
+									$erreur = $_GET["erreur"];
+									if($erreur == 1) {echo '                    <p class="mt-3">Le fichier dépasse la limite autorisée par le serveur(fichier php.ini) !</p></script>';}
+									if($erreur == 2) {echo '                    <p class="mt-3">Le fichier dépasse la limite autorisée dans le formulaire HTML !</p></script>';}
+									if($erreur == 3) {echo '                    <p class="mt-3">L&apos;envoi du fichier a été interrompu pendant le transfert !</p></script>';}
+									//if($erreur == 4) {echo '                    <p class="mt-3">Aucun fichier envoyé ou bien il a une taille nulle !</p></script>';}
+									if($erreur == 5) {echo '                    <p class="mt-3">Mauvaise extension de fichier !</p></script>';}
+									
+									echo '                    <button type="button" class="btn btn-warning my-2" data-dismiss="modal">Continuer</button>';
+									echo '                </div>';
+									echo '            </div>';
+									echo '        </div><!-- /.modal-content -->';
+									echo '    </div><!-- /.modal-dialog -->';
+									echo '</div><!-- /.modal -->';
+								}
+								?>
+								
+								<!-- Start Content-->
+                    <div class="container-fluid">
+
+                        <!-- start page title -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="page-title-box">
+                                    <div class="page-title-right">
+                                        <nav aria-label="breadcrumb">
+                                            <ol class="breadcrumb bg-light-lighten p-2">
+                                                <li class="breadcrumb-item"><a href="index.php"><i class="uil-home-alt"></i> Accueil HALUR1</a></li>
+                                                <li class="breadcrumb-item active" aria-current="page">Over<span class="font-weight-bold">HAL</span></li>
+                                            </ol>
+                                        </nav>
+                                    </div>
+                                    <h4 class="page-title">Convertissez vos imports éditeurs en TEI</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end page title -->
+
+                        <div class="row">
+                            <div class="col-xl-8 col-lg-6 d-flex">
+                                <!-- project card -->
+                                <div class="card d-block w-100 shadow-lg">
+                                    <div class="card-body">
+                                        
+                                        <!-- project title-->
+                                        <h2 class="h1 mt-0">
+                                            <i class="mdi mdi-widgets-outline text-primary"></i>
+                                            <span class="font-weight-light">Over</span><span class="text-primary">HAL</span>
+                                        </h2>
+                                        <h5 class="badge badge-primary badge-pill">Présentation</h5>
+																				
+																				<img src="./img/ricardo-gomez-angel-horgenberg-horgen-switzerland-unsplash.png" alt="Accueil OverHAL" class="img-fluid"><br>
+																				<p class="font-italic">Photo : Horgenberg, Horgen, Switzerland by Ricardo Gomez Angel on Unsplash (détail)</p>
+
+                                        <p class=" mb-2 text-justify">
+																					OverHAL permet d'une part de générer un fichier de publications TEI HAL pour Zip2HAL à partir d'un fichier source, d'autre part d'envoyer des mails aux auteurs pour récupération du manuscrit auteur. Conçu à partir d'un script de <a target="_blank" rel="noopener noreferrer" href="http://igm.univ-mlv.fr/~gambette/ExtractionHAL/CouvertureHAL/">Philippe Gambette</a> (CouvertureHAL), il a été créé par Olivier Troccaz (conception-développement) et Laurent Jonchère (conception).																					
+                                        </p>
+																				
+																				<p class="mb-4">
+                                            Contacts : <a target='_blank' rel='noopener noreferrer' href="https://openaccess.univ-rennes1.fr/interlocuteurs/laurent-jonchere">Laurent Jonchère</a> (Université de Rennes 1) / <a target='_blank' rel='noopener noreferrer' href="https://ecobio.univ-rennes1.fr/personnel.php?qui=Olivier_Troccaz">Olivier Troccaz</a> (CNRS ECOBIO/OSUR).
+                                        </p>
+
+                                    </div> <!-- end card-body-->
+                                    
+                                </div> <!-- end card-->
+
+                            </div> <!-- end col -->
+                            <div class="col-lg-6 col-xl-4 d-flex">
+                                <div class="card shadow-lg w-100">
+                                    <div class="card-body">
+                                        <h5 class="badge badge-primary badge-pill">Mode d'emploi</h5>
+                                        <div class=" mb-2">
+                                            <ul class="list-group">
+                                                <li class="list-group-item">
+                                                    <a target="_blank" rel="noopener noreferrer" href="https://halur1.univ-rennes1.fr/Manuel-OverHAL.pdf"><i class="mdi mdi-file-pdf-box-outline mr-1"></i> Télécharger le manuel</a>
+                                                </li>
+                                               
+                                            </ul> 
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- end card-->
+                            </div>
+                        </div>
+                        <!-- end row -->
+
+                        <div class="row">
+                            <div class="col-12 d-flex">
+                                <!-- project card -->
+                                <div class="card w-100 d-block shadow-lg">
+                                    <div class="card-body">
+                                        
+																				<form enctype="multipart/form-data" action="OverHAL_results.php" method="post" accept-charset="UTF-8">
+																				<input type="hidden" name="MAX_FILE_SIZE" value="600000">
+																				
+                                        <h5 class="badge badge-primary badge-pill">Paramétrage</h5>
+																				
+																				<div class="row mb-3">
+                                            <div class="col-sm-12">
+                                                <div class="border border-dark rounded p-2 mb-2">
+                                                    <div class='h4 text-uppercase text-secondary mb-3'>Étape 1 : Charger le fichier</div>
+
+                                                    <div class="border p-2 small text-primary mb-2">
+                                                        Envoyez les fichiers résultat (600 Ko maximum, voir ci-dessus le "mode d'emploi") :
+                                                    </div>
+                                                
+                                                    <div class="row">
+                                                        <div class="form-group col-sm-4">
+                                                            <label for="wos_csv" class="badge badge-secondary-lighten">Web of Science (CSV) :</label>
+                                                            <input class="form-control mb-1" id="wos_csv" name="wos_csv" type="file">
+
+                                                            <label for="wos_csv" class="badge badge-secondary-lighten">Scopus (CSV) :</label>
+                                                            <input class="form-control mb-1" id="scopus" name="scopus" type="file">
+																														
+																														<span><br><a target="_blank" rel="noopener noreferrer" href="OverHAL_FCGI_construct_import.php"> Construire un fichier FCGI à partir d'une liste de PMID</a>, puis l'envoyer à OverHAL avec ce formulaire.</span>
+
+                                                        </div>
+
+                                                        <div class="form-group col-sm-4">
+
+                                                            <label for="wos_csv" class="badge badge-secondary-lighten">Zotero (CSV) :</label>
+                                                            <input class="form-control mb-1" id="zotero" name="zotero" type="file">
+
+                                                            <label for="wos_csv" class="badge badge-secondary-lighten">SciFinder (CSV) :</label>
+                                                            <input class="form-control mb-1" id="scifin" name="scifin" type="file">
+																														
+																														<label for="wos_csv" class="badge badge-secondary-lighten">Pubmed (FCGI) :</label>
+                                                            <input class="form-control mb-1" id="pubmed_fcgi" name="pubmed_fcgi" type="file">
+                                                            
+                                                        </div>
+
+                                                        <div class="form-group col-sm-4">
+
+                                                            <label for="wos_csv" class="badge badge-secondary-lighten">Pubmed (CSV) : </label>
+                                                            <input class="form-control mb-1" id="pubmed_csv" name="pubmed_csv" type="file">
+
+                                                            <label for="wos_csv" class="badge badge-secondary-lighten">Pubmed (XML) : </label>
+                                                            <input class="form-control mb-1" id="pubmed_xml" name="pubmed_xml" type="file">
+
+																														<?php
+																														include("./Glob_IP_list.php");
+																														if (in_array($ip, $IP_aut)) {
+																															echo '<label for="dimensions" class="badge badge-secondary-lighten">Dimensions (CSV) :</label>';
+																															echo '<input class="form-control mb-1" id="dimensions" name="dimensions" type="file" /><br/>';
+																														}
+																														?>
+                                                        </div>
+                                                    </div> <!-- .row -->
+
+                                                    <div class="row border-top pt-3">
+                                                        <div class="col-sm-12">
+                                                            <div class="mb-2 small">
+                                                                <span class="badge badge-primary badge-pill"><i class="mdi mdi-flash-alert mdi-18px"></i></span>
+                                                            Expérimental (enregistrer des alertes mail en html) :</div>
+                                                           
+                                                        </div>
+                                                        
+                                                    </div> <!-- .row -->
+
+                                                    <div class="row">
+                                                        <div class="col-sm-3">
+                                                            <label for="wos_csv" class="badge badge-secondary-lighten">Web of Science (HTML) :</label>
+                                                            <input class="form-control mb-1" id="wos_html" name="wos_html" type="file">
+                                                        </div>
+                                                        <div class="col-sm-3">
+                                                            <label for="wos_csv" class="badge badge-secondary-lighten">Pubmed (HTML) : </label>
+                                                    <input class="form-control mb-1" id="pubmed_html" name="pubmed_html" type="file">
+                                                        </div>
+                                                        
+                                                    </div> <!-- .row -->
+
+                                                </div> <!-- .border -->
+
+                                            </div> <!-- .col-sm-12 -->
+                                        </div> <!-- .row -->
+
+																				<div class="row mb-3">
+                                            <div class="col-sm-12">
+                                                <div class="border border-dark rounded p-2 mb-2">
+                                                    <div class='h4 text-uppercase text-secondary mb-3'>Étape 2 : Construire la requête HAL</div>
+
+                                                    <div class="form-group row mb-1">
+                                                        <label for="reqHAL" class="col-12 col-md-2 col-form-label font-weight-bold">
+                                                        Requête libre
+                                                        </label>
+																												<?php
+																												$reqHAL = "https://api.archives-ouvertes.fr/search/?q=collCode_s:\"IRSET\"&fq=(producedDateY_i:\"".date('Y', time())."\")&rows=10000&fl=docType_s,docid,halId_s,authFullName_s,title_s,subTitle_s,journalTitle_s,volume_s,issue_s,page_s,producedDateY_i,proceedings_s,files_s,label_s,citationFull_s,bookTitle_s,doiId_s,conferenceStartDateY_i";
+																												?>                                                        
+                                                        <div class="col-12 col-md-10">
+                                                            <div class="input-group">
+                                                                <div class="input-group-prepend">
+                                                                    <button type="button" tabindex="0" class="btn btn-info" data-html="true" data-toggle="popover" data-trigger="focus" title="" data-content="consultez l'API de HAL <a href='https://api.archives-ouvertes.fr/docs/search'>https://api.archives-ouvertes.fr/docs/search</a>" data-original-title="">
+                                                                    <i class="mdi mdi-comment-question text-white"></i>
+                                                                    </button>
+                                                                </div>
+                                                                <input type="text" id="reqHAL" name="hal" class="form-control"  value='<?php echo $reqHAL;?>'>
+                                                           
+                                                        </div>
+                                                    
+                                                </div>
+                                            </div> <!-- .form-group -->
+
+                                            <div class="form-group row mb-1">
+                                                <div class="col-12">
+                                                    <div class="custom-control custom-checkbox custom-control-inline">
+																												<input type="checkbox" checked class="custom-control-input" name="limzot" id="limzot" value="ok">
+                                                        <label class="custom-control-label" for="limzot">Limiter l'affichage des résultats aux seules références non trouvées dans HAL</label>
+                                                    </div>
+                                                </div>
+                                            </div> <!-- .form-group -->
 
 
-/*
-    OverHAL - 2016-06-24
-    Copyright (C) 2016 Philippe Gambette (HAL_UPEMLV[AT]univ-mlv.fr) et Olivier Troccaz (olivier.troccaz[AT]univ-rennes1.fr)
+                                            <div class="form-group row mb-1">
+                                                <div class="col-12">
+                                                    <h3 class="d-inline-block border-bottom border-primary text-primary">OU</h3>
+                                                </div>
+                                            </div> <!-- .form-group -->
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+                                            <div class="form-group row mb-3">
+                                                <label for="team" class="col-12 col-md-2 col-form-label font-weight-bold">
+                                                Code collection HAL
+                                                </label>
+                                                
+                                                <div class="col-12 col-md-10">
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend">
+                                                            <button type="button" tabindex="0" class="btn btn-info" data-html="true" data-toggle="popover" data-trigger="focus" title="" data-content='Code visible dans l&apos;URL d&apos;une collection.
+                                            Exemple : IPR-MOL est le code de la collection http://hal.archives-ouvertes.fr/ <span class="font-weight-bold">IPR-PMOL</span> de l&apos;équipe Physique moléculaire de l&apos;unité IPR UMR CNRS 6251' data-original-title="">
+                                                            <i class="mdi mdi-comment-question text-white"></i>
+                                                            </button>
+                                                        </div>
+                                                        <input type="text" id="team" name="team" class="form-control"  value="IRSET" onchange="majReqHAL();">
+                                                    <a class="ml-2 small" target="_blank" rel="noopener noreferrer" href="https://hal-univ-rennes1.archives-ouvertes.fr/page/codes-collections">Trouver le code<br>de mon équipe / labo</a>
+                                                    </div>
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+                                                    
+                                                </div>
+                                            </div> <!-- .form-group -->
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+                                            <div class="form-group row mb-1">
+                                                <div class="form-group col-12">
+                                                    <div class="form-inline">
+                                                        <label for="year1" class="mr-2">Années de publication :</label>
+                                                        <input type="text" class="form-control mr-2" id="year1" name="year1" value="<?php echo date('Y', time())-1;?>" size="10" onchange="majReqHAL();">
+                                                        <label for="year2" class="mr-2">à</label>
+                                                        <input type="text" class="form-control mr-2" id="year2" name="year2" value="<?php echo date('Y', time());?>" size="10" onchange="majReqHAL();">
+                                                    </div>
+                                                </div>
+                                            </div>
 
-*/
+                                            <div class="form-group row mb-2">
+                                                <div class="col-12">
+                                                    <div class="custom-control custom-checkbox">
+																												<input type="checkbox" checked class="custom-control-input" name="aparai" id="aparai" value="ok" onchange="majReqHAL();">
+                                                        <label class="custom-control-label" for="aparai">Inclure les articles "À paraître"</label>
+                                                    </div>
+                                                    <div class="custom-control custom-checkbox">
+																												<input type="checkbox" class="custom-control-input" name="txtint" id="txtint" value="ok" onchange="majReqHAL();">
+                                                        <label class="custom-control-label" for="txtint">Requête uniquement sur le texte intégral (dépôt HAL ou lien arxiv ou lien Pubmed Central)</label>
+                                                    </div>
+                                                    <div class="custom-control custom-checkbox">
+																												<input type="checkbox" checked class="custom-control-input" name="desactSR" value="oui" id="desactSR">
+                                                        <label class="custom-control-label" for="desactSR">Désactiver les recherches Sherpa/RoMEO</label>
+                                                    </div>
+																										<?php
+																										include("./Glob_IP_list.php");
+																										if (in_array($ip, $IP_aut)) {
+																											echo '<div class="custom-control custom-checkbox">';
+																											echo '  <input type="checkbox" class="custom-control-input" name="actMailsM" value="oui" id="actMailsM">';
+                                                      echo '  <label class="custom-control-label" for="actMailsM">Activer les procédures d\'envoi de mails (demande du manuscrit à l\'auteur = M)</label>';
+																											echo '</div>';
+																											
+																											echo '<div class="custom-control custom-checkbox">';
+																											echo '  <input type="checkbox" class="custom-control-input" name="actMailsP" value="oui" id="actMailsP">';
+                                                      echo '  <label class="custom-control-label" for="actMailsP">Activer les procédures d\'envoi de mails (autorisation de dépôt du post-print = P)</label>';
+																											echo '</div>';
+																										}else{
+																											echo('<br/>La fonctionnalité d\'envoi d\'emails ne s\'affiche que pour les utilisateurs autorisés (adresse IP). Voir le mode d\'emploi / installation<br /><br />');
+																										}
+																										?>
+																										
+                                                </div>
+                                            </div> <!-- .form-group -->
 
-if (isset($_GET["erreur"]))
-{
-	$erreur = $_GET["erreur"];
-	if ($erreur == 1) {echo("<script type=\"text/javascript\">alert(\"Le fichier dépasse la limite autorisée par le serveur (fichier php.ini) !\")</script>");}
-	if ($erreur == 2) {echo("<script type=\"text/javascript\">alert(\"Le fichier dépasse la limite autorisée dans le formulaire HTML !\")</script>");}
-	if ($erreur == 3) {echo("<script type=\"text/javascript\">alert(\"L'envoi du fichier a été interrompu pendant le transfert !\")</script>");}
-	//if ($erreur == 4) {echo("<script type=\"text/javascript\">alert(\"Aucun fichier envoyé ou bien il a une taille nulle !\")</script>");}
-	if ($erreur == 5) {echo("<script type=\"text/javascript\">alert(\"Mauvaise extension de fichier !\")</script>");}
-}
+                                            <div class="form-group row mb-1">
+                                                <div class="col-12">
+                                                    <div class="custom-control custom-checkbox">
+																												<input type="checkbox" class="custom-control-input" name="bibtex" value="oui" id="bibtex">
+                                                        <label class="custom-control-label" for="bibtex">Générer un bibtex de publications en français, à partir d'un fichier Zotero, avec éventuellement,</label>
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div> <!-- .form-group -->
 
-?>
-<div style="background-color:#FFFFFF;width:900px;padding:10px;font-family:calibri,verdana,sans-serif">
-OverHAL permet de comparer HAL et des listes de publications (Scopus, WoS, SciFinder, Zotero, etc), à partir d'un script PHP créé par <a target="_blank" rel="noopener noreferrer" href="http://igm.univ-mlv.fr/~gambette/ExtractionHAL/CouvertureHAL/">Philippe Gambette</a>, repris et modifié par <a target="_blank" rel="noopener noreferrer" href="https://ecobio.univ-rennes1.fr/personnel.php?qui=Olivier_Troccaz">Olivier Troccaz</a> (ECOBIO - OSUR) pour l'Université de Rennes 1.
-<br>Pour tout renseignement, n'hésitez pas à contacter <a target="_blank" rel="noopener noreferrer" href="https://openaccess.univ-rennes1.fr/interlocuteurs/laurent-jonchere">Laurent Jonchère</a> ou <a target="_blank" rel="noopener noreferrer" href="https://ecobio.univ-rennes1.fr/personnel.php?qui=Olivier_Troccaz">Olivier Troccaz</a>.
-<br>Si vous souhaitez utiliser le script PHP pour une autre institution, consultez <a target="_blank" rel="noopener noreferrer" href="https://wiki.ccsd.cnrs.fr/wikis/hal/index.php/Outils_et_services_d%C3%A9velopp%C3%A9s_localement_pour_am%C3%A9liorer_ou_faciliter_l%27utilisation_de_HAL#Autres_outils">le wiki du CCSD</a> (OverHAL).</p>
+                                            <div class="form-group row mb-2">
+                                                <label for="keywords" class="col-md-3 offset-md-1 col-form-label font-weight-bold p-0">
+                                                ces mots-clés <span class="small">(séparés par "; ")</span> :
+                                                </label>
+                                                
+                                                <div class="col-12 col-md-6">
+                                                    <input type="text" class="form-control" id="keywords" name="keywords" size="40">
+                                                </div>
 
-<h2>Mode d'emploi</h2>
-<a href="Manuel-OverHAL.pdf">Télécharger le manuel</a>
-<br>
+                                            </div> <!-- .form-group -->
 
-<h2>Paramétrage</h2>
-<a target="_blank" href="./FCGI_construct_import.php">Construire un fichier FCGI à partir d'une liste de PMID</a>, puis l'envoyer à OverHAL avec le formulaire ci-dessous.<br/>
-<br/>
-<strong>1. Charger le fichier</strong><br/>
-<br/>
-<form enctype="multipart/form-data" action="OverHAL_results.php" method="post" accept-charset="UTF-8">
-<p class="form-inline">
-<input type="hidden" name="MAX_FILE_SIZE" value="600000" />
-Envoyez les fichiers résultat (600 Ko maximum, voir ci-dessus le "mode d'emploi") :<br/>
-<label for="wos_csv">Web of Science (CSV)</label> : <input class="form-control" id="wos_csv" style="height: 25px; font-size: 90%; padding: 0px;" name="wos_csv" type="file" /><br/>
-<label for="scopus">Scopus (CSV)</label> : <input class="form-control" id="scopus" style="height: 25px; font-size: 90%; padding: 0px;" name="scopus" type="file" /><br/>
-<label for="zotero">Zotero (CSV)</label> : <input class="form-control" id="zotero" style="height: 25px; font-size: 90%; padding: 0px;" name="zotero" type="file" /><br/>
-<label for="scifin">SciFinder (CSV)</label> : <input class="form-control" id="scifin" style="height: 25px; font-size: 90%; padding: 0px;" name="scifin" type="file" /><br/>
-<label for="pubmed_csv">Pubmed (CSV)</label> : <input class="form-control" id="pubmed_csv" style="height: 25px; font-size: 90%; padding: 0px;" name="pubmed_csv" type="file" /><br/>
-<label for="pubmed_xml">Pubmed (XML)</label> : <input class="form-control" id="pubmed_xml" style="height: 25px; font-size: 90%; padding: 0px;" name="pubmed_xml" type="file" /><br/>
-<label for="pubmed_fcgi">Pubmed (FCGI)</label> : <input class="form-control" id="pubmed_fcgi" style="height: 25px; font-size: 90%; padding: 0px;" name="pubmed_fcgi" type="file" /><br/>
-<?php
-include("./IP_list.php");
-if (in_array($ip, $IP_aut)) {
-  echo('<label for="dimensions">Dimensions (CSV)</label> : <input class="form-control" id="dimensions" style="height: 25px; font-size: 90%; padding: 0px;" name="dimensions" type="file" /><br/>');
-}
-?>
-<br/>
-<em>Expérimental (enregistrer des alertes mail en html) :</em><br/>
-<label for="wos_html">Web of Science (HTML)</label> : <input class="form-control" id="wos_html" style="height: 25px; font-size: 90%; padding: 0px;" name="wos_html" type="file" /><br/>
-<label for="pubmed_html">Pubmed (HTML)</label> : <input class="form-control" id="pubmed_html" style="height: 25px; font-size: 90%; padding: 0px;" name="pubmed_html" type="file" /><br/>
-<br/>
-<strong>2. Construire la requête HAL</strong><br/>
-<br/>
-<label for="reqHAL">Requête libre</label> (<a target="_blank" rel="noopener noreferrer" href="https://api.archives-ouvertes.fr/docs/search">consultez l'API de HAL</a>)<br/>
-<?php
-$reqHAL = "https://api.archives-ouvertes.fr/search/?q=collCode_s:\"IRSET\"&fq=(producedDateY_i:\"".date('Y', time())."\")&rows=10000&fl=docType_s,docid,halId_s,authFullName_s,title_s,subTitle_s,journalTitle_s,volume_s,issue_s,page_s,producedDateY_i,proceedings_s,files_s,label_s,citationFull_s,bookTitle_s,doiId_s,conferenceStartDateY_i";
-?>
-<input type='text' class="form-control" style="height: 25px; width: 800px;" id='reqHAL' name='hal' value='<?php echo $reqHAL;?>'><br/><br/>
-<label for="limzot">Limiter l'affichage des résultats aux seules références non trouvées dans HAL :</label> <input class="form-control" style="height: 15px;" type="checkbox" checked id="limzot" name="limzot" value="ok"><br/>
-<br/>
-<strong>ou :</strong><br/>
-<p class="form-inline"><label for="team">Code collection HAL</label> <a class=info onclick='return false' href="#">(qu’est-ce que c’est ?)<span>Code visible dans l’URL d’une collection.
-Exemple : IPR-MOL est le code de la collection http://hal.archives-ouvertes.fr/<strong>IPR-PMOL</strong> de l’équipe Physique moléculaire
-de l’unité IPR UMR CNRS 6251</span></a> :
-<input type="text" class="form-control" style="height: 25px; width: 300px;" id="team" name="team" value="IRSET" onchange="majReqHAL();"><br/>
-<br/>
-<label for="year1">Années de publication :</label>
-<input type="text" class="form-control" style="height: 25px; width: 100px;" id="year1" name="year1" value="<?php echo date('Y', time())-1;?>" size="10" onchange="majReqHAL();">
-&nbsp;<label for="year2">à</label>&nbsp;
-<input type="text" class="form-control" style="height: 25px; width: 100px;" id="year2" name="year2" value="<?php echo date('Y', time());?>" size="10" onchange="majReqHAL();"><br/>
-<br/>
-<input type="checkbox" class="form-control" id="aparai" style="height: 15px;" name="aparai" value="ok" onchange="majReqHAL();"> <label for="aparai">inclure les articles <em>"A paraître"</em></label><br/>
-<input type="checkbox" class="form-control" id="txtint" style="height: 15px;" name="txtint" value="ok" onchange="majReqHAL();"> <label for="txtint">requête uniquement sur le texte intégral (dépôt HAL ou lien arxiv ou lien Pubmed Central)</label><br/>
-<input type="checkbox" class="form-control" id="desactSR" style="height: 15px;" checked name="desactSR" value="oui"> <label for="desactSR">désactiver les recherches Sherpa/RoMEO</label><br/>
-<?php
-include("./IP_list.php");
-if (in_array($ip, $IP_aut)) {
-  echo("<input type=\"checkbox\" class=\"form-control\" style=\"height: 15px;\" id=\"actMailsM\" name=\"actMailsM\" value=\"oui\"> <label for=\"actMailsM\">activer les procédures d'envoi de mails (demande du manuscrit à l'auteur = M)</label><br/>");
-  echo("<input type=\"checkbox\" class=\"form-control\" style=\"height: 15px;\" id=\"actMailsP\" name=\"actMailsP\" value=\"oui\"> <label for=\"actMailsP\">activer les procédures d'envoi de mails (autorisation de dépôt du post-print = P)</label><br/>");
-}else{
-  echo("<br/>La fonctionnalité d'envoi d'emails ne s'affiche que pour les utilisateurs autorisés (adresse IP). Voir le mode d'emploi / installation<br/>");
-}
-?>
-<input type="checkbox" class="form-control" style="height: 15px;" id="bibtex" name="bibtex" value="oui"> <label for="bibtex">générer un bibtex de publications en français, à partir d'un fichier Zotero, avec éventuellement,</label><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;. <label for="keywords">ces mots-clés (séparés par "; "):</label> <input type="text" class="form-control" style="height: 25px; width: 300px;" id="keywords" name="keywords" size="40"><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;. <label for="author">cet auteur ("Mortier, Renaud", par exemple):</label> <input type="text" class="form-control" style="height: 25px; width: 300px;" id="author" name="author" size="40">
-<br/>
-<br/><br/>
-<label for="joker">URL Joker :</label> <input type="text" class="form-control" style="height: 25px; width: 800px;" id="joker" name="joker" size=100 value=""><br/><br/>
-<input type="hidden" name="ip" value="<?php echo $ip; ?>">
-<input type="submit" class="form-control btn btn-md btn-primary" value="Envoyer">
-</form>
-</p>
-<br>
-<?php
-include('./bas.php');
-?>
-</body>
+                                            <div class="form-group row mb-2">
+                                                <label for="author" class="col-md-3 offset-md-1 col-form-label font-weight-bold p-0">
+                                                cet auteur <span class="small">("Mortier, Renaud", par exemple)</span> :
+                                                </label>
+                                                
+                                                <div class="col-12 col-md-6">
+                                                    <input type="text" class="form-control" id="author" name="author" size="40">
+                                                </div>
+
+                                            </div> <!-- .form-group -->
+
+                                            <div class="form-group row mb-1">
+                                                <label for="joker" class="col-md-2 col-form-label font-weight-bold">
+                                                URL Joker :
+                                                </label>
+                                                
+                                                <div class="col-12 col-md-10">
+                                                    <input type="text" class="form-control" id="joker" name="joker" size="40">
+                                                </div>
+
+                                            </div> <!-- .form-group -->
+
+                                            
+
+
+                                        </div> <!-- .border -->
+
+
+                                        <div class="form-group row mt-4">
+                                                <div class="col-12 justify-content-center d-flex">
+																										<input type="hidden" name="ip" value="<?php echo $ip; ?>">
+                                                    <input type="submit" class="btn btn-md btn-primary btn-lg" value="Valider" name="soumis">
+                                                </div>
+                                            </div>
+
+                                    </div> <!-- .col-sm-12 -->
+                                </div> <!-- .row -->
+																
+																				</form>
+																
+
+                                    </div> <!-- end card-body-->
+                                    
+                                </div> <!-- end card-->
+
+                            </div> <!-- end col -->
+                        </div>
+                        <!-- end row -->
+
+                    </div>
+                    <!-- container -->
+
+                </div>
+                <!-- content -->
+								
+								<?php
+								include('./Glob_bas.php');
+								?>
+								
+								</div>
+
+            <!-- ============================================================== -->
+            <!-- End Page content -->
+            <!-- ============================================================== -->
+
+
+        </div>
+				
+				<button id="scrollBackToTop" class="btn btn-primary"><i class="mdi mdi-24px text-white mdi-chevron-double-up"></i></button>
+        <!-- END wrapper -->
+
+        <!-- bundle -->
+        <!-- <script src="./assets/js/vendor.min.js"></script> -->
+        <script src="./assets/js/app.min.js"></script>
+
+        <!-- third party js -->
+        <script src="./assets/js/vendor/Chart.bundle.min.js"></script>
+        <!-- third party js ends -->
+        <script src="./assets/js/pages/hal-ur1.chartjs.js"></script>
+				
+				<script>
+            (function($) {
+                'use strict';
+                $('#warning-alert-modal').modal(
+                    {'show': true, 'backdrop': 'static'}    
+                    
+                        );
+                $(document).scroll(function() {
+                  var y = $(this).scrollTop();
+                  if (y > 200) {
+                    $('#scrollBackToTop').fadeIn();
+                  } else {
+                    $('#scrollBackToTop').fadeOut();
+                  }
+                });
+                $('#scrollBackToTop').each(function(){
+                    $(this).click(function(){ 
+                        $('html,body').animate({ scrollTop: 0 }, 'slow');
+                        return false; 
+                    });
+                });
+            })(window.jQuery)
+        </script>
+    </body>
 </html>

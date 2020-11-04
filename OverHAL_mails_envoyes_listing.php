@@ -8,7 +8,7 @@ if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
   $ip = $_SERVER['REMOTE_ADDR'];
 }
 
-include("./IP_list.php");
+include("./Glob_IP_list.php");
 if (in_array($ip, $IP_aut)) {
   //accès autorisé
   include "./OverHAL_mails_envoyes.php";
@@ -158,7 +158,7 @@ if (in_array($ip, $IP_aut)) {
 <body style="font-family:corbel, sans-serif;font-size:12px;">
 <h1>OverHAL : listing des mails envoyés</h1>
 <?php
-include("./IP_list.php");
+include("./Glob_IP_list.php");
 if (in_array($ip, $IP_aut)) {
   //accès autorisé
   include "./OverHAL_mails_envoyes.php";

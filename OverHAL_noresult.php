@@ -9,7 +9,7 @@ if (isset($_GET['css']) && ($_GET['css'] != ""))
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang="fr">
 <head>
-  <title>CouvHAL : Comparaison HAL vs Scopus</title>
+  <title>OverHAL : Comparaison HAL vs Scopus</title>
   <meta name="Description" content="CouvertureHAL : Comparaison HAL vs Scopus">
   <link rel="stylesheet" href="<?php echo($css);?>" type="text/css">
   <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">

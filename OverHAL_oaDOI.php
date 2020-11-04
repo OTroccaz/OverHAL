@@ -205,7 +205,7 @@ function testOALic($url, $vol, $iss, $pag, $dat, $pdfCR, &$evd, &$titLic, &$typL
       $urlPDF = urldecode($pdfCR);
     }else{
       //2nd method to find the PDF
-      include "./oaDOI_entDOI_urlPDF.php";
+      include "./OverHAL_oaDOI_entDOI_urlPDF.php";
       //var_dump($entURL);
       //echo $entDOI. '<br>';
       $keyURL = array_search($entDOI, $entURL);

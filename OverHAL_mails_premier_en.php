@@ -136,7 +136,7 @@ if ($refdoi != "")
   $body .= "<br><b>".$data[$colTitle]."</b><br>\\";
 }
 
-$body .= "<br><b>Would you please send us <a href=&quot;https://ecm.univ-rennes1.fr/nuxeo/site/esupversions/a4f17fcd-8301-407f-b53b-14053a7362f6&quot;>the final post-refereeing pre-copyedit version (clean copy)</a></b> of your article, that is the <b>final version that hasn’t been formatted by the publisher.</b><br>\
+$body .= "<br><b>Would you please send us <a href=&quot;https://ecm.univ-rennes1.fr/nuxeo/site/esupversions/a4f17fcd-8301-407f-b53b-14053a7362f6&quot;>the final post-refereeing pre-copyedit version (clean copy)</a></b> of your article, that is the <b>final version that hasn&apos;t been formatted by the publisher.</b><br>\
 <br>\
 It is usually a doc file, which does not bear the look and feel of the journal, nor the publisher's copyright notice on it. (2)<br>\
 <br>\
@@ -293,7 +293,7 @@ if ($refdoi != "")
   $body .= "<br><b>".$data[$colTitle]."</b><br>\\";
 }
 
-$body .= "<br>This journal allows use of accepted manuscripts in repositories, ie. <a href=&quot;https://ecm.univ-rennes1.fr/nuxeo/site/esupversions/a4f17fcd-8301-407f-b53b-14053a7362f6&quot;>final drafts post-refereeing (clean copy)</a> that haven’t been formatted by the publisher (2).<br>\
+$body .= "<br>This journal allows use of accepted manuscripts in repositories, ie. <a href=&quot;https://ecm.univ-rennes1.fr/nuxeo/site/esupversions/a4f17fcd-8301-407f-b53b-14053a7362f6&quot;>final drafts post-refereeing (clean copy)</a> that haven&apos;t been formatted by the publisher (2).<br>\
 <br>\
 <b>I was able to retrieve the accepted manuscript from the publisher's platform.<br>\
 I shall deposit it in our institutional repository, as is authorized by the publisher, unless you tell us otherwise.</b><br>\

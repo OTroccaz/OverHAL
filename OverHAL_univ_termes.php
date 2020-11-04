@@ -72,6 +72,6 @@ $UNIV_LISTE = array(
 69 => array("pays"=>"Switzerland", "univ"=>"Universitat "),
 70 => array("pays"=>"Luxembourg", "univ"=>"Universitat "),
 71 => array("pays"=>"Liechtenstein", "univ"=>"Universitat "),
-72 => array("pays"=>"Netherlands", "univ"=>"Universiteit")
+72 => array("pays"=>"Netherlands", "univ"=>"Universiteit ")
 );
 ?>

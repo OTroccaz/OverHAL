@@ -10,8 +10,8 @@ if (isset($_GET['css']) && ($_GET['css'] != ""))
 <html lang="fr">
 
 <head>
-  <title>CouvHAL : Importation HTML</title>
-  <meta name="Description" content="CouvHAL : HTML import">
+  <title>OverHAL : Importation HTML</title>
+  <meta name="Description" content="OverHAL : HTML import">
   <link rel="stylesheet" href="<?php echo($css);?>" type="text/css">
   <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">  
