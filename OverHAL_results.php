@@ -371,7 +371,8 @@ foreach ($souBib as $key => $subTab)
 	<!-- <link href="./assets/css/app-creative-dark.min.css" rel="stylesheet" type="text/css" id="dark-style" /> -->
 	
 	<!-- third party js -->
-	<script src="OverHAL.js"></script>
+	<script src="./OverHAL.js"></script>
+	<script src="./OverHAL_results.js"></script>
 	<!-- third party js end -->
 	
 	<!-- bundle -->

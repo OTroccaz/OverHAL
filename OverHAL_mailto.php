@@ -18,7 +18,7 @@ $headers .= "Content-Transfer-Encoding: 8bit"."\r\n";
 //$headers .= $adr."\r\n";
 $jules = stripAccents(mb_encode_mimeheader("Jules César", "UTF-8"));
 $headers .= 'From: '.$jules.' <jules.cesar@univ-rome.fr>'."\r\n";
-$headers .= "Reply-to: '.$jules.' <jules.cesar@univ-rome.fr>"."\r\n";
+$headers .= 'Reply-to: '.$jules.' <jules.cesar@univ-rome.fr>'."\r\n";
 $headers .= 'Cc: votre.adresse1@mail.fr'."\r\n";
 $headers .= 'BCc: votre.adresse2@mail.fr'."\r\n";
 
