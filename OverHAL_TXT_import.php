@@ -160,6 +160,10 @@ if (file_exists('./PubMed.txt')) {//TXT PubMed file has been submitted
 				$tabPM['pubmedcentral'][$j] = str_replace(array("PMC - ", "\r\n", "\r", "\n", PHP_EOL, chr(10), chr(13), chr(10).chr(13)), "", $ligne);
 				break;
 				
+			case "PST - ":
+				$tabPM['statut'][$j] = str_replace(array("PST - ", "\r\n", "\r", "\n", PHP_EOL, chr(10), chr(13), chr(10).chr(13)), "", $ligne);
+				break;
+				
 			case "CRDT- "://2020/09/08 17:12
 				$res = str_replace(array("CRDT- ", "\r\n", "\r", "\n", PHP_EOL, chr(10), chr(13), chr(10).chr(13)), "", $ligne);
 				$tabRes = explode(" ", $res);
@@ -171,7 +175,7 @@ if (file_exists('./PubMed.txt')) {//TXT PubMed file has been submitted
 		if (substr($tabPM['motscles'][$j], -2) == ", ") {$tabPM['motscles'][$j] = substr($tabPM['motscles'][$j], 0, (strlen($tabPM['motscles'][$j]) - 2));}
 	}
 	
-	//var_dump($tabPM);
+	var_dump($tabPM);
 	
 	//export results in a CSV file
 	$Fnm = "./HAL/pubmed_txt.csv"; 
@@ -251,8 +255,12 @@ if (file_exists('./PubMed.txt')) {//TXT PubMed file has been submitted
 			$chaine .= "^";
 		}
 		
-		//Statut ?
-		$chaine .= "^";
+		//Statut
+		if (isset($tabPM['statut'][$i])) {
+			$chaine .= $tabPM['statut'][$i]."^";
+		}else{
+			$chaine .= "^";
+		}
 		
 		//DateEpub
 		if (isset($tabPM['dateEpub'][$i])) {
