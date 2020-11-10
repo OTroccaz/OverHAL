@@ -183,32 +183,35 @@ if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
                                                             <label for="wos_csv" class="badge badge-secondary-lighten">Web of Science (CSV) :</label>
                                                             <input class="form-control mb-1" id="wos_csv" name="wos_csv" type="file">
 
-                                                            <label for="wos_csv" class="badge badge-secondary-lighten">Scopus (CSV) :</label>
+                                                            <label for="scopus" class="badge badge-secondary-lighten">Scopus (CSV) :</label>
                                                             <input class="form-control mb-1" id="scopus" name="scopus" type="file">
 																														
-																														<span><br><a target="_blank" rel="noopener noreferrer" href="OverHAL_FCGI_construct_import.php"> Construire un fichier FCGI à partir d'une liste de PMID</a>, puis l'envoyer à OverHAL avec ce formulaire.</span>
-
+																														<label for="pubmed_txt" class="badge badge-secondary-lighten">Pubmed (TXT) :</label>
+                                                            <input class="form-control mb-1" id="pubmed_txt" name="pubmed_txt" type="file">
+																														
                                                         </div>
 
                                                         <div class="form-group col-sm-4">
 
-                                                            <label for="wos_csv" class="badge badge-secondary-lighten">Zotero (CSV) :</label>
+                                                            <label for="zotero" class="badge badge-secondary-lighten">Zotero (CSV) :</label>
                                                             <input class="form-control mb-1" id="zotero" name="zotero" type="file">
 
-                                                            <label for="wos_csv" class="badge badge-secondary-lighten">SciFinder (CSV) :</label>
+                                                            <label for="scifin" class="badge badge-secondary-lighten">SciFinder (CSV) :</label>
                                                             <input class="form-control mb-1" id="scifin" name="scifin" type="file">
 																														
-																														<label for="wos_csv" class="badge badge-secondary-lighten">Pubmed (FCGI) :</label>
+																														<label for="pubmed_fcgi" class="badge badge-secondary-lighten">Pubmed (FCGI) :</label>
                                                             <input class="form-control mb-1" id="pubmed_fcgi" name="pubmed_fcgi" type="file">
+																														
+																														<span><a target="_blank" rel="noopener noreferrer" href="OverHAL_FCGI_construct_import.php"> Construire un fichier FCGI à partir d'une liste de PMID</a>, puis l'envoyer à OverHAL avec le formulaire ci-dessus.</span>
                                                             
                                                         </div>
 
                                                         <div class="form-group col-sm-4">
 
-                                                            <label for="wos_csv" class="badge badge-secondary-lighten">Pubmed (CSV) : </label>
+                                                            <label for="pubmed_csv" class="badge badge-secondary-lighten">Pubmed (CSV) : </label>
                                                             <input class="form-control mb-1" id="pubmed_csv" name="pubmed_csv" type="file">
 
-                                                            <label for="wos_csv" class="badge badge-secondary-lighten">Pubmed (XML) : </label>
+                                                            <label for="pubmed_xml" class="badge badge-secondary-lighten">Pubmed (XML) : </label>
                                                             <input class="form-control mb-1" id="pubmed_xml" name="pubmed_xml" type="file">
 
 																														<?php

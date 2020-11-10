@@ -20,9 +20,11 @@ if (file_exists("./HAL/OverHAL_wos_csv.bib")) {unlink("./HAL/OverHAL_wos_csv.bib
 if (file_exists("./HAL/OverHAL_scifin.bib")) {unlink("./HAL/OverHAL_scifin.bib");}
 if (file_exists("./HAL/OverHAL_zotero.bib")) {unlink("./HAL/OverHAL_zotero.bib");}
 if (file_exists("./HAL/OverHAL_pubmed_xml.bib")) {unlink("./HAL/OverHAL_pubmed_xml.bib");}
+if (file_exists("./HAL/OverHAL_pubmed_txt.bib")) {unlink("./HAL/OverHAL_pubmed_txt.bib");}
 if (file_exists("./HAL/OverHAL_pubmed_csv.bib")) {unlink("./HAL/OverHAL_pubmed_csv.bib");}
 if (file_exists("./HAL/OverHAL_pubmed_fcgi.bib")) {unlink("./HAL/OverHAL_pubmed_fcgi.bib");}
 if (file_exists("./HAL/OverHAL_dimensions.bib")) {unlink("./HAL/OverHAL_dimensions.bib");}
+if (file_exists("./HAL/OverHAL_pubmed_txt.bib")) {unlink("./HAL/OverHAL_pubmed_txt.bib");}
 
 //TEI files deletion
 if (file_exists("./HAL/OverHAL_scopus.zip")) {unlink("./HAL/OverHAL_scopus.zip");}
@@ -30,8 +32,10 @@ if (file_exists("./HAL/OverHAL_wos_csv.zip")) {unlink("./HAL/OverHAL_wos_csv.zip
 if (file_exists("./HAL/OverHAL_scifin.zip")) {unlink("./HAL/OverHAL_scifin.zip");}
 if (file_exists("./HAL/OverHAL_zotero.zip")) {unlink("./HAL/OverHAL_zotero.zip");}
 if (file_exists("./HAL/OverHAL_pubmed_xml.zip")) {unlink("./HAL/OverHAL_pubmed_xml.zip");}
+if (file_exists("./HAL/OverHAL_pubmed_txt.zip")) {unlink("./HAL/OverHAL_pubmed_txt.zip");}
 if (file_exists("./HAL/OverHAL_pubmed_fcgi.zip")) {unlink("./HAL/OverHAL_pubmed_fcgi.zip");}
 if (file_exists("./HAL/OverHAL_dimensions.zip")) {unlink("./HAL/OverHAL_dimensions.zip");}
+if (file_exists("./HAL/OverHAL_pubmed_txt.zip")) {unlink("./HAL/OverHAL_pubmed_txt.zip");}
 
 //Possibilité de désactiver temporairement SR : = oui ou non
 $desactivSR = "non";
@@ -151,6 +155,37 @@ if (isset($_FILES['pubmed_xml']))
     include "./OverHAL_XML_import.php";
     //unlink("Pubmed.html");
     $pubmed_xml = 1;
+  }
+}
+
+$pubmed_txt= 0;
+if (isset($_FILES['pubmed_txt']))
+{
+  if ($_FILES['pubmed_txt']['error'] != 4)//Is there a pubmed TXT file ?
+  {
+    if ($_FILES['pubmed_txt']['error'])
+    {
+      switch ($_FILES['pubmed_txt']['error'])
+      {
+         case 1: // UPLOAD_ERR_INI_SIZE
+         Header("Location: "."OverHAL.php?erreur=1");
+         break;
+         case 2: // UPLOAD_ERR_FORM_SIZE
+         Header("Location: "."OverHAL.php?erreur=2");
+         break;
+         case 3: // UPLOAD_ERR_PARTIAL
+         Header("Location: "."OverHAL.php?erreur=3");
+         break;
+      }
+    }
+    $extension = strrchr($_FILES['pubmed_txt']['name'], '.');
+    if ($extension != ".txt") {
+      Header("Location: "."OverHAL.php?erreur=5");
+    }
+    move_uploaded_file($_FILES['pubmed_txt']['tmp_name'], "PubMed.txt");
+    include "./OverHAL_TXT_import.php";
+    //unlink("Pubmed.html");
+    $pubmed_txt = 1;
   }
 }
 
@@ -298,6 +333,21 @@ if ($pubmed_xml == 1)
   $souBib["pubmed_xml"] = $pubmedXmlTab;
 }
 
+if ($pubmed_txt == 1)
+{
+  $pubmedTxtTab = array(
+    "Maj" => "PubMed (TXT)",
+    "Sep" => "^",
+    "Year" => "DatePub",
+    "Title" => "Titre",
+    "DOI" => "DOI",
+    "Authors" => "Auteurs",
+    "Source" => "Revue",
+    "Type" => "Type",
+  );
+  $souBib["pubmed_txt"] = $pubmedTxtTab;
+}
+
 if ($pubmed_fcgi == 1)
 {
   $pubmedFCGITab = array(
@@ -318,7 +368,7 @@ $nbSouBib = count($souBib);
 //Tests errors on file submit
 foreach ($souBib as $key => $subTab)
 {
-  if ($key != "wos_html" && $key != "pubmed_html" && $key != "pubmed_xml" && $key != "pubmed_fcgi")
+  if ($key != "wos_html" && $key != "pubmed_html" && $key != "pubmed_xml" && $key != "pubmed_txt" && $key != "pubmed_fcgi")
   {
     if (isset($_FILES[$key]['name']) && $_FILES[$key]['name'] != "") //File has been submitted
     {
@@ -1220,11 +1270,16 @@ foreach ($souBib as $key => $subTab)
 				{
 					$handle = fopen("./HAL/pubmed_xml.csv",'r');
 				}else{
-					if($key == "pubmed_fcgi")
+					if($key == "pubmed_txt")
 					{
-						$handle = fopen("./HAL/pubmed_fcgi.csv",'r');
+						$handle = fopen("./HAL/pubmed_txt.csv",'r');
 					}else{
-						$handle = fopen($_FILES[$key]['tmp_name'],'r');
+						if($key == "pubmed_fcgi")
+						{
+							$handle = fopen("./HAL/pubmed_fcgi.csv",'r');
+						}else{
+							$handle = fopen($_FILES[$key]['tmp_name'],'r');
+						}
 					}
 				}
 			}
@@ -1598,6 +1653,7 @@ foreach ($souBib as $key => $subTab)
 					break;
 				case "wos_html":
 				case "pubmed_xml":
+				case "pubmed_txt":
 				case "pubmed_fcgi":
 				case "zotero":
 					if ($papers[$key][$key2]['ISSN'] != "")
@@ -1917,6 +1973,7 @@ foreach ($souBib as $key => $subTab)
 					$linkSource = "<a target=\"_blank\" href=\"http://www.ncbi.nlm.nih.gov/pubmed/".$papers[$key][$key2]['EntrezUID']."\"><img alt='Pubmed' src=\"./img/pubmed.png\"></a>";
 					break;
 				case "pubmed_xml":
+				case "pubmed_txt":
 					$linkSource = "<a target=\"_blank\" href=\"http://www.ncbi.nlm.nih.gov/pubmed/".$papers[$key][$key2]['PMID']."\"><img alt='Pubmed' src=\"./img/pubmed.png\"></a>";
 					break;
 				case "pubmed_fcgi":
@@ -2078,7 +2135,7 @@ foreach ($souBib as $key => $subTab)
 						{
 							$imgMailM = "./img/bouton-m.jpg";
 						}
-						$linkMailM = "<div id=\"".$titreNorm."M\"><a href=\"#".$titreNorm."\" onClick=\"majMailsM('".$adr."','".$titreNorm."','".$refdoi."','M','','".strtoupper($lang)."','".$callNumber."'); mailto('".$adr."','".$subjectM."','".$bodyM."');\"><img alt='".$adr."' title='".$adr."' src=\"".$imgMailM."\"></a></div>";
+						$linkMailM = "<div id=\"".$titreNorm."M\"><a href=\"#".$titreNorm."\" onClick=\"majMailsM('".$adr."','".$titreNorm."','".$refdoi."','M','','".strtoupper($lang)."','".$callNumber."'); mailto('".$adr."','".$subjectM."','".$bodyM."');\"><img alt='".$adr."' title='".$adr."' src='".$imgMailM."'></a></div>";
 					}else{//new solicitation
 						if ($lang == "FR")
 						{
@@ -2090,7 +2147,7 @@ foreach ($souBib as $key => $subTab)
 						{
 							$imgMailM = "./img/bouton-m.jpg";
 						}
-						$linkMailM = "<div id=\"".$titreNorm."M\"><a href=\"#".$titreNorm."\" onClick=\"majMailsM('".$adr."','".$titreNorm."','".$refdoi."','M','','".strtoupper($lang)."','".$callNumber."'); mailto('".$adr."','".$subjectM."','".$bodyM."');\"><img alt='".$adr."' title='".$adr."' src=\"".$imgMailM."\"></a></div>";
+						$linkMailM = "<div id=\"".$titreNorm."M\"><a href=\"#".$titreNorm."\" onClick=\"majMailsM('".$adr."','".$titreNorm."','".$refdoi."','M','','".strtoupper($lang)."','".$callNumber."'); mailto('".$adr."','".$subjectM."','".$bodyM."');\"><img alt='".$adr."' title='".$adr."' src='".$imgMailM."'></a></div>";
 					}
 					if ($nouvelEnvoiP == "non")
 					{
@@ -2104,7 +2161,7 @@ foreach ($souBib as $key => $subTab)
 						{
 							$imgMailP = "./img/bouton-p.jpg";
 						}
-						$linkMailP = "<div id=\"".$titreNorm."P\"><a href=\"#".$titreNorm."\" onClick=\"majMailsP('".$adr."','".$titreNorm."','".$refdoi."','P','','".strtoupper($lang)."','".$callNumber."'); mailto('".$adr."','".$subjectP."','".$bodyP."');\"><img alt='".$adr."' title='".$adr."' src=\"".$imgMailP."\"></a></div>";
+						$linkMailP = "<div id=\"".$titreNorm."P\"><a href=\"#".$titreNorm."\" onClick=\"majMailsP('".$adr."','".$titreNorm."','".$refdoi."','P','','".strtoupper($lang)."','".$callNumber."'); mailto('".$adr."','".$subjectP."','".$bodyP."');\"><img alt='".$adr."' title='".$adr."' src='".$imgMailP."'></a></div>";
 					}else{//new solicitation
 						if ($lang == "FR")
 						{
@@ -2116,7 +2173,7 @@ foreach ($souBib as $key => $subTab)
 						{
 							$imgMailP = "./img/bouton-p.jpg";
 						}
-						$linkMailP = "<div id=\"".$titreNorm."P\"><a href=\"#".$titreNorm."\" onClick=\"majMailsP('".$adr."','".$titreNorm."','".$refdoi."','P','','".strtoupper($lang)."','".$callNumber."'); mailto('".$adr."','".$subjectP."','".$bodyP."');\"><img alt='".$adr."' title='".$adr."' src=\"".$imgMailP."\"></a></div>";
+						$linkMailP = "<div id=\"".$titreNorm."P\"><a href=\"#".$titreNorm."\" onClick=\"majMailsP('".$adr."','".$titreNorm."','".$refdoi."','P','','".strtoupper($lang)."','".$callNumber."'); mailto('".$adr."','".$subjectP."','".$bodyP."');\"><img alt='".$adr."' title='".$adr."' src='".$imgMailP."'></a></div>";
 					}
 				}else{
 					$linkMailM = "<strong>OK</strong>";
@@ -2124,8 +2181,8 @@ foreach ($souBib as $key => $subTab)
 				}
 				if ($mailValide == "non")
 				{
-					$linkMailM = "<a href=\"#".$titreNorm."\" onClick=\"errAdr('".$adr."');\"><img alt='".$adr."' title='".$adr."' src=\"".$imgMailM."\"></a>";
-					$linkMailP = "<a href=\"#".$titreNorm."\" onClick=\"errAdr('".$adr."');\"><img alt='".$adr."' title='".$adr."' src=\"".$imgMailP."\"></a>";
+					$linkMailM = "<a href=\"#".$titreNorm."\" onClick=\"errAdr('".$adr."');\"><img alt='".$adr."' title='".$adr."' src='".$imgMailM."'></a>";
+					$linkMailP = "<a href=\"#".$titreNorm."\" onClick=\"errAdr('".$adr."');\"><img alt='".$adr."' title='".$adr."' src='".$imgMailP."'></a>";
 				}
 
 				if ($noadr == "")
@@ -2159,13 +2216,13 @@ foreach ($souBib as $key => $subTab)
 					}
 					if ($activMailsM == "oui")
 					{
-						echo "<td align='center' valign='top'><img alt='".$noadr."' title='".$noadr."' src=\"".$imgMailM."\"></td>";
+						echo "<td align='center' valign='top'><img alt='".$noadr."' title='".$noadr."' src='".$imgMailM."'></td>";
 					}else{
 						echo "<td align='center' valign='top'>&nbsp;</td>";
 					}
 					if ($activMailsP == "oui")
 					{
-						echo "<td align='center' valign='top'><img alt='".$noadr."' title='".$noadr."' src=\"".$imgMailP."\"></td>";
+						echo "<td align='center' valign='top'><img alt='".$noadr."' title='".$noadr."' src='".$imgMailP."'></td>";
 					}else{
 						echo "<td align='center' valign='top'>&nbsp;</td>";
 					}
@@ -4166,6 +4223,7 @@ foreach ($souBib as $key => $subTab)
 					break;
 					
 				case "pubmed_xml":
+				case "pubmed_txt":
 					$aut = $papers[$key][$key2]['Auteurs'];
 					$autTab = explode("; ",$aut);
 					if (count($autTab) < $limNbAut)
@@ -4264,11 +4322,11 @@ foreach ($souBib as $key => $subTab)
 						$pmid = supprAmp($papers[$key][$key2]['PMID']);//PMID
 						mb_internal_encoding('UTF-8');
 						$zip = new ZipArchive();
-						$FnmZ = "./HAL/OverHAL_pubmed_xml.zip";
+						$FnmZ = "./HAL/OverHAL_".$key.".zip";
 						if ($zip->open($FnmZ, ZipArchive::CREATE)!==TRUE) {
 							exit("Impossible d'ouvrir le fichier <$FnmZ>\n");
 						}
-						$Fnm = "./HAL/OverHAL_pubmed_xml_".$pmid.".xml";
+						$Fnm = "./HAL/OverHAL_".$key."_".$pmid.".xml";
 						$inF = fopen($Fnm,"a+");
 						fseek($inF, 0);
 						//$chaine = "\xEF\xBB\xBF";//UTF-8
@@ -5634,6 +5692,10 @@ if (file_exists("./HAL/OverHAL_pubmed_xml.bib"))
 {
 	echo '<br /><a class="btn btn-secondary mt-2" target="_blank" rel="noopener noreferrer" href="./HAL/OverHAL_pubmed_xml.bib">Exporter les résultats PubMed pour Bib2HAL</a>';
 }
+if (file_exists("./HAL/OverHAL_pubmed_txt.bib"))
+{
+	echo '<br /><a class="btn btn-secondary mt-2" target="_blank" rel="noopener noreferrer" href="./HAL/OverHAL_pubmed_txt.bib">Exporter les résultats PubMed pour Bib2HAL</a>';
+}
 if (file_exists("./HAL/OverHAL_pubmed_csv.bib"))
 {
 	echo '<br /><a class="btn btn-secondary mt-2" target="_blank" rel="noopener noreferrer" href="./HAL/OverHAL_pubmed_csv.bib">Exporter les résultats PubMed pour Bib2HAL</a>';
@@ -5657,6 +5719,10 @@ if (file_exists("./HAL/OverHAL_zotero.zip"))
 if (file_exists("./HAL/OverHAL_pubmed_xml.zip"))
 {
 	echo '<br /><a class="btn btn-secondary mt-2" target="_blank" rel="noopener noreferrer" href="./HAL/OverHAL_pubmed_xml.zip">Exporter les résultats Pubmed au format TEI</a>';
+}
+if (file_exists("./HAL/OverHAL_pubmed_txt.zip"))
+{
+	echo '<br /><a class="btn btn-secondary mt-2" target="_blank" rel="noopener noreferrer" href="./HAL/OverHAL_pubmed_txt.zip">Exporter les résultats Pubmed au format TEI</a>';
 }
 if (file_exists("./HAL/OverHAL_pubmed_fcgi.zip"))
 {
