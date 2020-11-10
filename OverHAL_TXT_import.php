@@ -125,7 +125,7 @@ if (file_exists('./PubMed.txt')) {//TXT PubMed file has been submitted
 						$tabPM['affiliation'][$j] .= "; ";
 						$auteur = str_replace(array("FAU - ", "\r\n", "\r", "\n", PHP_EOL, chr(10), chr(13), chr(10).chr(13)), "", $tabFI[$i+1]);
 						$orcid = 0;
-						$tabPM['auteurs'][$j] .= $auteur.";";
+						$tabPM['auteurs'][$j] .= $auteur."; ";
 						$tabPM['affiliation'][$j] .= "[".$auteur."] ";
 					}
 					$i++;
@@ -153,7 +153,7 @@ if (file_exists('./PubMed.txt')) {//TXT PubMed file has been submitted
 				break;
 				
 			case "OT  - ":
-				$tabPM['motscles'][$j] .= str_replace(array("OT  - ", "\r\n", "\r", "\n", PHP_EOL, chr(10), chr(13), chr(10).chr(13)), "", $ligne).", ";
+				$tabPM['motscles'][$j] .= str_replace(array("OT  - ", "\r\n", "\r", "\n", PHP_EOL, chr(10), chr(13), chr(10).chr(13)), "", $ligne)."; ";
 				break;
 				
 			case "PMC - ":
@@ -163,7 +163,7 @@ if (file_exists('./PubMed.txt')) {//TXT PubMed file has been submitted
 			case "CRDT- "://2020/09/08 17:12
 				$res = str_replace(array("CRDT- ", "\r\n", "\r", "\n", PHP_EOL, chr(10), chr(13), chr(10).chr(13)), "", $ligne);
 				$tabRes = explode(" ", $res);
-				$tabPM['dateEpub'][$j] = $tabRes[0];
+				$tabPM['dateEpub'][$j] = str_replace("/", "-", $tabRes[0]);
 				break;
 			
 		}
@@ -263,14 +263,14 @@ if (file_exists('./PubMed.txt')) {//TXT PubMed file has been submitted
 		
 		//Revue
 		if (isset($tabPM['journal'][$i])) {
-			$chaine .= str_replace("'", "\'", $tabPM['journal'][$i])."^";
+			$chaine .= str_replace("'", "’", $tabPM['journal'][$i])."^";
 		}else{
 			$chaine .= "^";
 		}
 		
 		//Revue abrégée
 		if (isset($tabPM['revabr'][$i])) {
-			$chaine .= str_replace("'", "\'", $tabPM['revabr'][$i])."^";
+			$chaine .= str_replace("'", "’", $tabPM['revabr'][$i])."^";
 		}else{
 			$chaine .= "^";
 		}
@@ -290,22 +290,22 @@ if (file_exists('./PubMed.txt')) {//TXT PubMed file has been submitted
 		}
 		
 		//Titre
-		if (isset($tabPM['titer'][$i])) {
-			$chaine .= str_replace("'", "\'", $tabPM['titre'][$i])."^";
+		if (isset($tabPM['titre'][$i])) {
+			$chaine .= str_replace("'", "’", $tabPM['titre'][$i])."^";
 		}else{
 			$chaine .= "^";
 		}
 		
 		//Auteurs
 		if (isset($tabPM['auteurs'][$i])) {
-			$chaine .= str_replace("'", "\'", $tabPM['auteurs'][$i])."^";
+			$chaine .= str_replace("'", "’", $tabPM['auteurs'][$i])."^";
 		}else{
 			$chaine .= "^";
 		}
 		
 		//Affiliations
 		if (isset($tabPM['affiliation'][$i])) {
-			$chaine .= str_replace("'", "\'", $tabPM['affiliation'][$i])."^";
+			$chaine .= str_replace("'", "’", $tabPM['affiliation'][$i])."^";
 		}else{
 			$chaine .= "^";
 		}
@@ -319,7 +319,7 @@ if (file_exists('./PubMed.txt')) {//TXT PubMed file has been submitted
 		
 		//Mots-clés
 		if (isset($tabPM['motscles'][$i])) {
-			$chaine .= str_replace("'", "\'", $tabPM['motscles'][$i])."^";
+			$chaine .= str_replace("'", "’", $tabPM['motscles'][$i])."^";
 		}else{
 			$chaine .= "^";
 		}
@@ -329,7 +329,7 @@ if (file_exists('./PubMed.txt')) {//TXT PubMed file has been submitted
 		
 		//Résumé
 		if (isset($tabPM['abstract'][$i])) {
-			$chaine .= str_replace("'", "\'", $tabPM['abstract'][$i])."^";
+			$chaine .= str_replace("'", "’", $tabPM['abstract'][$i])."^";
 		}else{
 			$chaine .= "^";
 		}
