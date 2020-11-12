@@ -46,6 +46,7 @@ if (file_exists('./PubMed.txt')) {//TXT PubMed file has been submitted
 				$tabPM['affiliation'][$j] = "";
 				$tabPM['orcid'][$j] = "";
 				$tabPM['motscles'][$j] = "";
+				
 				$tabPM['pubmed'][$j] = str_replace(array("PMID- ", "\r\n", "\r", "\n", PHP_EOL, chr(10), chr(13), chr(10).chr(13)), "", $ligne);
 				break;
 			
@@ -67,6 +68,9 @@ if (file_exists('./PubMed.txt')) {//TXT PubMed file has been submitted
 				$tabPM['datePub'][$j] = str_replace(array("DP  - ", "\r\n", "\r", "\n", PHP_EOL, chr(10), chr(13), chr(10).chr(13)), "", $ligne);
 				$tabPM['datePub'][$j] = str_replace(array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"), array("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"), $tabPM['datePub'][$j]);
 				$tabPM['datePub'][$j] = str_replace(" ", "-", $tabPM['datePub'][$j]);
+				$temp = $tabPM['datePub'][$j]."-";
+				$temp = str_replace(array("-1-", "-2-", "-3-", "-4-", "-5-", "-6-", "-7-", "-8-", "-9-"), array("-01-", "-02-", "-03-", "-04-", "-05-", "-06-", "-07-", "-08-", "-09-"), $temp);
+				$tabPM['datePub'][$j] = substr($temp, 0, -1);
 				break;
 				
 			case "TI  - ":
@@ -78,6 +82,7 @@ if (file_exists('./PubMed.txt')) {//TXT PubMed file has been submitted
 					$tabPM['titre'][$j] .= $ligne;
 					$i++;
 				}
+				if (substr($tabPM['titre'][$j], -1) == ".") {$tabPM['titre'][$j] = substr($tabPM['titre'][$j], 0, -1);}
 				break;
 				
 			case "PG  - ":
@@ -86,6 +91,7 @@ if (file_exists('./PubMed.txt')) {//TXT PubMed file has been submitted
 				
 			case "LID - ":
 				if (strpos($ligne, ("[doi]")) !== false) {$tabPM['doi'][$j] = str_replace(array("LID - ", " [doi]", "\r\n", "\r", "\n", PHP_EOL, chr(10), chr(13), chr(10).chr(13)), "", $ligne);}
+				break;
 				
 			case "AB  - ":
 				$tabPM['abstract'][$j] = str_replace(array("AB  - ", "\r\n", "\r", "\n", PHP_EOL, chr(10), chr(13), chr(10).chr(13)), "", $ligne);
@@ -175,7 +181,7 @@ if (file_exists('./PubMed.txt')) {//TXT PubMed file has been submitted
 		if (substr($tabPM['motscles'][$j], -2) == ", ") {$tabPM['motscles'][$j] = substr($tabPM['motscles'][$j], 0, (strlen($tabPM['motscles'][$j]) - 2));}
 	}
 	
-	var_dump($tabPM);
+	//var_dump($tabPM);
 	
 	//export results in a CSV file
 	$Fnm = "./HAL/pubmed_txt.csv"; 
