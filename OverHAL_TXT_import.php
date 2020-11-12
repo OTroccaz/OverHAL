@@ -72,9 +72,27 @@ if (file_exists('./PubMed.txt')) {//TXT PubMed file has been submitted
 				$temp = str_replace(array("-1-", "-2-", "-3-", "-4-", "-5-", "-6-", "-7-", "-8-", "-9-"), array("-01-", "-02-", "-03-", "-04-", "-05-", "-06-", "-07-", "-08-", "-09-"), $temp);
 				$tabPM['datePub'][$j] = substr($temp, 0, -1);
 				break;
+			
+			case "LA  - ":
+				$tabPM['langue'][$j] = str_replace(array("LA  - ", "\r\n", "\r", "\n", PHP_EOL, chr(10), chr(13), chr(10).chr(13)), "", $ligne);
+				break;
 				
 			case "TI  - ":
-				$tabPM['titre'][$j] = str_replace(array("TI  - ", "\r\n", "\r", "\n", PHP_EOL, chr(10), chr(13), chr(10).chr(13)), "", $ligne);
+				if (strpos($ligne, "[Not Available]") === false) {
+					$tabPM['titre'][$j] = str_replace(array("TI  - ", "\r\n", "\r", "\n", PHP_EOL, chr(10), chr(13), chr(10).chr(13)), "", $ligne);
+					//Champ sur plusieurs lignes ?
+					while (substr($tabFI[$i+1], 0, 6) == "      ") {
+						$ligne = str_replace("      ", "", $tabFI[$i+1]);
+						$ligne = str_replace(array("\r\n", "\r", "\n", PHP_EOL, chr(10), chr(13), chr(10).chr(13)), "", $ligne);
+						$tabPM['titre'][$j] .= $ligne;
+						$i++;
+					}
+					if (substr($tabPM['titre'][$j], -1) == ".") {$tabPM['titre'][$j] = substr($tabPM['titre'][$j], 0, -1);}
+				}
+				break;
+			
+			case "TT  - ":
+				$tabPM['titre'][$j] = str_replace(array("TT  - ", "\r\n", "\r", "\n", PHP_EOL, chr(10), chr(13), chr(10).chr(13)), "", $ligne);
 				//Champ sur plusieurs lignes ?
 				while (substr($tabFI[$i+1], 0, 6) == "      ") {
 					$ligne = str_replace("      ", "", $tabFI[$i+1]);
@@ -83,6 +101,7 @@ if (file_exists('./PubMed.txt')) {//TXT PubMed file has been submitted
 					$i++;
 				}
 				if (substr($tabPM['titre'][$j], -1) == ".") {$tabPM['titre'][$j] = substr($tabPM['titre'][$j], 0, -1);}
+				$tabPM['langue'][$j] = "fre";
 				break;
 				
 			case "PG  - ":
@@ -136,10 +155,6 @@ if (file_exists('./PubMed.txt')) {//TXT PubMed file has been submitted
 					}
 					$i++;
 				}
-				break;
-				
-			case "LA  - ":
-				$tabPM['langue'][$j] = str_replace(array("LA  - ", "\r\n", "\r", "\n", PHP_EOL, chr(10), chr(13), chr(10).chr(13)), "", $ligne);
 				break;
 				
 			case "PT  - ":
