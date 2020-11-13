@@ -271,6 +271,7 @@ $souBib = array(
     "Authors" => "Author",
     "Source" => "Publication Title",
     "Type" => "Item Type",
+		"Url" => "Url",
   )
 );
 
@@ -1034,6 +1035,8 @@ if(isset($_POST['hal']))
 	 foreach($results->response->docs as $entry)
 	 {
 			$doi = "";
+			$pubLink = "";
+			$seeAlso = "";
 			$titlePlus = "";
 			$titreInit = $entry->title_s[0];
 			//The title of the HAL file will be the main key to look for the article in HAL, we now simplify it (lowercase, no punctuation or spaces, etc.)
@@ -1060,7 +1063,15 @@ if(isset($_POST['hal']))
 			//Saving the DOI
 			if (isset($entry->doiId_s)) {$doi=strtolower($entry->doiId_s);}
 			//if(strlen($doi)>0){$halId[$doi]=($entry->doiId_s);}
-			if(strlen($doi)>0){$halId[$doi]=($entry->halId_s);}
+			if (strlen($doi)>0){$halId[$doi]=($entry->halId_s);}
+			
+			//Saving the publisher link
+			if (isset($entry->publisherLink_s[0])) {$pubLink = normalize(strtolower($entry->publisherLink_s[0]));}
+			if (strlen($pubLink)>0){$halId[$pubLink] = ($entry->publisherLink_s[0]);}
+			
+			//Saving the 'see also' field
+			if (isset($entry->seeAlso_s)) {$seeAlso = normalize(strtolower($entry->seeAlso_s[0]));}
+			if (strlen($seeAlso)>0){$halId[$seeAlso] = ($entry->seeAlso_s[0]);}
 
 			//Saving the year
 			if (isset($entry->conferenceStartDateY_i) && $entry->conferenceStartDateY_i != "")//It's a communication
@@ -1155,7 +1166,15 @@ if(isset($_POST['hal']))
 				if (isset($entry->doiId_s)) {$doi=strtolower($entry->doiId_s);}
 				//if(strlen($doi)>0){$halId[$doi]=($entry->doiId_s);}
 				if(strlen($doi)>0){$halId[$doi]=($entry->halId_s);}
-
+				
+				//Saving the publisher link
+				if (isset($entry->publisherLink_s[0])) {$pubLink = normalize(strtolower($entry->publisherLink_s[0]));}
+				if (strlen($pubLink)>0){$halId[$pubLink] = ($entry->publisherLink_s[0]);}
+				
+				//Saving the 'see also' field
+				if (isset($entry->seeAlso_s)) {$seeAlso = normalize(strtolower($entry->seeAlso_s[0]));}
+				if (strlen($seeAlso)>0){$halId[$seeAlso] = ($entry->seeAlso_s[0]);}
+			
 				//Saving the year
 				if (isset($entry->conferenceStartDateY_i) && $entry->conferenceStartDateY_i != "")//It's a communication
 				{
@@ -1237,7 +1256,7 @@ if(isset($_POST['hal']))
 			
 			}
 	 }
-
+	 
 	 //echo "</ul>";
 	 if ($nbHAL >= 10000)//10000 results max.
 	 {
@@ -1503,6 +1522,21 @@ foreach ($souBib as $key => $subTab)
 					 echo "<tr style=\"background-color:#EEFFEE\"><td valign='top'><a target=\"_blank\" href=\"http://hal.archives-ouvertes.fr/".$halId[$frenchTitle]."\">&hearts;</a></td><td valign='top'>".$halYears[$frenchTitle]."</td><td valign='top'>".$halAuthors[$frenchTitle]."</td><td valign='top'>".$halTitles[$frenchTitle][0]."</td><td valign='top'>".$halWhere[$frenchTitle]."</td><td valign='top'>french title match</td></tr>";
 				 }
 				 $foundInHAL=TRUE;
+				}
+				
+				//Trying to match with publisherLink or seeAlso
+				if ($key == "zotero")
+				{
+					$Url = normalize(strtolower($result[$key][$nb]["Url"]));
+					if((!$foundInHAL) and $Url != "" and (array_key_exists($Url,$halId)))
+					{
+					 if ($limzot == "non")
+					 {
+						 echo "<tr><td valign='top'></td><td valign='top'>".$yearPaper."</td><td valign='top'>".$result[$key][$nb][$colAuthors]."</td><td valign='top'>".$result[$key][$nb][$colTitle]."</td><td valign='top'>".$revuePaper."</td></tr>";
+						 echo "<tr style=\"background-color:#EEFFEE\"><td valign='top'><a target=\"_blank\" href=\"http://hal.archives-ouvertes.fr/".$halId[$frenchTitle]."\">&hearts;</a></td><td valign='top'>".$halYears[$frenchTitle]."</td><td valign='top'>".$halAuthors[$frenchTitle]."</td><td valign='top'>".$halTitles[$frenchTitle][0]."</td><td valign='top'>".$halWhere[$frenchTitle]."</td><td valign='top'>french title match</td></tr>";
+					 }
+					 $foundInHAL=TRUE;
+					}
 				}
 
 				// Search for possible duplicates for communications with year paper and year conference
@@ -2751,9 +2785,9 @@ foreach ($souBib as $key => $subTab)
 					}
 					if (isset($papers[$key][$key2]['Publication Year'])) {$chaine .= "_".mb_strtolower($papers[$key][$key2]['Publication Year'], 'UTF-8');}
 					if (isset($papers[$key][$key2]['Title'])) {$chaine .= ",".chr(13).chr(10)."	title = {".$papers[$key][$key2]['Title']."}";}
-					if (isset($papers[$key][$key2]['Volume'])) {$chaine .= ",".chr(13).chr(10)."	volume = {".$papers[$key][$key2]['Volume']."}";}
+					if (isset($papers[$key][$key2]['Volume'])) {$chaine .= ",".chr(13).chr(10)."	volume = {".str_replace(array("N° ", "VOL. "), "", $papers[$key][$key2]['Volume'])."}";}
 					if (isset($papers[$key][$key2]['ISSN'])) {$chaine .= ",".chr(13).chr(10)."	issn = {".$papers[$key][$key2]['ISSN']."}";}
-					if (isset($papers[$key][$key2]['DOI'])) {$chaine .= ",".chr(13).chr(10)."	doi = {".$papers[$key][$key2]['DOI']."}";}
+					if (isset($papers[$key][$key2]['DOI']) && $papers[$key][$key2]['DOI'] != "") {$chaine .= ",".chr(13).chr(10)."	doi = {".$papers[$key][$key2]['DOI']."}";}
 					if (isset($papers[$key][$key2]['Abstract Note'])) {$chaine .= ",".chr(13).chr(10)."	abstract = {".str_replace(array("{", "}"), "_", trim($papers[$key][$key2]['Abstract Note']))."}";}
 					if (isset($papers[$key][$key2]['Publication Title']))
 					{
@@ -2768,8 +2802,13 @@ foreach ($souBib as $key => $subTab)
 							$titreJTmp = preg_replace("#\([^\)]+\)#", "¤", $titreJ);
 							$titreJVal = str_replace(" ¤", "", $titreJTmp);
 						}
-						$chaine .= ",".chr(13).chr(10)."	journal = {".$titreJVal."}";
+						if ($type == "inbook") {
+							$chaine .= ",".chr(13).chr(10)."	booktitle = {".$titreJVal."}";
+						}else{
+							$chaine .= ",".chr(13).chr(10)."	journal = {".$titreJVal."}";
+						}
 					}
+					if (isset($papers[$key][$key2]['Url'])) {$chaine .= ",".chr(13).chr(10)."	publisherLink = {".$papers[$key][$key2]['Url']."}";}
 					
 					if (isset($_POST['author']) && $_POST['author'] != "" && isset($papers[$key][$key2]['Author']) && $papers[$key][$key2]['Author'] == "")
 					{

@@ -28,7 +28,7 @@ function majReqHAL() {
   hal += year;
   hal += txtint;
   hal += aparai;
-  hal += "&rows=10000&fl=docType_s,docid,halId_s,authFullName_s,title_s,subTitle_s,journalTitle_s,volume_s,issue_s,page_s,producedDateY_i,proceedings_s,files_s,label_s,citationFull_s,bookTitle_s,doiId_s,conferenceStartDateY_i";
+  hal += "&rows=10000&fl=docType_s,docid,halId_s,authFullName_s,title_s,subTitle_s,journalTitle_s,volume_s,issue_s,page_s,producedDateY_i,proceedings_s,files_s,label_s,citationFull_s,bookTitle_s,doiId_s,conferenceStartDateY_i,publisherLink_s,seeAlso_s";
   hal += txtintplus;
   document.getElementById("reqHAL").value = hal;
   

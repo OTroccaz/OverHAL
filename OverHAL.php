@@ -261,7 +261,7 @@ if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
                                                         Requête libre
                                                         </label>
 																												<?php
-																												$reqHAL = "https://api.archives-ouvertes.fr/search/?q=collCode_s:\"IRSET\"&fq=(producedDateY_i:\"".date('Y', time())."\")&rows=10000&fl=docType_s,docid,halId_s,authFullName_s,title_s,subTitle_s,journalTitle_s,volume_s,issue_s,page_s,producedDateY_i,proceedings_s,files_s,label_s,citationFull_s,bookTitle_s,doiId_s,conferenceStartDateY_i";
+																												$reqHAL = "https://api.archives-ouvertes.fr/search/?q=collCode_s:\"IRSET\"&fq=(producedDateY_i:\"".date('Y', time())."\")&rows=10000&fl=docType_s,docid,halId_s,authFullName_s,title_s,subTitle_s,journalTitle_s,volume_s,issue_s,page_s,producedDateY_i,proceedings_s,files_s,label_s,citationFull_s,bookTitle_s,doiId_s,conferenceStartDateY_i,publisherLink_s,seeAlso_s";
 																												?>                                                        
                                                         <div class="col-12 col-md-10">
                                                             <div class="input-group">
@@ -313,17 +313,37 @@ if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
                                                     
                                                 </div>
                                             </div> <!-- .form-group -->
-
-                                            <div class="form-group row mb-1">
-                                                <div class="form-group col-12">
-                                                    <div class="form-inline">
-                                                        <label for="year1" class="mr-2">Années de publication :</label>
-                                                        <input type="text" class="form-control mr-2" id="year1" name="year1" value="<?php echo date('Y', time())-1;?>" size="10" onchange="majReqHAL();">
-                                                        <label for="year2" class="mr-2">à</label>
-                                                        <input type="text" class="form-control mr-2" id="year2" name="year2" value="<?php echo date('Y', time());?>" size="10" onchange="majReqHAL();">
-                                                    </div>
-                                                </div>
-                                            </div>
+																						
+																						<div class="form-group row mb-1">
+																							<div class="form-group col-sm-2">
+																								<label for="year1">Période : Depuis</label>
+																								<select id="year1" class="custom-select" name="year1" onchange="majReqHAL();">
+																								<?php
+																								$moisactuel = date('n', time());
+																								if ($moisactuel >= 10) {$i = date('Y', time())+1;}else{$i = date('Y', time());}
+																								while ($i >= date('Y', time()) - 30) {
+																									if (isset($year1) && $year1 == $i) {$txt = "selected";}else{$txt = "";}
+																									echo '<option value='.$i.' '.$txt.'>'.$i.'</option>' ;
+																									$i--;
+																								}
+																								?>
+																								</select>
+																							</div>
+																							<div class="form-group col-sm-2">
+																								<label for="year2">Jusqu'à</label>
+																								<select id="year2" class="custom-select" name="year2" onchange="majReqHAL();">
+																								<?php
+																								$moisactuel = date('n', time());
+																								if ($moisactuel >= 10) {$i = date('Y', time())+1;}else{$i = date('Y', time());}
+																								while ($i >= date('Y', time()) - 30) {
+																									if (isset($year2) && $year2 == $i) {$txt = "selected";}else{$txt = "";}
+																									echo '<option value='.$i.' '.$txt.'>'.$i.'</option>';
+																									$i--;
+																								}
+																								?>
+																								</select>
+																							</div>
+                                            </div><!-- .form-group -->
 
                                             <div class="form-group row mb-2">
                                                 <div class="col-12">
