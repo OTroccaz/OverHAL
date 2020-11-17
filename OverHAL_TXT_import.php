@@ -125,15 +125,16 @@ if (file_exists('./PubMed.txt')) {//TXT PubMed file has been submitted
 				
 			case "FAU - ":
 				$auteur = str_replace(array("FAU - ", "\r\n", "\r", "\n", PHP_EOL, chr(10), chr(13), chr(10).chr(13)), "", $ligne);
-				$orcid = 0;
+				//$orcid = 0;
 				$tabPM['auteurs'][$j] .= $auteur."; ";
 				$tabPM['affiliation'][$j] .= "[".$auteur."] ";
 				
 				while (substr($tabFI[$i+1], 0, 6) == "FAU - " || substr($tabFI[$i+1], 0, 6) == "AU  - " || substr($tabFI[$i+1], 0, 6) == "AUID- " || substr($tabFI[$i+1], 0, 6) == "AD  - ") {
 					//echo $tabFI[$i+1].'<br>';
 					if (substr($tabFI[$i+1], 0, 6) == "AUID- ") {
-						$tabPM['orcid'][$j] .= "http://orcid.org/".str_replace(array("AUID- ORCID: ", "\r\n", "\r", "\n", PHP_EOL, chr(10), chr(13), chr(10).chr(13)), "", $tabFI[$i+1])."~|~";
-						$orcid = 1;
+						//$tabPM['orcid'][$j] .= "https://orcid.org/".str_replace(array("AUID- ORCID: ", "\r\n", "\r", "\n", PHP_EOL, chr(10), chr(13), chr(10).chr(13)), "", $tabFI[$i+1])."~|~";
+						$tabPM['orcid'][$j] .= $auteur."/".str_replace(array("AUID- ORCID: ", "\r\n", "\r", "\n", PHP_EOL, chr(10), chr(13), chr(10).chr(13)), "", $tabFI[$i+1])."; ";
+						//$orcid = 1;
 					}
 					if (substr($tabFI[$i+1], 0, 6) == "AD  - ") {
 						$tabPM['affiliation'][$j] .= str_replace(array("AD  - ", "\r\n", "\r", "\n", PHP_EOL, chr(10), chr(13), chr(10).chr(13)), "", $tabFI[$i+1]);
@@ -146,10 +147,10 @@ if (file_exists('./PubMed.txt')) {//TXT PubMed file has been submitted
 						}
 					}
 					if (substr($tabFI[$i+1], 0, 6) == "FAU - ") {//Nouvel auteur
-						if ($orcid == 0) {$tabPM['orcid'][$j] .= "~|~";}
+						//if ($orcid == 0) {$tabPM['orcid'][$j] .= "~|~";}
 						$tabPM['affiliation'][$j] .= "; ";
 						$auteur = str_replace(array("FAU - ", "\r\n", "\r", "\n", PHP_EOL, chr(10), chr(13), chr(10).chr(13)), "", $tabFI[$i+1]);
-						$orcid = 0;
+						//$orcid = 0;
 						$tabPM['auteurs'][$j] .= $auteur."; ";
 						$tabPM['affiliation'][$j] .= "[".$auteur."] ";
 					}

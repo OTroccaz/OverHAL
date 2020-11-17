@@ -223,7 +223,8 @@ foreach($xml as $PubmedArticle){
       }
       
       //if ($elt->AffiliationInfo->Affiliation != "") {$listAff .= $autAff.$elt->AffiliationInfo->Affiliation."~|~";}else{$listAff .= "~|~";}
-      if ($elt->Identifier != "" && $elt->Identifier["Source"] == "ORCID") {$listOrc .= $elt->Identifier."~|~";}else{$listOrc .= "~|~";}
+      //if ($elt->Identifier != "" && $elt->Identifier["Source"] == "ORCID") {$listOrc .= $elt->Identifier."~|~";}else{$listOrc .= "~|~";}
+			if ($elt->Identifier != "" && $elt->Identifier["Source"] == "ORCID") {$listOrc .= $elt->LastName.", ".$elt->ForeName."/".str_replace("http://orcid.org/", "", $elt->Identifier)."; ";}
     }
     $listAut = substr($listAut, 0, (strlen($listAut) - 2));
     $chaine .= $listAut."^";

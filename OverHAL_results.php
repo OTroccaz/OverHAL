@@ -3126,7 +3126,7 @@ foreach ($souBib as $key => $subTab)
 						//var_dump($autTab);
 						//var_dump($labTab);
 						$strTab = array();
-						$ddn = supprAmp($papers[$key][$key2]['UT']);//Document Delivery Number > Accession Number
+						$ddn = supprAmp(str_replace("WOS:", "", $papers[$key][$key2]['UT']));//Document Delivery Number > Accession Number
 						mb_internal_encoding('UTF-8');
 						$zip = new ZipArchive();
 						$FnmZ = "./HAL/OverHAL_wos_csv.zip";
@@ -3244,6 +3244,17 @@ foreach ($souBib as $key => $subTab)
 										{
 											$chaine .= '                  <email>'.trim($elt).'</email>'."\r\n";
 											break;//email ajouté > on sort de la boucle
+										}
+									}
+								}
+								if (isset($papers[$key][$key2]['OI']))
+								{//ORCID
+									$tabOrcid = explode(";", $papers[$key][$key2]['OI']);
+									foreach ($tabOrcid as $elt) {
+										if (stripos(trim(normalize($elt)), normalize($nom.', '.$prenom)) !== false)
+										{
+											$chaine .= '                  <idno type="https://orcid.org/">'.str_ireplace($nom.", ".$prenom."/", "", trim($elt)).'</idno>'."\r\n";
+											break;//Orcid ajouté > on sort de la boucle
 										}
 									}
 								}
@@ -4466,6 +4477,17 @@ foreach ($souBib as $key => $subTab)
 								$kT = array_search($nompre, $autTab);
 								//echo $kT." - ".$nom."<br>";
 								
+								if (isset($papers[$key][$key2]['idORCID']))
+								{//ORCID
+									$tabOrcid = explode(";", $papers[$key][$key2]['idORCID']);
+									foreach ($tabOrcid as $elt) {
+										if (stripos(trim(normalize($elt)), normalize($nom.', '.$prenom)) !== false)
+										{
+											$chaine .= '                  <idno type="https://orcid.org/">'.str_ireplace($nom.", ".$prenom."/", "", trim($elt)).'</idno>'."\r\n";
+											break;//Orcid ajouté > on sort de la boucle
+										}
+									}
+								}
 								
 								//var_dump($autTab);
 								if ($kT !== FALSE) {
