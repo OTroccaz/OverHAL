@@ -3230,8 +3230,10 @@ foreach ($souBib as $key => $subTab)
 							}
 							$nom = supprAmp(trim($quiTab[0]));
 							$nompre = $nom .", ".$prenom;
+							$rolAut = "aut";
+							if (stripos($papers[$key][$key2]['RP'], $nom .", ".substr($prenom, 0, 1)) !== false) {$rolAut = "crp";}
 							if ($prenom != "") {
-								$chaine .= '                <author role="aut">'."\r\n";
+								$chaine .= '                <author role="'.$rolAut.'">'."\r\n";
 								$chaine .= '                  <persName>'."\r\n";
 								$chaine .= '                    <forename type="first">'.$prenom.'</forename>'."\r\n";
 								$chaine .= '                    <surname>'.$nom.'</surname>'."\r\n";
@@ -3886,13 +3888,22 @@ foreach ($souBib as $key => $subTab)
 							}
 							$nom = trim($nom);
 							$nompre = $nom .", ".$prenom;
+							$rolAut = "aut";
+							if (stripos($papers[$key][$key2]['Correspondence Address'], $nom .", ".substr($prenom, 0, 1)) !== false) {$rolAut = "crp";}
 							//echo $nompre.'<br>';
 							if ($prenom != "") {
-								$chaine .= '                <author role="aut">'."\r\n";
+								$chaine .= '                <author role="'.$rolAut.'">'."\r\n";
 								$chaine .= '                  <persName>'."\r\n";
 								$chaine .= '                    <forename type="first">'.$prenom.'</forename>'."\r\n";
 								$chaine .= '                    <surname>'.$nom.'</surname>'."\r\n";
 								$chaine .= '                  </persName>'."\r\n";
+								//Si auteur correspondant, recherche du mail
+								if ($rolAut == "crp") {
+									if (stripos($papers[$key][$key2]['Correspondence Address'], "email") !== false) {
+										$tabCrp = explode("email:", $papers[$key][$key2]['Correspondence Address']);
+										$chaine .= '                  <email>'.trim($tabCrp[1]).'</email>'."\r\n";
+									}
+								}
 								$kT = array_search($nompre, $autTab);
 								//echo $kT." - ".$nom." - ".$labTab[$nompre][$kT]."<br>";
 								if ($kT !== FALSE) {
