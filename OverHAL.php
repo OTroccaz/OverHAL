@@ -1,4 +1,14 @@
 <?php
+//authentification CAS ou autre ?
+if (strpos($_SERVER['HTTP_HOST'], '127.0.0.1') !== false || strpos($_SERVER['HTTP_HOST'], 'ecobio') !== false) {
+  include('./_connexion.php');
+}else{
+  require_once('./CAS_connect.php');
+	$HAL_USER = phpCAS::getUser();
+	$HAL_QUOI = "OverHAL";
+	if($HAL_USER != "jonchere" && $HAL_USER != "otroccaz") {include('./Stats_listes_HALUR1.php');}
+}
+
 // récupération de l'adresse IP du client (on cherche d'abord à savoir s'il est derrière un proxy)
 if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
   $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
@@ -123,7 +133,7 @@ if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
                                         </h2>
                                         <h5 class="badge badge-primary badge-pill">Présentation</h5>
 																				
-																				<img src="./img/ricardo-gomez-angel-horgenberg-horgen-switzerland-unsplash.png" alt="Accueil OverHAL" class="img-fluid"><br>
+																				<img src="./img/ricardo-gomez-angel-horgenberg-horgen-switzerland-unsplash.jpg" alt="Accueil OverHAL" class="img-fluid"><br>
 																				<p class="font-italic">Photo : Horgenberg, Horgen, Switzerland by Ricardo Gomez Angel on Unsplash (détail)</p>
 
                                         <p class=" mb-2 text-justify">

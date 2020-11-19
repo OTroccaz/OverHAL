@@ -517,7 +517,7 @@ foreach ($souBib as $key => $subTab)
                                         </h2>
                                         <h5 class="badge badge-primary badge-pill">Présentation</h5>
 																				
-																				<img src="./img/ricardo-gomez-angel-horgenberg-horgen-switzerland-unsplash.png" alt="Accueil OverHAL" class="img-fluid"><br>
+																				<img src="./img/ricardo-gomez-angel-horgenberg-horgen-switzerland-unsplash.jpg" alt="Accueil OverHAL" class="img-fluid"><br>
 																				<p class="font-italic">Photo : Horgenberg, Horgen, Switzerland by Ricardo Gomez Angel on Unsplash (détail)</p>
 
                                         <p class=" mb-2 text-justify">
