@@ -3563,7 +3563,7 @@ foreach ($souBib as $key => $subTab)
 						}
 						if (isset($papers[$key][$key2]['PM']) && $papers[$key][$key2]['PM'] != "")
 						{
-							$chaine .= '              <idno type="pubmed">'.supprAmp($papers[$key][$key2]['PM']).'</idno>'."\r\n";
+							$chaine .= '              <idno type="pubmed">'.supprAmp(str_replace("WOS:", "", $papers[$key][$key2]['PM'])).'</idno>'."\r\n";
 						}
 						$chaine .= '            </biblStruct>'."\r\n";
 						$chaine .= '          </sourceDesc>'."\r\n";
