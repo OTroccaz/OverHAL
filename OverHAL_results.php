@@ -2097,11 +2097,11 @@ foreach ($souBib as $key => $subTab)
 				$mailOK = "";
 
 				foreach($MAILS_LISTE AS $i => $valeur) {
-					if ($refdoi != "" && $MAILS_LISTE[$i]["quoi2"] == $refdoi) //mail already send
+					if ($refdoi != "" && strtolower($MAILS_LISTE[$i]["quoi2"]) == strtolower($refdoi)) //mail already send
 					{
 						$mailOK = "OK";
 					}
-					if ($adr != "" && $MAILS_LISTE[$i]["qui"] == $adr)
+					if ($adr != "" && strtolower($MAILS_LISTE[$i]["qui"]) == strtolower($adr))
 					{
 						$nouvelEnvoiM = "oui";
 						$nouvelEnvoiP = "oui";
