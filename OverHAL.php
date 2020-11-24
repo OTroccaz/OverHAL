@@ -24,8 +24,8 @@ if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
 	<meta charset="utf-8" />
 	<title>OverHAL - HAL - UR1</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta content="" name="description" />
-	<meta content="Coderthemes + Lizuka" name="author" />
+	<meta content="OverHAL permet de générer un fichier de publications TEI HAL pour Zip2HAL à partir d'un fichier source et de contacter les auteurs pour leur manuscrit" />
+	<meta content="Coderthemes + Lizuka + OTroccaz + LJonchere" name="author" />
 	<!-- App favicon -->
 	<link rel="shortcut icon" href="favicon.ico">
 
