@@ -4,7 +4,7 @@ $subjectM = "Texte integral de votre article pour diffusion dans HAL";
 $body = "<font face='corbel'>Bonjour,\
 <br>\
 <br>\
-Je suis chargé de diffuser en open access les publications des laboratoires de l'Université de Rennes 1 dans <a href=&quot;https://hal-univ-rennes1.archives-ouvertes.fr/&quot;>l'archive ouverte HAL-Rennes 1</a> (<a href=&quot;https://openaccess.univ-rennes1.fr/la-politique-open-access-de-rennes-1/&quot;>en savoir plus</a>).<br>\
+Je suis chargé de diffuser en open access les publications des laboratoires de l'Université de Rennes 1 dans <a href=&quot;https://hal-univ-rennes1.archives-ouvertes.fr/&quot;>l'archive ouverte HAL-Rennes 1</a> (<a href=&quot;https://openaccess.univ-rennes1.fr/la-strategie-archive-ouverte&quot;>en savoir plus</a>).<br>\
 ";
 
 switch($team)
@@ -163,7 +163,7 @@ $subjectP = "POSTPRINT Texte integral de votre article pour diffusion dans HAL";
 $body = "<font face='corbel'>Bonjour,\
 <br>\
 <br>\
-Je suis chargé de diffuser en open access les publications des laboratoires de l'Université de Rennes 1 dans <a href=&quot;https://hal-univ-rennes1.archives-ouvertes.fr/&quot;>l'archive ouverte HAL-Rennes 1</a> (<a href=&quot;https://openaccess.univ-rennes1.fr/la-politique-open-access-de-rennes-1/&quot;>en savoir plus</a>).<br>\
+Je suis chargé de diffuser en open access les publications des laboratoires de l'Université de Rennes 1 dans <a href=&quot;https://hal-univ-rennes1.archives-ouvertes.fr/&quot;>l'archive ouverte HAL-Rennes 1</a> (<a href=&quot;https://openaccess.univ-rennes1.fr/la-strategie-archive-ouverte/&quot;>en savoir plus</a>).<br>\
 ";
 
 switch($team)
