@@ -1048,13 +1048,18 @@ if(isset($_POST['hal']))
 				$tradTitle = substr($entry->title_s[0], $posi, $posf-$posi);
 				$encodedTitle=normalize(utf8_encode(mb_strtolower($tradTitle)));
 			}else{
-				//Is there a subTitle ?
-				$titlePlus = $entry->title_s[0];
-				if (isset($entry->subTitle_s[0])) {
-					$titreInit = $titlePlus;
-					$titlePlus .= " : ".$entry->subTitle_s[0];
+				//Does the title integrates a traduction with title_s[1]?
+				if (isset($entry->title_s[1]) && $entry->title_s[1] != "") {
+					$encodedTitle=normalize(utf8_encode(mb_strtolower($entry->title_s[1])));
+				}else{
+					//Is there a subTitle ?
+					$titlePlus = $entry->title_s[0];
+					if (isset($entry->subTitle_s[0])) {
+						$titreInit = $titlePlus;
+						$titlePlus .= " : ".$entry->subTitle_s[0];
+					}
+					$encodedTitle=normalize(utf8_encode(mb_strtolower(utf8_decode($titlePlus))));
 				}
-				$encodedTitle=normalize(utf8_encode(mb_strtolower(utf8_decode($titlePlus))));
 			}
 			//So we store all parameters using the simplified HAL title
 			//We also use the DOI as a key if it is present:
