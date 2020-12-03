@@ -1001,6 +1001,207 @@ function supprAmp($st) {
 	return $st;
 }
 
+function storePrm($entry, $nbHAL, $doi, $pubLink, $seeAlso, $titlePlus, $titreInit, $encodedTitle, &$halId, &$nbHalPerYear, &$halTitles, &$halWhere, &$halAuthors, &$halFullRef, &$halDoctyp, &$halArxivs, &$halPubmed, &$halYears) {
+	//So we store all parameters using the simplified HAL title
+	//We also use the DOI as a key if it is present:
+	$halId[$encodedTitle]=($entry->halId_s);
+
+	//Saving the DOI
+	if (isset($entry->doiId_s)) {$doi=strtolower($entry->doiId_s);}
+	//if(strlen($doi)>0){$halId[$doi]=($entry->doiId_s);}
+	if (strlen($doi)>0){$halId[$doi]=($entry->halId_s);}
+
+	//Saving the publisher link
+	if (isset($entry->publisherLink_s[0])) {$pubLink = normalize(strtolower($entry->publisherLink_s[0]));}
+	if (strlen($pubLink)>0){$halId[$pubLink] = ($entry->publisherLink_s[0]);}
+
+	//Saving the 'see also' field
+	if (isset($entry->seeAlso_s)) {$seeAlso = normalize(strtolower($entry->seeAlso_s[0]));}
+	if (strlen($seeAlso)>0){$halId[$seeAlso] = ($entry->seeAlso_s[0]);}
+
+	//Saving the year
+	if (isset($entry->conferenceStartDateY_i) && $entry->conferenceStartDateY_i != "")//It's a communication
+	{
+		$halYears[$encodedTitle]=($entry->conferenceStartDateY_i);
+		if(strlen($doi)>0){$halYears[$doi]=($entry->conferenceStartDateY_i);}
+	}else
+	{
+		$halYears[$encodedTitle]=($entry->producedDateY_i);
+		if(strlen($doi)>0){$halYears[$doi]=($entry->producedDateY_i);}
+	}
+
+	//Record number of HAL publications per year
+	if (isset($entry->conferenceStartDateY_i) && $entry->conferenceStartDateY_i != "")//It's a communication
+	{
+		if(array_key_exists(($entry->conferenceStartDateY_i),$nbHalPerYear))
+		{
+			 $nbHalPerYear[$entry->conferenceStartDateY_i]+=1;
+		} else
+		{
+			 $nbHalPerYear[$entry->conferenceStartDateY_i]=1;
+		}
+	}else
+	{
+		if(array_key_exists(($entry->producedDateY_i),$nbHalPerYear))
+		{
+			 $nbHalPerYear[$entry->producedDateY_i]+=1;
+		} else
+		{
+			 $nbHalPerYear[$entry->producedDateY_i]=1;
+		}
+	}
+
+	//Saving the title
+	//Is there a subTitle ?
+	$titlePlus = $entry->title_s[0];
+	if (isset($entry->subTitle_s[0])) {
+		$titlePlus .= " : ".$entry->subTitle_s[0];
+	}
+	$halTitles[$encodedTitle]=($titlePlus);
+	if(strlen($doi)>0){$halTitles[$doi]=($titlePlus);}
+	//Saving the publication location: journal, conference or book
+	if(isset($entry->journalTitle_s) && strlen($entry->journalTitle_s)>0)
+	{
+		 $halWhere[$encodedTitle]=($entry->journalTitle_s);
+		 if(strlen($doi)>0){$halWhere[$doi]=($entry->journalTitle_s);}
+	}
+	if(isset($entry->proceedings_s) && strlen($entry->proceedings_s)>0)
+	{
+		 $halWhere[$encodedTitle]=($entry->proceedings_s);
+		 if(strlen($doi)>0){$halWhere[$doi]=($entry->proceedings_s);}
+	}
+	if(isset($entry->bookTitle_s) && strlen($entry->bookTitle_s)>0)
+	{
+		 $halWhere[$encodedTitle]=($entry->bookTitle_s);
+		 if(strlen($doi)>0){$halWhere[$doi]=($entry->bookTitle_s);}
+	}
+
+	//Saving authors:
+	$authors="";
+	$initial = 1;
+	foreach($entry->authFullName_s as $author)
+	{
+		 if ($initial==1){
+				$authors = $author;
+				$initial=0;
+		 } else
+		 {
+				$authors = $authors.", ".$author;
+		 }
+	}
+	$halAuthors[$encodedTitle]=$authors;
+	if(strlen($doi)>0){$halAuthors[$doi]=$authors;}
+
+	//Saving full citation
+	$halFullRef[$encodedTitle]=($entry->citationFull_s);
+	if(strlen($doi)>0){$halFullRef[$doi]=($entry->citationFull_s);}
+	//echo "<li>".$entry->halId_s." - ".normalize(utf8_encode(mb_strtolower(utf8_decode($entry->title_s[0]))))."</li>";
+
+	if (isset($entry->docType_s)) {$halDoctyp[$encodedTitle] = ($entry->docType_s);}
+	if (isset($entry->arxivId_s)) {$halArxivs[$encodedTitle] = ($entry->arxivId_s);}
+	if (isset($entry->pubmedcentralId_s)) {$halPubmed[$encodedTitle] = ($entry->pubmedcentralId_s);}
+
+	$nbHAL+=1;
+
+	if (isset($entry->subTitle_s[0])) {//Duplication of the entry with the reducted title
+		$encodedTitle=normalize(utf8_encode(mb_strtolower(utf8_decode($titreInit))));
+
+		$halId[$encodedTitle]=($entry->halId_s);
+
+		//Saving the DOI
+		if (isset($entry->doiId_s)) {$doi=strtolower($entry->doiId_s);}
+		//if(strlen($doi)>0){$halId[$doi]=($entry->doiId_s);}
+		if(strlen($doi)>0){$halId[$doi]=($entry->halId_s);}
+		
+		//Saving the publisher link
+		if (isset($entry->publisherLink_s[0])) {$pubLink = normalize(strtolower($entry->publisherLink_s[0]));}
+		if (strlen($pubLink)>0){$halId[$pubLink] = ($entry->publisherLink_s[0]);}
+		
+		//Saving the 'see also' field
+		if (isset($entry->seeAlso_s)) {$seeAlso = normalize(strtolower($entry->seeAlso_s[0]));}
+		if (strlen($seeAlso)>0){$halId[$seeAlso] = ($entry->seeAlso_s[0]);}
+
+		//Saving the year
+		if (isset($entry->conferenceStartDateY_i) && $entry->conferenceStartDateY_i != "")//It's a communication
+		{
+			$halYears[$encodedTitle]=($entry->conferenceStartDateY_i);
+			if(strlen($doi)>0){$halYears[$doi]=($entry->conferenceStartDateY_i);}
+		}else
+		{
+			$halYears[$encodedTitle]=($entry->producedDateY_i);
+			if(strlen($doi)>0){$halYears[$doi]=($entry->producedDateY_i);}
+		}
+
+		//Record number of HAL publications per year
+		if (isset($entry->conferenceStartDateY_i) && $entry->conferenceStartDateY_i != "")//It's a communication
+		{
+			if(array_key_exists(($entry->conferenceStartDateY_i),$nbHalPerYear))
+			{
+				 $nbHalPerYear[$entry->conferenceStartDateY_i]+=1;
+			} else
+			{
+				 $nbHalPerYear[$entry->conferenceStartDateY_i]=1;
+			}
+		}else
+		{
+			if(array_key_exists(($entry->producedDateY_i),$nbHalPerYear))
+			{
+				 $nbHalPerYear[$entry->producedDateY_i]+=1;
+			} else
+			{
+				 $nbHalPerYear[$entry->producedDateY_i]=1;
+			}
+		}
+
+		//Saving the title
+		$titlePlus = $entry->title_s[0];
+		$halTitles[$encodedTitle]=($titlePlus);
+		if(strlen($doi)>0){$halTitles[$doi]=($titlePlus);}
+		//Saving the publication location: journal, conference or book
+		if(isset($entry->journalTitle_s) && strlen($entry->journalTitle_s)>0)
+		{
+			 $halWhere[$encodedTitle]=($entry->journalTitle_s);
+			 if(strlen($doi)>0){$halWhere[$doi]=($entry->journalTitle_s);}
+		}
+		if(isset($entry->proceedings_s) && strlen($entry->proceedings_s)>0)
+		{
+			 $halWhere[$encodedTitle]=($entry->proceedings_s);
+			 if(strlen($doi)>0){$halWhere[$doi]=($entry->proceedings_s);}
+		}
+		if(isset($entry->bookTitle_s) && strlen($entry->bookTitle_s)>0)
+		{
+			 $halWhere[$encodedTitle]=($entry->bookTitle_s);
+			 if(strlen($doi)>0){$halWhere[$doi]=($entry->bookTitle_s);}
+		}
+
+		//Saving authors:
+		$authors="";
+		$initial = 1;
+		foreach($entry->authFullName_s as $author)
+		{
+			 if ($initial==1){
+					$authors = $author;
+					$initial=0;
+			 } else
+			 {
+					$authors = $authors.", ".$author;
+			 }
+		}
+		$halAuthors[$encodedTitle]=$authors;
+		if(strlen($doi)>0){$halAuthors[$doi]=$authors;}
+
+		//Saving full citation
+		$halFullRef[$encodedTitle]=($entry->citationFull_s);
+		if(strlen($doi)>0){$halFullRef[$doi]=($entry->citationFull_s);}
+		
+		if (isset($entry->docType_s)) {$halDoctyp[$encodedTitle] = ($entry->docType_s);}
+		if (isset($entry->arxivId_s)) {$halArxivs[$encodedTitle] = ($entry->arxivId_s);}
+		if (isset($entry->pubmedcentralId_s)) {$halPubmed[$encodedTitle] = ($entry->pubmedcentralId_s);}
+		
+		$nbHAL+=1;
+	 }
+}
+
 include("./Glob_normalize.php");
 
 $halId=array();
@@ -1032,6 +1233,7 @@ if(isset($_POST['hal']))
 	 $nbHalPerYear=array();
 	 //echo $hal;
 	 //echo "<br/><br/>Résultats :<ul>";
+	 
 	 foreach($results->response->docs as $entry)
 	 {
 			$doi = "";
@@ -1061,207 +1263,54 @@ if(isset($_POST['hal']))
 					$encodedTitle=normalize(utf8_encode(mb_strtolower(utf8_decode($titlePlus))));
 				}
 			}
-			//So we store all parameters using the simplified HAL title
-			//We also use the DOI as a key if it is present:
-			$halId[$encodedTitle]=($entry->halId_s);
-
-			//Saving the DOI
-			if (isset($entry->doiId_s)) {$doi=strtolower($entry->doiId_s);}
-			//if(strlen($doi)>0){$halId[$doi]=($entry->doiId_s);}
-			if (strlen($doi)>0){$halId[$doi]=($entry->halId_s);}
 			
-			//Saving the publisher link
-			if (isset($entry->publisherLink_s[0])) {$pubLink = normalize(strtolower($entry->publisherLink_s[0]));}
-			if (strlen($pubLink)>0){$halId[$pubLink] = ($entry->publisherLink_s[0]);}
-			
-			//Saving the 'see also' field
-			if (isset($entry->seeAlso_s)) {$seeAlso = normalize(strtolower($entry->seeAlso_s[0]));}
-			if (strlen($seeAlso)>0){$halId[$seeAlso] = ($entry->seeAlso_s[0]);}
-
-			//Saving the year
-			if (isset($entry->conferenceStartDateY_i) && $entry->conferenceStartDateY_i != "")//It's a communication
+			storePrm($entry, $nbHAL, $doi, $pubLink, $seeAlso, $titlePlus, $titreInit, $encodedTitle, $halId, $nbHalPerYear, $halTitles, $halWhere, $halAuthors, $halFullRef, $halDoctyp, $halArxivs, $halPubmed, $halYears);
+	 }
+	 
+	 //Recherche sur CRAC
+	 $hal = str_replace("https://api.archives-ouvertes.fr/search/", "https://api.archives-ouvertes.fr/crac/hal/", $hal);
+	 
+	 $contents = file_get_contents($hal);
+	 $results = json_decode($contents);
+	 
+	 foreach($results->response->docs as $entry)
+	 {
+			$doi = "";
+			$pubLink = "";
+			$seeAlso = "";
+			$titlePlus = "";
+			$titreInit = $entry->title_s[0];
+			//The title of the HAL file will be the main key to look for the article in HAL, we now simplify it (lowercase, no punctuation or spaces, etc.)
+			//Does the title integrates a traduction with []?
+			if(strpos($entry->title_s[0], "[") !== false && strpos($entry->title_s[0], "]") !== false)
 			{
-				$halYears[$encodedTitle]=($entry->conferenceStartDateY_i);
-				if(strlen($doi)>0){$halYears[$doi]=($entry->conferenceStartDateY_i);}
-			}else
-			{
-				$halYears[$encodedTitle]=($entry->producedDateY_i);
-				if(strlen($doi)>0){$halYears[$doi]=($entry->producedDateY_i);}
-			}
-
-			//Record number of HAL publications per year
-			if (isset($entry->conferenceStartDateY_i) && $entry->conferenceStartDateY_i != "")//It's a communication
-			{
-				if(array_key_exists(($entry->conferenceStartDateY_i),$nbHalPerYear))
-				{
-					 $nbHalPerYear[$entry->conferenceStartDateY_i]+=1;
-				} else
-				{
-					 $nbHalPerYear[$entry->conferenceStartDateY_i]=1;
-				}
-			}else
-			{
-				if(array_key_exists(($entry->producedDateY_i),$nbHalPerYear))
-				{
-					 $nbHalPerYear[$entry->producedDateY_i]+=1;
-				} else
-				{
-					 $nbHalPerYear[$entry->producedDateY_i]=1;
-				}
-			}
-
-			//Saving the title
-			//Is there a subTitle ?
-			$titlePlus = $entry->title_s[0];
-			if (isset($entry->subTitle_s[0])) {
-				$titlePlus .= " : ".$entry->subTitle_s[0];
-			}
-			$halTitles[$encodedTitle]=($titlePlus);
-			if(strlen($doi)>0){$halTitles[$doi]=($titlePlus);}
-			//Saving the publication location: journal, conference or book
-			if(isset($entry->journalTitle_s) && strlen($entry->journalTitle_s)>0)
-			{
-				 $halWhere[$encodedTitle]=($entry->journalTitle_s);
-				 if(strlen($doi)>0){$halWhere[$doi]=($entry->journalTitle_s);}
-			}
-			if(isset($entry->proceedings_s) && strlen($entry->proceedings_s)>0)
-			{
-				 $halWhere[$encodedTitle]=($entry->proceedings_s);
-				 if(strlen($doi)>0){$halWhere[$doi]=($entry->proceedings_s);}
-			}
-			if(isset($entry->bookTitle_s) && strlen($entry->bookTitle_s)>0)
-			{
-				 $halWhere[$encodedTitle]=($entry->bookTitle_s);
-				 if(strlen($doi)>0){$halWhere[$doi]=($entry->bookTitle_s);}
-			}
-
-			//Saving authors:
-			$authors="";
-			$initial = 1;
-			foreach($entry->authFullName_s as $author)
-			{
-				 if ($initial==1){
-						$authors = $author;
-						$initial=0;
-				 } else
-				 {
-						$authors = $authors.", ".$author;
-				 }
-			}
-			$halAuthors[$encodedTitle]=$authors;
-			if(strlen($doi)>0){$halAuthors[$doi]=$authors;}
-
-			//Saving full citation
-			$halFullRef[$encodedTitle]=($entry->citationFull_s);
-			if(strlen($doi)>0){$halFullRef[$doi]=($entry->citationFull_s);}
-			//echo "<li>".$entry->halId_s." - ".normalize(utf8_encode(mb_strtolower(utf8_decode($entry->title_s[0]))))."</li>";
-
-			if (isset($entry->docType_s)) {$halDoctyp[$encodedTitle] = ($entry->docType_s);}
-			if (isset($entry->arxivId_s)) {$halArxivs[$encodedTitle] = ($entry->arxivId_s);}
-			if (isset($entry->pubmedcentralId_s)) {$halPubmed[$encodedTitle] = ($entry->pubmedcentralId_s);}
-
-			$nbHAL+=1;
-			
-			if (isset($entry->subTitle_s[0])) {//Duplication of the entry with the reducted title
-				$encodedTitle=normalize(utf8_encode(mb_strtolower(utf8_decode($titreInit))));
-			
-				$halId[$encodedTitle]=($entry->halId_s);
-
-				//Saving the DOI
-				if (isset($entry->doiId_s)) {$doi=strtolower($entry->doiId_s);}
-				//if(strlen($doi)>0){$halId[$doi]=($entry->doiId_s);}
-				if(strlen($doi)>0){$halId[$doi]=($entry->halId_s);}
-				
-				//Saving the publisher link
-				if (isset($entry->publisherLink_s[0])) {$pubLink = normalize(strtolower($entry->publisherLink_s[0]));}
-				if (strlen($pubLink)>0){$halId[$pubLink] = ($entry->publisherLink_s[0]);}
-				
-				//Saving the 'see also' field
-				if (isset($entry->seeAlso_s)) {$seeAlso = normalize(strtolower($entry->seeAlso_s[0]));}
-				if (strlen($seeAlso)>0){$halId[$seeAlso] = ($entry->seeAlso_s[0]);}
-			
-				//Saving the year
-				if (isset($entry->conferenceStartDateY_i) && $entry->conferenceStartDateY_i != "")//It's a communication
-				{
-					$halYears[$encodedTitle]=($entry->conferenceStartDateY_i);
-					if(strlen($doi)>0){$halYears[$doi]=($entry->conferenceStartDateY_i);}
-				}else
-				{
-					$halYears[$encodedTitle]=($entry->producedDateY_i);
-					if(strlen($doi)>0){$halYears[$doi]=($entry->producedDateY_i);}
-				}
-
-				//Record number of HAL publications per year
-				if (isset($entry->conferenceStartDateY_i) && $entry->conferenceStartDateY_i != "")//It's a communication
-				{
-					if(array_key_exists(($entry->conferenceStartDateY_i),$nbHalPerYear))
-					{
-						 $nbHalPerYear[$entry->conferenceStartDateY_i]+=1;
-					} else
-					{
-						 $nbHalPerYear[$entry->conferenceStartDateY_i]=1;
+				$posi = strpos($entry->title_s[0], "[")+1;
+				$posf = strpos($entry->title_s[0], "]");
+				$tradTitle = substr($entry->title_s[0], $posi, $posf-$posi);
+				$encodedTitle=normalize(utf8_encode(mb_strtolower($tradTitle)));
+			}else{
+				//Does the title integrates a traduction with title_s[1]?
+				if (isset($entry->title_s[1]) && $entry->title_s[1] != "") {
+					$encodedTitle=normalize(utf8_encode(mb_strtolower($entry->title_s[1])));
+				}else{
+					//Is there a subTitle ?
+					$titlePlus = $entry->title_s[0];
+					if (isset($entry->subTitle_s[0])) {
+						$titreInit = $titlePlus;
+						$titlePlus .= " : ".$entry->subTitle_s[0];
 					}
-				}else
-				{
-					if(array_key_exists(($entry->producedDateY_i),$nbHalPerYear))
-					{
-						 $nbHalPerYear[$entry->producedDateY_i]+=1;
-					} else
-					{
-						 $nbHalPerYear[$entry->producedDateY_i]=1;
-					}
+					$encodedTitle=normalize(utf8_encode(mb_strtolower(utf8_decode($titlePlus))));
 				}
-
-				//Saving the title
-				$titlePlus = $entry->title_s[0];
-				$halTitles[$encodedTitle]=($titlePlus);
-				if(strlen($doi)>0){$halTitles[$doi]=($titlePlus);}
-				//Saving the publication location: journal, conference or book
-				if(isset($entry->journalTitle_s) && strlen($entry->journalTitle_s)>0)
-				{
-					 $halWhere[$encodedTitle]=($entry->journalTitle_s);
-					 if(strlen($doi)>0){$halWhere[$doi]=($entry->journalTitle_s);}
-				}
-				if(isset($entry->proceedings_s) && strlen($entry->proceedings_s)>0)
-				{
-					 $halWhere[$encodedTitle]=($entry->proceedings_s);
-					 if(strlen($doi)>0){$halWhere[$doi]=($entry->proceedings_s);}
-				}
-				if(isset($entry->bookTitle_s) && strlen($entry->bookTitle_s)>0)
-				{
-					 $halWhere[$encodedTitle]=($entry->bookTitle_s);
-					 if(strlen($doi)>0){$halWhere[$doi]=($entry->bookTitle_s);}
-				}
-
-				//Saving authors:
-				$authors="";
-				$initial = 1;
-				foreach($entry->authFullName_s as $author)
-				{
-					 if ($initial==1){
-							$authors = $author;
-							$initial=0;
-					 } else
-					 {
-							$authors = $authors.", ".$author;
-					 }
-				}
-				$halAuthors[$encodedTitle]=$authors;
-				if(strlen($doi)>0){$halAuthors[$doi]=$authors;}
-
-				//Saving full citation
-				$halFullRef[$encodedTitle]=($entry->citationFull_s);
-				if(strlen($doi)>0){$halFullRef[$doi]=($entry->citationFull_s);}
-				
-				if (isset($entry->docType_s)) {$halDoctyp[$encodedTitle] = ($entry->docType_s);}
-				if (isset($entry->arxivId_s)) {$halArxivs[$encodedTitle] = ($entry->arxivId_s);}
-				if (isset($entry->pubmedcentralId_s)) {$halPubmed[$encodedTitle] = ($entry->pubmedcentralId_s);}
-				
-				$nbHAL+=1;
+			}
 			
+			//Si titre encodé absent du tableau $halId, c'est une nouvelle notice à considérer
+			if (!array_key_exists($encodedTitle, $halId)) {
+				storePrm($entry, $nbHAL, $doi, $pubLink, $seeAlso, $titlePlus, $titreInit, $encodedTitle, $halId, $nbHalPerYear, $halTitles, $halWhere, $halAuthors, $halFullRef, $halDoctyp, $halArxivs, $halPubmed, $halYears);
 			}
 	 }
 	 
+	 
+
 	 //echo "</ul>";
 	 if ($nbHAL >= 10000)//10000 results max.
 	 {
@@ -1350,7 +1399,7 @@ foreach ($souBib as $key => $subTab)
 					if (!empty($data[0]))
 					{
 						//$result[$key][$j][$nomCol[$key][$i]]=trim($data[$i], "\xBB..\xEF");//Suppression of some special ASCII characters linked to CSV files
-						$result[$key][$j][$nomCol[$key][$i]]=$data[$i];
+						$result[$key][$j][$nomCol[$key][$i]] = $data[$i];
 					}else{
 						$i--;
 					}
@@ -1394,21 +1443,26 @@ foreach ($souBib as $key => $subTab)
 				{
 				 $yearPaper = substr($result[$key][$nb][$colYear], -4, 4);
 				}else{
-					if ($key != "wos_csv")
+					if ($key == "pubmed_txt")
 					{
-					 $yearPaper = $result[$key][$nb][$colYear];
+					 $yearPaper = substr($result[$key][$nb][$colYear], 0, 4);
 					}else{
-						if (isset($result[$key][$nb][$colYear]) && $result[$key][$nb][$colYear] != "")
+						if ($key != "wos_csv")
 						{
-							$yearPaper = $result[$key][$nb][$colYear];
+						 $yearPaper = $result[$key][$nb][$colYear];
 						}else{
-							if (isset($result[$key][$nb]['EY']) && $result[$key][$nb]['EY'] != "")
+							if (isset($result[$key][$nb][$colYear]) && $result[$key][$nb][$colYear] != "")
 							{
-								$yearPaper = $result[$key][$nb]['EY'];
+								$yearPaper = $result[$key][$nb][$colYear];
 							}else{
-								if (isset($result[$key][$nb]['EA']) && $result[$key][$nb]['EA'] != "")
+								if (isset($result[$key][$nb]['EY']) && $result[$key][$nb]['EY'] != "")
 								{
-									$yearPaper = substr($result[$key][$nb]['EA'], -4);
+									$yearPaper = $result[$key][$nb]['EY'];
+								}else{
+									if (isset($result[$key][$nb]['EA']) && $result[$key][$nb]['EA'] != "")
+									{
+										$yearPaper = substr($result[$key][$nb]['EA'], -4);
+									}
 								}
 							}
 						}
@@ -1597,1940 +1651,1715 @@ foreach ($souBib as $key => $subTab)
 		Par ailleurs, les notices avec plus de <?php echo $limTEI;?> auteurs ne seront pas prises en compte dans l'export TEI et apparaîtront <s>barrées</s>.</p>
 		<?php
 		//var_dump($papers[$key]);
-		if ($desactivSR != "oui")
-		{
-			echo "<table border='1px' cellpadding='5px' cellspacing='5px' style='border-collapse: collapse' bordercolor='#eeeeee'>";
-			echo "<tr>";
-			echo "<td colspan='9'><strong>Informations diverses collectées grâce à l'API SHERPA/RoMEO</strong></td>";
-			echo "</tr>";
-			echo "<tr>";
-			echo "<td align='center'><img alt='Emargo 6 mois' src='./img/embargo-6.jpg'></td>";
-			echo "<td align='center'><img alt='Emargo 12 mois' src='./img/embargo-12.jpg'></td>";
-			echo "<td align='center'><img alt='Emargo 24 mois' src='./img/embargo-24.jpg'></td>";
-			echo "<td align='center'><img alt='Emargo possible sous certaines conditions' src='./img/embargo-e.jpg'></td>";
-			echo "<td align='center'><img alt='Dépôt du post-print auteur autorisé' src='./img/post-print.png'></td>";
-			echo "<td align='center'><img alt='Dépôt du PDF éditeur autorisé' src='./img/pdf.png'></td>";
-			echo "<td align='center'><img alt='Aucun dépôt autorisé' src='./img/red-cross.png'></td>";
-			echo "<td align='center'><img alt='Journal non référencé dans Sherpa-Romeo' src='./img/ungraded.png'></td>";
-			echo "<td align='center'><img alt='Journal open access référencé dans le DOAJ (Directory of Open Access Journals)' src='./img/doaj.png'></td>";
-			echo "</tr>";
-			echo "<tr>";
-			echo "<td valign='top' colspan='3'><small>Embargo sur la diffusion 6 mois, 12 mois ou 24 mois</small></td>";
-			echo "<td valign='top' ><small>Embargo possible, voir conditions</small></td>";
-			echo "<td valign='top' ><small>Dépôt du post-print auteur autorisé</small></td>";
-			echo "<td valign='top' ><small>Dépôt du PDF éditeur autorisé</small></td>";
-			echo "<td valign='top' ><small>Aucun dépôt autorisé</small></td>";
-			echo "<td valign='top' ><small>Journal non référencé dans Sherpa-Romeo</small></td>";
-			echo "<td valign='top' ><small>Journal open access référencé dans le DOAJ (Directory of Open Access Journals)</small></td>";
-			echo "</tr>";
-			echo "</table><br>";
-		}
-		$k = 1;
-		echo "<table class='table table-responsive table-bordered table-centered'>";
-		echo "<thead class='thead-dark'>";
-		echo "<tr>";
-		echo "<th>&nbsp;</th>";
-		if ($desactivSR == "non")
-		{
-			echo"<th valign='top'><h4>Pprint</h4></th><th valign='top'><h4>PDF</h4></th><th valign='top'><h4>Doaj</h4></th>";
-		}
-		echo "<th valign='top'><h4>Références</h4></th><th valign='top'><h4>DOI</h4></th><th valign='top'><h4>Source</h4></th><th valign='top'><h4>Joker</h4></th>";
-		if ($activMailsM == "oui" || $activMailsP == "oui")
-		{
-			echo "<th align='center' colspan='2' valign='top'><h4>Mails</h4></th>";
-		}
-		echo "</tr>";
-		$cst = 0;
-		$listTit = "¤";
-		foreach($papers[$key] as $key2 => $data)
-		{
-			$imgMailM = "";
-			$imgMailP = "";
-			// Extract the year and the revue
-			if ($key == "pubmed_csv")
-			{
-			 $yearPaper = substr($data[$colYear], -4, 4);
-			 $revuePaper = substr($data[$colSource], 0, -6);
-			}else{
-				if ($key != "wos_csv")
-				{
-				 $yearPaper = $data[$colYear];
-				}else{
-					if (isset($data[$colYear]) && $data[$colYear] != "")
-					{
-						$yearPaper = $data[$colYear];
-					}else{
-						if (isset($data['EY']) && $data['EY'] != "")
-						{
-							$yearPaper = $data['EY'];
-						}else{
-							if (isset($data['EA']) && $data['EA'] != "")
-							{
-								$yearPaper = substr($data['EA'], -4);
-							}
-						}
-					}
-				}
-				$revuePaper = $data[$colSource];
-			}
-			// Trying to retrieve the ISSN number and the DOI
-			$url = "";
-			$resdoi = "";
-			$refdoi = "";
-			switch($key)
-			{
-				case "wos_csv":
-					if ($papers[$key][$key2]['SN'] != "")
-					{
-						$url = 'https://v2.sherpa.ac.uk/cgi/retrieve?item-type=publication&api-key='.$akSR.'&format=Json&filter=[["issn","equals",".'.$papers[$key][$key2]['SN'].'"]]';
-					}
-					if ($papers[$key][$key2]['DI'] != "")
-					{
-						$resdoi = "<a target=\"_blank\" href=\"https://doi.org/".$papers[$key][$key2]['DI']."\"><img alt='DOI' src='./img/doi.jpg'></a>";
-						$refdoi = $papers[$key][$key2]['DI'];
-					}
-					break;
-				case "wos_html":
-				case "pubmed_xml":
-				case "pubmed_txt":
-				case "pubmed_fcgi":
-				case "zotero":
-					if ($papers[$key][$key2]['ISSN'] != "")
-					{
-						$url = 'https://v2.sherpa.ac.uk/cgi/retrieve?item-type=publication&api-key='.$akSR.'&format=Json&filter=[["issn","equals",".'.$papers[$key][$key2]['ISSN'].'"]]';
-					}
-					if ($papers[$key][$key2]['DOI'] != "")
-					{
-						$resdoi = "<a target=\"_blank\" href=\"https://doi.org/".$papers[$key][$key2]['DOI']."\"><img alt='DOI' src='./img/doi.jpg'></a>";
-						$refdoi = $papers[$key][$key2]['DOI'];
-					}
-					break;
-				case "scifin":
-					if ($papers[$key][$key2]['DOI'] != "")
-					{
-						$resdoi = "<a target=\"_blank\" href=\"https://doi.org/".$papers[$key][$key2]['DOI']."\"><img alt='DOI' src='./img/doi.jpg'></a>";
-						$refdoi = $papers[$key][$key2]['DOI'];
-					}
-					if ($papers[$key][$key2]['Internat.Standard Doc. Number'] != "")
-					{
-						$url = 'https://v2.sherpa.ac.uk/cgi/retrieve?item-type=publication&api-key='.$akSR.'&format=Json&filter=[["issn","equals",".'.$papers[$key][$key2]['Internat.Standard Doc. Number'].'"]]';
-					}
-					if ($papers[$key][$key2]['DOI'] != "")
-					{
-						$resdoi = "<a target=\"_blank\" href=\"https://doi.org/".$papers[$key][$key2]['DOI']."\"><img alt='DOI' src='./img/doi.jpg'></a>";
-						$refdoi = $papers[$key][$key2]['DOI'];
-					}
-					break;
-				case "pubmed_zotero":
-					if ($papers[$key][$key2]['ISSN'] != "")
-					{
-						$issn = $papers[$key][$key2]['ISSN'];
-						if (strpos($issn, "-") === false)//No '-' in the ISSN number > 16310691 for example
-						{
-							$issn = substr($issn, 0, 4)."-".substr($issn, -4);
-						}
-						if (strlen($issn) > 9)//Several ISSN numbers > 0031-9007, 1079-7114 for example
-						{
-							$issn = substr($issn, 0, 9);
-						}
-						$url = 'https://v2.sherpa.ac.uk/cgi/retrieve?item-type=publication&api-key='.$akSR.'&format=Json&filter=[["issn","equals",".'.$issn.'"]]';
-					}
-					if ($papers[$key][$key2]['DOI'] != "")
-					{
-						$resdoi = "<a target=\"_blank\" href=\"https://doi.org/".$papers[$key][$key2]['DOI']."\"><img alt='DOI' src='./img/doi.jpg'></a>";
-						$refdoi = $papers[$key][$key2]['DOI'];
-					}
-					break;
-				case "pubmed_html":
-					if ($papers[$key][$key2]['DOI'] != "")
-					{
-						$resdoi = "<a target=\"_blank\" href=\"https://doi.org/".$papers[$key][$key2]['DOI']."\"><img alt='DOI' src='./img/doi.jpg'></a>";
-						$refdoi = $papers[$key][$key2]['DOI'];
-					}
-					$revuePaper2 = str_replace(" ", "%20", $revuePaper);
-					$urlinit = 'https://v2.sherpa.ac.uk/cgi/retrieve?item-type=publication&api-key='.$akSR.'&format=Json&filter=[["title","equals",".'.str_replace('&amp;', '%26', $revuePaper2).'"]]';
-					$raw_data = file_get_contents($urlinit);
-					$jSON = json_decode($raw_data, true);
-					$resultat = array2xml($jSON, false);
-					$dom = new DOMDocument();
-					$dom->loadXML($resultat);
-					$issn = "";
-					$res = $dom->getElementsByTagName("issn");//ISSN
-					if ($res -> length > 0) {
-						$issn = $res->item(0)->nodeValue;
-						if ($issn != "")
-						{
-							$url = 'https://v2.sherpa.ac.uk/cgi/retrieve?item-type=publication&api-key='.$akSR.'&format=Json&filter=[["issn","equals",".'.$issn.'"]]';
-						}
-					}
-					break;
-				case "scopus":
-					if ($papers[$key][$key2]['DOI'] != "")
-					{
-						$resdoi = "<a target=\"_blank\" href=\"https://doi.org/".$papers[$key][$key2]['DOI']."\"><img alt='DOI' src='./img/doi.jpg'></a>";
-						$refdoi = $papers[$key][$key2]['DOI'];
-					}
-					$revuePaper2 = str_replace(" ", "%20", $revuePaper);
-					$urlinit = 'https://v2.sherpa.ac.uk/cgi/retrieve?item-type=publication&api-key='.$akSR.'&format=Json&filter=[["title","equals",".'.str_replace('&amp;', '%26', $revuePaper2).'"]]';
-					$raw_data = file_get_contents($urlinit);
-					$jSON = json_decode($raw_data, true);
-					$resultat = array2xml($jSON, false);
-					$dom = new DOMDocument();
-					$dom->loadXML($resultat);
-					$issn = "";
-					$res = $dom->getElementsByTagName("issn");//ISSN
-					if ($res -> length > 0) {
-						$issn = $res->item(0)->nodeValue;
-						if ($issn != "")
-						{
-							$url = 'https://v2.sherpa.ac.uk/cgi/retrieve?item-type=publication&api-key='.$akSR.'&format=Json&filter=[["issn","equals",".'.$issn.'"]]';
-						}
-					}
-					break;
-				case "pubmed_csv":
-					if (strpos($papers[$key][$key2]['Details'], "doi:") !== false) // DOI found
-					{
-						$pos0 = strpos($papers[$key][$key2]['Details'], "doi:");
-						if (strpos($papers[$key][$key2]['Details'], "pii:") !== false) // Existing previous characters before DOI
-						{
-							$pos1 = strpos($papers[$key][$key2]['Details'], " ", $pos0+10)+1;;
-						}
-						else
-						{
-							$pos1 = $pos0 + 5;
-						}
-						$pos2 = strpos($papers[$key][$key2]['Details'], " ", $pos1+1)-1;
-						if ($pos2 == -1) {$pos2 = strlen($papers[$key][$key2]['Details'])-1;}// No blank space after the beginning of the DOI and the end of the string
-						$resdoi = substr($papers[$key][$key2]['Details'], $pos1, $pos2-$pos1);
-						$refdoi = trim($resdoi);
-						$resdoi = "<a target=\"_blank\" href=\"https://doi.org/".trim($resdoi)."\"><img alt='DOI' src='./img/doi.jpg'></a>";
-					}
-					$revuePaper2 = str_replace(" ", "%20", $revuePaper);
-					$urlinit = 'https://v2.sherpa.ac.uk/cgi/retrieve?item-type=publication&api-key='.$akSR.'&format=Json&filter=[["title","equals",".'.str_replace('&amp;', '%26', $revuePaper2).'"]]';
-					$raw_data = file_get_contents($urlinit);
-					$jSON = json_decode($raw_data, true);
-					$resultat = array2xml($jSON, false);
-					$dom = new DOMDocument();
-					$dom->loadXML($resultat);
-					$issn = "";
-					$res = $dom->getElementsByTagName("issn");//ISSN
-					if (isset($res->item(0)->nodeValue)) {$issn = $res->item(0)->nodeValue;}
-					if ($issn != "")
-					{
-						$url = 'https://v2.sherpa.ac.uk/cgi/retrieve?item-type=publication&api-key='.$akSR.'&format=Json&filter=[["issn","equals",".'.$issn.'"]]';
-					}
-					break;
-				case "dimensions":
-					if ($papers[$key][$key2]['DOI'] != "")
-					{
-						$resdoi = "<a target=\"_blank\" href=\"https://doi.org/".$papers[$key][$key2]['DOI']."\"><img alt='DOI' src='./img/doi.jpg'></a>";
-						$refdoi = $papers[$key][$key2]['DOI'];
-					}
-					break;
-			}
+		if (!empty($papers[$key])) {//Affichage des tableaux uniquement si présence de résultats !
 			if ($desactivSR != "oui")
 			{
-				//var_dump($papers);
-				if ($url == "")
-				{
-					$revuePaper2 = str_replace(" ", "%20", $revuePaper);
-					$url = 'https://v2.sherpa.ac.uk/cgi/retrieve?item-type=publication&api-key='.$akSR.'&format=Json&filter=[["title","equals",".'.str_replace('&amp;', '%26', $revuePaper2).'"]]';
-				}
-				$raw_data = file_get_contents($url);
-				$jSON = json_decode($raw_data, true);
-				$resultat = array2xml($jSON, false);
-				$dom = new DOMDocument();
-				$dom->loadXML($resultat);
-				$res = $dom->getElementsByTagName("outcome");//If the review is not found
-				$resout = $res->item(0)->nodeValue;
-				if ($resout != "notFound")//review has been found
-				{
-					$respar = "";
-					$respre = "";
-					$res = $dom->getElementsByTagName("postarchiving");//postarchiving conditions
-					$respar = $res->item(0)->nodeValue;
-					//echo $issn.' - '.$respar.'<br>';
-					$res = $dom->getElementsByTagName("postrestrictions");
-					if (isset($res))//Is there postrestriction ?
-					{
-						$respre = $res->item(0)->nodeValue;;
-					}
-					switch($respar)
-					{
-						case "restricted":
-							if (strpos($respre, "6") !== false)//Embargo 6 mois
-							{
-								$respar = "<img alt='Voir légende ci-dessus' src='./img/embargo-6.jpg'>";
-							}
-							if (strpos($respre, "12") !== false)//Embargo 12 mois
-							{
-								$respar = "<img alt='Voir légende ci-dessus' src='./img/embargo-12.jpg'>";
-							}
-							if (strpos($respre, "24") !== false)//Embargo 24 mois
-							{
-								$respar = "<img alt='Voir légende ci-dessus' src='./img/embargo-24.jpg'>";
-							}
-							break;
-						case "can":
-							$respar = "<img alt='Voir légende ci-dessus' src='./img/post-print.png'>";
-							break;
-						case "unknown":
-							$respar = "<img alt='Voir légende ci-dessus' src='./img/ungraded.png'>";
-							break;
-						case "cannot":
-							$respar = "<img alt='Voir légende ci-dessus' src='./img/red-cross.png'>";
-							break;
-					}
-					$rescdt = "";
-					$res = $dom->getElementsByTagName("condition");
-					for ($c = 0; $c < $res->length; $c++)
-					{
-						$rescdt .= "&bull; ".$res->item($c)->nodeValue."<br>";
-					}
-					$rescdt = str_replace("'", "&apos;", $rescdt);
-					$rescdt = str_replace('"', '\"', $rescdt);
-					if ((strpos($rescdt, "embargo") !== false || $respar == "restricted") && (strpos($respre, "6") === false && strpos($respre, "12") === false && strpos($respre, "24") === false && $respar != "<img alt='Voir légende ci-dessus' src='./img/red-cross.png'>"))
-					{
-						$respar = "<img alt='Voir légende ci-dessus' src='./img/embargo-e.jpg'>";
-					}
-					$urlisn = "";
-					$resisn = "";
-					$res = $dom->getElementsByTagName("issn");//ISSN
-					$resisn = $res->item(0)->nodeValue;
-					if ($resisn != "")
-					{
-						$urlisn = "http://www.sherpa.ac.uk/romeo/search.php?issn=".$resisn."&ak=kn8p0JxcxGc";
-					}
-					$respdf = "";
-					$res = $dom->getElementsByTagName("pdfarchiving");//PDF archiving conditions
-					$respdf = $res->item(0)->nodeValue;
-					switch($respdf)
-					{
-						case "cannot":
-							$respdf = "<img alt='Voir légende ci-dessus' src='./img/red-cross.png'>";
-							break;
-						case "can":
-							$respdf = "<img alt='Voir légende ci-dessus' src='./img/pdf.png'>";
-							break;
-						case "unknown":
-							$respdf = "<img alt='Voir légende ci-dessus' src='./img/ungraded.png'>";
-							break;
-						case "restricted":
-							$respdf = "<img alt='Voir légende ci-dessus' src='./img/ungraded.png'>";
-							break;
-					}
-					$resdiv = "";//Divers
-					if ($resisn != "")
-					{
-						$ch = curl_init();
-						curl_setopt($ch, CURLOPT_URL, $urlisn);
-						curl_setopt($ch, CURLOPT_HEADER, 0);
-						curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-						curl_setopt($ch, CURLOPT_USERAGENT, 'SCD (https://halur1.univ-rennes1.fr)');
-						curl_setopt($ch, CURLOPT_USERAGENT, 'PROXY (http://siproxy.univ-rennes1.fr)');
-						if (isset ($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on")	{
-							curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, TRUE);
-							curl_setopt($ch, CURLOPT_CAINFO, "cacert.pem");
-						}
-						$temp = curl_exec($ch);
-						curl_close($ch);
-						if (strpos($temp, "DOAJ") !== false)//DOAJ
-						{
-							$resdiv = "<a target='_blank' href='https://doaj.org/'><img alt='DOAJ' src='./img/doaj.png'></a>";
-							$imgMailM = "./img/bouton-ccby.jpg";
-							$imgMailP = "./img/bouton-ccby.jpg";
-						}
-					}
-				}else{
-					$urlisn = "OverHAL_noresult.php";
-					$rescdt = "";
-					$respar = "<img alt='Voir légende ci-dessus' src='./img/ungraded.png'>";
-					$respdf = "<img alt='Voir légende ci-dessus' src='./img/ungraded.png'>";
-					$resdiv = "";
-					//$resdoi = "";
-					//$refdoi = "";
-				}
-				if ($respar == "")//No information found for postarchiving
-				{
-					$respar = "<img alt='Voir légende ci-dessus' src='./img/ungraded.png'>";
-				}
-				if ($respdf == "")//No information found for PDF archiving
-				{
-					$respdf = "<img alt='Voir légende ci-dessus' src='./img/ungraded.png'>";
-				}
-				//echo "<tr><td colspan='4'>".$k." - ".$url."</td></tr>";
+				echo "<table border='1px' cellpadding='5px' cellspacing='5px' style='border-collapse: collapse' bordercolor='#eeeeee'>";
+				echo "<tr>";
+				echo "<td colspan='9'><strong>Informations diverses collectées grâce à l'API SHERPA/RoMEO</strong></td>";
+				echo "</tr>";
+				echo "<tr>";
+				echo "<td align='center'><img alt='Emargo 6 mois' src='./img/embargo-6.jpg'></td>";
+				echo "<td align='center'><img alt='Emargo 12 mois' src='./img/embargo-12.jpg'></td>";
+				echo "<td align='center'><img alt='Emargo 24 mois' src='./img/embargo-24.jpg'></td>";
+				echo "<td align='center'><img alt='Emargo possible sous certaines conditions' src='./img/embargo-e.jpg'></td>";
+				echo "<td align='center'><img alt='Dépôt du post-print auteur autorisé' src='./img/post-print.png'></td>";
+				echo "<td align='center'><img alt='Dépôt du PDF éditeur autorisé' src='./img/pdf.png'></td>";
+				echo "<td align='center'><img alt='Aucun dépôt autorisé' src='./img/red-cross.png'></td>";
+				echo "<td align='center'><img alt='Journal non référencé dans Sherpa-Romeo' src='./img/ungraded.png'></td>";
+				echo "<td align='center'><img alt='Journal open access référencé dans le DOAJ (Directory of Open Access Journals)' src='./img/doaj.png'></td>";
+				echo "</tr>";
+				echo "<tr>";
+				echo "<td valign='top' colspan='3'><small>Embargo sur la diffusion 6 mois, 12 mois ou 24 mois</small></td>";
+				echo "<td valign='top' ><small>Embargo possible, voir conditions</small></td>";
+				echo "<td valign='top' ><small>Dépôt du post-print auteur autorisé</small></td>";
+				echo "<td valign='top' ><small>Dépôt du PDF éditeur autorisé</small></td>";
+				echo "<td valign='top' ><small>Aucun dépôt autorisé</small></td>";
+				echo "<td valign='top' ><small>Journal non référencé dans Sherpa-Romeo</small></td>";
+				echo "<td valign='top' ><small>Journal open access référencé dans le DOAJ (Directory of Open Access Journals)</small></td>";
+				echo "</tr>";
+				echo "</table><br>";
 			}
-			echo "<tbody><tr>";
-			echo "<td valign=\"top\">".$k."</td>";
+			$k = 1;
+			echo "<table class='table table-responsive table-bordered table-centered'>";
+			echo "<thead class='thead-dark'>";
+			echo "<tr>";
+			echo "<th>&nbsp;</th>";
 			if ($desactivSR == "non")
 			{
-				echo "<td align='center' valign='top'>";
-				if ($resisn != "")
-				{
-					echo "<a target=\"_blank\" href='".$urlisn."' onmouseover='return overlib(\"".$rescdt."\",STICKY,CAPTION, \"&nbsp;<em>".$revuePaper."</em> conditions\",WIDTH, 320,HEIGHT, 130,RELX, 150,BORDER, 2,FGCOLOR,\"#FFFFFF\",BGCOLOR,\"#009933\",TEXTCOLOR,\"#000000\",CAPCOLOR,\"#000000\",CLOSECOLOR,\"#FFFFFF\");' onmouseout='return nd();'>".$respar."</a></td>";
-				}else{
-					echo "<a onmouseover='return overlib(\"".$rescdt."\",STICKY,CAPTION, \"&nbsp;<em>".$revuePaper."</em> conditions\",WIDTH, 320,HEIGHT, 130,RELX, 150,BORDER, 2,FGCOLOR,\"#FFFFFF\",BGCOLOR,\"#009933\",TEXTCOLOR,\"#000000\",CAPCOLOR,\"#000000\",CLOSECOLOR,\"#FFFFFF\");' onmouseout='return nd();'>".$respar."</a></td>";
-				}
-				echo "<td align='center' valign='top'>".$respdf."</td>";
-				echo "<td align='center' valign='top'>".$resdiv."</td>";
+				echo"<th valign='top'><h4>Pprint</h4></th><th valign='top'><h4>PDF</h4></th><th valign='top'><h4>Doaj</h4></th>";
 			}
-			$refdoiaff = "";
-			if ($refdoi != "")
-			{
-				$refdoiaff = " - doi: <a target=\"_blank\" href=\"https://doi.org/".$refdoi."\">https://doi.org/".$refdoi."</a>";
-			}
-			//if more than 50 authors, just show the 10th first
-			$nbaut = explode(";", $data[$colAuthors]);
-			if (count($nbaut) > $limTEI) {//If more than $limTEI authors, records will not be taken into account in the TEI export and we have to adopt a special marking
-			 $deb = "<s>";
-			 $fin = "</s>";
-			}else{
-			 $deb = "";
-			 $fin = "";
-			}
-			if (count($nbaut) > 50)
-			{
-				$affaut = "";
-				for ($i = 0; $i <=10; $i++)
-				{
-					$affaut .= $nbaut[$i].";";
-				}
-				$affaut .= " <em> et al.</em>";
-			}else{
-				$affaut = $data[$colAuthors];
-			}
-			echo "<td align='justify' valign='top'>".$deb.$affaut." (".$yearPaper.") <a target=\"_blank\" href=\"https://scholar.google.fr/scholar?hl=fr&q=".netCode($st=strtr($data[$colTitle],'"<>','   '))."\">".$data[$colTitle]."</a> - <em>".$revuePaper."</em>".$refdoiaff.$fin."</td>";
-			echo "<td align='center' valign='top'>".$resdoi."</td>";
-			//source column
-			$linkSource = "";
-			switch($key)
-			{
-				case "scopus":
-					$linkSource = "<a target=\"_blank\" href=\"".$papers[$key][$key2]['Link']."\"><img alt='Scopus' src=\"./img/scopus3.png\"></a>";
-					break;
-				case "pubmed_csv":
-					$linkSource = "<a target=\"_blank\" href=\"http://www.ncbi.nlm.nih.gov/pubmed/".$papers[$key][$key2]['EntrezUID']."\"><img alt='Pubmed' src=\"./img/pubmed.png\"></a>";
-					break;
-				case "pubmed_xml":
-				case "pubmed_txt":
-					$linkSource = "<a target=\"_blank\" href=\"http://www.ncbi.nlm.nih.gov/pubmed/".$papers[$key][$key2]['PMID']."\"><img alt='Pubmed' src=\"./img/pubmed.png\"></a>";
-					break;
-				case "pubmed_fcgi":
-					$linkSource = "<a target=\"_blank\" href=\"http://www.ncbi.nlm.nih.gov/pubmed/".$papers[$key][$key2]['Pubmed']."\"><img alt='Pubmed' src=\"./img/pubmed.png\"></a>";
-					break;
-				case "zotero":
-					$linkSource = "<a target=\"_blank\" href=\"".$papers[$key][$key2]['Link Attachments']."\"><img alt='Zotero' src=\"./img/zotero_128.png\"></a>";
-					break;
-				case "wos_csv":
-					$linkSource = "<a target=\"_blank\" href=\"http://ws.isiknowledge.com/cps/openurl/service?url_ver=Z39.88-2004&rft_id=info:ut/".str_replace("WOS:", "",$papers[$key][$key2]['UT'])."\"><img alt='WoS' src=\"./img/wos.png\"></a>";
-					break;
-				case "dimensions":
-					$linkSource = "<a target=\"_blank\" href=\"https://app.dimensions.ai/details/publication/".$papers[$key][$key2]['Publication ID']."\"><img alt='Dimensions' src=\"./img/dimensions.png\"></a>";
-					break;
-			}
-			echo "<td align='center' valign='top'>".$linkSource."</td>";
-			//joker column
-			$linkJoker = "";
-			if ($refdoi != "" && $joker != "")
-			{
-				$linkJoker = "<a target=\"_blank\" href=\"".$joker.$refdoi."\"><img alt='Scihub' src=\"./img/scihub.png\"></a>";
-			}
-			echo "<td align='center' valign='top'>".$linkJoker."</td>";
-			//mail column
+			echo "<th valign='top'><h4>Références</h4></th><th valign='top'><h4>DOI</h4></th><th valign='top'><h4>Source</h4></th><th valign='top'><h4>Joker</h4></th>";
 			if ($activMailsM == "oui" || $activMailsP == "oui")
 			{
-				$linkMailM = "";
-				$linkMailP = "";
-				$adr = "";
-				$noadr = "";
-				$lang = "";
+				echo "<th align='center' colspan='2' valign='top'><h4>Mails</h4></th>";
+			}
+			echo "</tr>";
+			$cst = 0;
+			$listTit = "¤";
+			foreach($papers[$key] as $key2 => $data)
+			{
+				$imgMailM = "";
+				$imgMailP = "";
+				// Extract the year and the revue
+				if ($key == "pubmed_csv")
+				{
+				 $yearPaper = substr($data[$colYear], -4, 4);
+				 $revuePaper = substr($data[$colSource], 0, -6);
+				}else{
+					if ($key != "wos_csv")
+					{
+					 $yearPaper = $data[$colYear];
+					}else{
+						if (isset($data[$colYear]) && $data[$colYear] != "")
+						{
+							$yearPaper = $data[$colYear];
+						}else{
+							if (isset($data['EY']) && $data['EY'] != "")
+							{
+								$yearPaper = $data['EY'];
+							}else{
+								if (isset($data['EA']) && $data['EA'] != "")
+								{
+									$yearPaper = substr($data['EA'], -4);
+								}
+							}
+						}
+					}
+					$revuePaper = $data[$colSource];
+				}
+				// Trying to retrieve the ISSN number and the DOI
+				$url = "";
+				$resdoi = "";
+				$refdoi = "";
+				switch($key)
+				{
+					case "wos_csv":
+						if ($papers[$key][$key2]['SN'] != "")
+						{
+							$url = 'https://v2.sherpa.ac.uk/cgi/retrieve?item-type=publication&api-key='.$akSR.'&format=Json&filter=[["issn","equals",".'.$papers[$key][$key2]['SN'].'"]]';
+						}
+						if ($papers[$key][$key2]['DI'] != "")
+						{
+							$resdoi = "<a target=\"_blank\" href=\"https://doi.org/".$papers[$key][$key2]['DI']."\"><img alt='DOI' src='./img/doi.jpg'></a>";
+							$refdoi = $papers[$key][$key2]['DI'];
+						}
+						break;
+					case "wos_html":
+					case "pubmed_xml":
+					case "pubmed_txt":
+					case "pubmed_fcgi":
+					case "zotero":
+						if ($papers[$key][$key2]['ISSN'] != "")
+						{
+							$url = 'https://v2.sherpa.ac.uk/cgi/retrieve?item-type=publication&api-key='.$akSR.'&format=Json&filter=[["issn","equals",".'.$papers[$key][$key2]['ISSN'].'"]]';
+						}
+						if ($papers[$key][$key2]['DOI'] != "")
+						{
+							$resdoi = "<a target=\"_blank\" href=\"https://doi.org/".$papers[$key][$key2]['DOI']."\"><img alt='DOI' src='./img/doi.jpg'></a>";
+							$refdoi = $papers[$key][$key2]['DOI'];
+						}
+						break;
+					case "scifin":
+						if ($papers[$key][$key2]['DOI'] != "")
+						{
+							$resdoi = "<a target=\"_blank\" href=\"https://doi.org/".$papers[$key][$key2]['DOI']."\"><img alt='DOI' src='./img/doi.jpg'></a>";
+							$refdoi = $papers[$key][$key2]['DOI'];
+						}
+						if ($papers[$key][$key2]['Internat.Standard Doc. Number'] != "")
+						{
+							$url = 'https://v2.sherpa.ac.uk/cgi/retrieve?item-type=publication&api-key='.$akSR.'&format=Json&filter=[["issn","equals",".'.$papers[$key][$key2]['Internat.Standard Doc. Number'].'"]]';
+						}
+						if ($papers[$key][$key2]['DOI'] != "")
+						{
+							$resdoi = "<a target=\"_blank\" href=\"https://doi.org/".$papers[$key][$key2]['DOI']."\"><img alt='DOI' src='./img/doi.jpg'></a>";
+							$refdoi = $papers[$key][$key2]['DOI'];
+						}
+						break;
+					case "pubmed_zotero":
+						if ($papers[$key][$key2]['ISSN'] != "")
+						{
+							$issn = $papers[$key][$key2]['ISSN'];
+							if (strpos($issn, "-") === false)//No '-' in the ISSN number > 16310691 for example
+							{
+								$issn = substr($issn, 0, 4)."-".substr($issn, -4);
+							}
+							if (strlen($issn) > 9)//Several ISSN numbers > 0031-9007, 1079-7114 for example
+							{
+								$issn = substr($issn, 0, 9);
+							}
+							$url = 'https://v2.sherpa.ac.uk/cgi/retrieve?item-type=publication&api-key='.$akSR.'&format=Json&filter=[["issn","equals",".'.$issn.'"]]';
+						}
+						if ($papers[$key][$key2]['DOI'] != "")
+						{
+							$resdoi = "<a target=\"_blank\" href=\"https://doi.org/".$papers[$key][$key2]['DOI']."\"><img alt='DOI' src='./img/doi.jpg'></a>";
+							$refdoi = $papers[$key][$key2]['DOI'];
+						}
+						break;
+					case "pubmed_html":
+						if ($papers[$key][$key2]['DOI'] != "")
+						{
+							$resdoi = "<a target=\"_blank\" href=\"https://doi.org/".$papers[$key][$key2]['DOI']."\"><img alt='DOI' src='./img/doi.jpg'></a>";
+							$refdoi = $papers[$key][$key2]['DOI'];
+						}
+						$revuePaper2 = str_replace(" ", "%20", $revuePaper);
+						$urlinit = 'https://v2.sherpa.ac.uk/cgi/retrieve?item-type=publication&api-key='.$akSR.'&format=Json&filter=[["title","equals",".'.str_replace('&amp;', '%26', $revuePaper2).'"]]';
+						$raw_data = file_get_contents($urlinit);
+						$jSON = json_decode($raw_data, true);
+						$resultat = array2xml($jSON, false);
+						$dom = new DOMDocument();
+						$dom->loadXML($resultat);
+						$issn = "";
+						$res = $dom->getElementsByTagName("issn");//ISSN
+						if ($res -> length > 0) {
+							$issn = $res->item(0)->nodeValue;
+							if ($issn != "")
+							{
+								$url = 'https://v2.sherpa.ac.uk/cgi/retrieve?item-type=publication&api-key='.$akSR.'&format=Json&filter=[["issn","equals",".'.$issn.'"]]';
+							}
+						}
+						break;
+					case "scopus":
+						if ($papers[$key][$key2]['DOI'] != "")
+						{
+							$resdoi = "<a target=\"_blank\" href=\"https://doi.org/".$papers[$key][$key2]['DOI']."\"><img alt='DOI' src='./img/doi.jpg'></a>";
+							$refdoi = $papers[$key][$key2]['DOI'];
+						}
+						$revuePaper2 = str_replace(" ", "%20", $revuePaper);
+						$urlinit = 'https://v2.sherpa.ac.uk/cgi/retrieve?item-type=publication&api-key='.$akSR.'&format=Json&filter=[["title","equals",".'.str_replace('&amp;', '%26', $revuePaper2).'"]]';
+						$raw_data = file_get_contents($urlinit);
+						$jSON = json_decode($raw_data, true);
+						$resultat = array2xml($jSON, false);
+						$dom = new DOMDocument();
+						$dom->loadXML($resultat);
+						$issn = "";
+						$res = $dom->getElementsByTagName("issn");//ISSN
+						if ($res -> length > 0) {
+							$issn = $res->item(0)->nodeValue;
+							if ($issn != "")
+							{
+								$url = 'https://v2.sherpa.ac.uk/cgi/retrieve?item-type=publication&api-key='.$akSR.'&format=Json&filter=[["issn","equals",".'.$issn.'"]]';
+							}
+						}
+						break;
+					case "pubmed_csv":
+						if (strpos($papers[$key][$key2]['Details'], "doi:") !== false) // DOI found
+						{
+							$pos0 = strpos($papers[$key][$key2]['Details'], "doi:");
+							if (strpos($papers[$key][$key2]['Details'], "pii:") !== false) // Existing previous characters before DOI
+							{
+								$pos1 = strpos($papers[$key][$key2]['Details'], " ", $pos0+10)+1;;
+							}
+							else
+							{
+								$pos1 = $pos0 + 5;
+							}
+							$pos2 = strpos($papers[$key][$key2]['Details'], " ", $pos1+1)-1;
+							if ($pos2 == -1) {$pos2 = strlen($papers[$key][$key2]['Details'])-1;}// No blank space after the beginning of the DOI and the end of the string
+							$resdoi = substr($papers[$key][$key2]['Details'], $pos1, $pos2-$pos1);
+							$refdoi = trim($resdoi);
+							$resdoi = "<a target=\"_blank\" href=\"https://doi.org/".trim($resdoi)."\"><img alt='DOI' src='./img/doi.jpg'></a>";
+						}
+						$revuePaper2 = str_replace(" ", "%20", $revuePaper);
+						$urlinit = 'https://v2.sherpa.ac.uk/cgi/retrieve?item-type=publication&api-key='.$akSR.'&format=Json&filter=[["title","equals",".'.str_replace('&amp;', '%26', $revuePaper2).'"]]';
+						$raw_data = file_get_contents($urlinit);
+						$jSON = json_decode($raw_data, true);
+						$resultat = array2xml($jSON, false);
+						$dom = new DOMDocument();
+						$dom->loadXML($resultat);
+						$issn = "";
+						$res = $dom->getElementsByTagName("issn");//ISSN
+						if (isset($res->item(0)->nodeValue)) {$issn = $res->item(0)->nodeValue;}
+						if ($issn != "")
+						{
+							$url = 'https://v2.sherpa.ac.uk/cgi/retrieve?item-type=publication&api-key='.$akSR.'&format=Json&filter=[["issn","equals",".'.$issn.'"]]';
+						}
+						break;
+					case "dimensions":
+						if ($papers[$key][$key2]['DOI'] != "")
+						{
+							$resdoi = "<a target=\"_blank\" href=\"https://doi.org/".$papers[$key][$key2]['DOI']."\"><img alt='DOI' src='./img/doi.jpg'></a>";
+							$refdoi = $papers[$key][$key2]['DOI'];
+						}
+						break;
+				}
+				if ($desactivSR != "oui")
+				{
+					//var_dump($papers);
+					if ($url == "")
+					{
+						$revuePaper2 = str_replace(" ", "%20", $revuePaper);
+						$url = 'https://v2.sherpa.ac.uk/cgi/retrieve?item-type=publication&api-key='.$akSR.'&format=Json&filter=[["title","equals",".'.str_replace('&amp;', '%26', $revuePaper2).'"]]';
+					}
+					$raw_data = file_get_contents($url);
+					$jSON = json_decode($raw_data, true);
+					$resultat = array2xml($jSON, false);
+					$dom = new DOMDocument();
+					$dom->loadXML($resultat);
+					$res = $dom->getElementsByTagName("outcome");//If the review is not found
+					$resout = $res->item(0)->nodeValue;
+					if ($resout != "notFound")//review has been found
+					{
+						$respar = "";
+						$respre = "";
+						$res = $dom->getElementsByTagName("postarchiving");//postarchiving conditions
+						$respar = $res->item(0)->nodeValue;
+						//echo $issn.' - '.$respar.'<br>';
+						$res = $dom->getElementsByTagName("postrestrictions");
+						if (isset($res))//Is there postrestriction ?
+						{
+							$respre = $res->item(0)->nodeValue;;
+						}
+						switch($respar)
+						{
+							case "restricted":
+								if (strpos($respre, "6") !== false)//Embargo 6 mois
+								{
+									$respar = "<img alt='Voir légende ci-dessus' src='./img/embargo-6.jpg'>";
+								}
+								if (strpos($respre, "12") !== false)//Embargo 12 mois
+								{
+									$respar = "<img alt='Voir légende ci-dessus' src='./img/embargo-12.jpg'>";
+								}
+								if (strpos($respre, "24") !== false)//Embargo 24 mois
+								{
+									$respar = "<img alt='Voir légende ci-dessus' src='./img/embargo-24.jpg'>";
+								}
+								break;
+							case "can":
+								$respar = "<img alt='Voir légende ci-dessus' src='./img/post-print.png'>";
+								break;
+							case "unknown":
+								$respar = "<img alt='Voir légende ci-dessus' src='./img/ungraded.png'>";
+								break;
+							case "cannot":
+								$respar = "<img alt='Voir légende ci-dessus' src='./img/red-cross.png'>";
+								break;
+						}
+						$rescdt = "";
+						$res = $dom->getElementsByTagName("condition");
+						for ($c = 0; $c < $res->length; $c++)
+						{
+							$rescdt .= "&bull; ".$res->item($c)->nodeValue."<br>";
+						}
+						$rescdt = str_replace("'", "&apos;", $rescdt);
+						$rescdt = str_replace('"', '\"', $rescdt);
+						if ((strpos($rescdt, "embargo") !== false || $respar == "restricted") && (strpos($respre, "6") === false && strpos($respre, "12") === false && strpos($respre, "24") === false && $respar != "<img alt='Voir légende ci-dessus' src='./img/red-cross.png'>"))
+						{
+							$respar = "<img alt='Voir légende ci-dessus' src='./img/embargo-e.jpg'>";
+						}
+						$urlisn = "";
+						$resisn = "";
+						$res = $dom->getElementsByTagName("issn");//ISSN
+						$resisn = $res->item(0)->nodeValue;
+						if ($resisn != "")
+						{
+							$urlisn = "http://www.sherpa.ac.uk/romeo/search.php?issn=".$resisn."&ak=kn8p0JxcxGc";
+						}
+						$respdf = "";
+						$res = $dom->getElementsByTagName("pdfarchiving");//PDF archiving conditions
+						$respdf = $res->item(0)->nodeValue;
+						switch($respdf)
+						{
+							case "cannot":
+								$respdf = "<img alt='Voir légende ci-dessus' src='./img/red-cross.png'>";
+								break;
+							case "can":
+								$respdf = "<img alt='Voir légende ci-dessus' src='./img/pdf.png'>";
+								break;
+							case "unknown":
+								$respdf = "<img alt='Voir légende ci-dessus' src='./img/ungraded.png'>";
+								break;
+							case "restricted":
+								$respdf = "<img alt='Voir légende ci-dessus' src='./img/ungraded.png'>";
+								break;
+						}
+						$resdiv = "";//Divers
+						if ($resisn != "")
+						{
+							$ch = curl_init();
+							curl_setopt($ch, CURLOPT_URL, $urlisn);
+							curl_setopt($ch, CURLOPT_HEADER, 0);
+							curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+							curl_setopt($ch, CURLOPT_USERAGENT, 'SCD (https://halur1.univ-rennes1.fr)');
+							curl_setopt($ch, CURLOPT_USERAGENT, 'PROXY (http://siproxy.univ-rennes1.fr)');
+							if (isset ($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on")	{
+								curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, TRUE);
+								curl_setopt($ch, CURLOPT_CAINFO, "cacert.pem");
+							}
+							$temp = curl_exec($ch);
+							curl_close($ch);
+							if (strpos($temp, "DOAJ") !== false)//DOAJ
+							{
+								$resdiv = "<a target='_blank' href='https://doaj.org/'><img alt='DOAJ' src='./img/doaj.png'></a>";
+								$imgMailM = "./img/bouton-ccby.jpg";
+								$imgMailP = "./img/bouton-ccby.jpg";
+							}
+						}
+					}else{
+						$urlisn = "OverHAL_noresult.php";
+						$rescdt = "";
+						$respar = "<img alt='Voir légende ci-dessus' src='./img/ungraded.png'>";
+						$respdf = "<img alt='Voir légende ci-dessus' src='./img/ungraded.png'>";
+						$resdiv = "";
+						//$resdoi = "";
+						//$refdoi = "";
+					}
+					if ($respar == "")//No information found for postarchiving
+					{
+						$respar = "<img alt='Voir légende ci-dessus' src='./img/ungraded.png'>";
+					}
+					if ($respdf == "")//No information found for PDF archiving
+					{
+						$respdf = "<img alt='Voir légende ci-dessus' src='./img/ungraded.png'>";
+					}
+					//echo "<tr><td colspan='4'>".$k." - ".$url."</td></tr>";
+				}
+				echo "<tbody><tr>";
+				echo "<td valign=\"top\">".$k."</td>";
+				if ($desactivSR == "non")
+				{
+					echo "<td align='center' valign='top'>";
+					if ($resisn != "")
+					{
+						echo "<a target=\"_blank\" href='".$urlisn."' onmouseover='return overlib(\"".$rescdt."\",STICKY,CAPTION, \"&nbsp;<em>".$revuePaper."</em> conditions\",WIDTH, 320,HEIGHT, 130,RELX, 150,BORDER, 2,FGCOLOR,\"#FFFFFF\",BGCOLOR,\"#009933\",TEXTCOLOR,\"#000000\",CAPCOLOR,\"#000000\",CLOSECOLOR,\"#FFFFFF\");' onmouseout='return nd();'>".$respar."</a></td>";
+					}else{
+						echo "<a onmouseover='return overlib(\"".$rescdt."\",STICKY,CAPTION, \"&nbsp;<em>".$revuePaper."</em> conditions\",WIDTH, 320,HEIGHT, 130,RELX, 150,BORDER, 2,FGCOLOR,\"#FFFFFF\",BGCOLOR,\"#009933\",TEXTCOLOR,\"#000000\",CAPCOLOR,\"#000000\",CLOSECOLOR,\"#FFFFFF\");' onmouseout='return nd();'>".$respar."</a></td>";
+					}
+					echo "<td align='center' valign='top'>".$respdf."</td>";
+					echo "<td align='center' valign='top'>".$resdiv."</td>";
+				}
+				$refdoiaff = "";
+				if ($refdoi != "")
+				{
+					$refdoiaff = " - doi: <a target=\"_blank\" href=\"https://doi.org/".$refdoi."\">https://doi.org/".$refdoi."</a>";
+				}
+				//if more than 50 authors, just show the 10th first
+				$nbaut = explode(";", $data[$colAuthors]);
+				if (count($nbaut) > $limTEI) {//If more than $limTEI authors, records will not be taken into account in the TEI export and we have to adopt a special marking
+				 $deb = "<s>";
+				 $fin = "</s>";
+				}else{
+				 $deb = "";
+				 $fin = "";
+				}
+				if (count($nbaut) > 50)
+				{
+					$affaut = "";
+					for ($i = 0; $i <=10; $i++)
+					{
+						$affaut .= $nbaut[$i].";";
+					}
+					$affaut .= " <em> et al.</em>";
+				}else{
+					$affaut = $data[$colAuthors];
+				}
+				echo "<td align='justify' valign='top'>".$deb.$affaut." (".$yearPaper.") <a target=\"_blank\" href=\"https://scholar.google.fr/scholar?hl=fr&q=".netCode($st=strtr($data[$colTitle],'"<>','   '))."\">".$data[$colTitle]."</a> - <em>".$revuePaper."</em>".$refdoiaff.$fin."</td>";
+				echo "<td align='center' valign='top'>".$resdoi."</td>";
+				//source column
+				$linkSource = "";
 				switch($key)
 				{
 					case "scopus":
-						if (strpos($papers[$key][$key2]['Correspondence Address'], "@") !== false)
-						{
-							$pos = strpos($papers[$key][$key2]['Correspondence Address'], "email:");
-							$adr = substr($papers[$key][$key2]['Correspondence Address'], ($pos + 6), strlen($papers[$key][$key2]['Correspondence Address']));
-							$adr= str_replace(" ", "", $adr);
-						}else{
-							$noadr = "no mail";
-						}
+						$linkSource = "<a target=\"_blank\" href=\"".$papers[$key][$key2]['Link']."\"><img alt='Scopus' src=\"./img/scopus3.png\"></a>";
 						break;
 					case "pubmed_csv":
+						$linkSource = "<a target=\"_blank\" href=\"http://www.ncbi.nlm.nih.gov/pubmed/".$papers[$key][$key2]['EntrezUID']."\"><img alt='Pubmed' src=\"./img/pubmed.png\"></a>";
+						break;
+					case "pubmed_xml":
+					case "pubmed_txt":
+						$linkSource = "<a target=\"_blank\" href=\"http://www.ncbi.nlm.nih.gov/pubmed/".$papers[$key][$key2]['PMID']."\"><img alt='Pubmed' src=\"./img/pubmed.png\"></a>";
+						break;
+					case "pubmed_fcgi":
+						$linkSource = "<a target=\"_blank\" href=\"http://www.ncbi.nlm.nih.gov/pubmed/".$papers[$key][$key2]['Pubmed']."\"><img alt='Pubmed' src=\"./img/pubmed.png\"></a>";
 						break;
 					case "zotero":
-						$team = "";
-						if ($papers[$key][$key2]['Rights'] != "")
-						{
-							$adr = str_replace(" ", "", $papers[$key][$key2]['Rights']);
-							$coll = str_replace(" ", "", $papers[$key][$key2]['Call Number']);
-							if ($coll != "") {$team = $coll;}
-						}else{
-							$noadr = "no mail";
-						}
+						$linkSource = "<a target=\"_blank\" href=\"".$papers[$key][$key2]['Link Attachments']."\"><img alt='Zotero' src=\"./img/zotero_128.png\"></a>";
 						break;
 					case "wos_csv":
-						if ($papers[$key][$key2]['EM'] != "")
-						{
-							$adr = str_replace(" ", "", $papers[$key][$key2]['EM']);
-						}else{
-							$noadr = "no mail";
-						}
+						$linkSource = "<a target=\"_blank\" href=\"http://ws.isiknowledge.com/cps/openurl/service?url_ver=Z39.88-2004&rft_id=info:ut/".str_replace("WOS:", "",$papers[$key][$key2]['UT'])."\"><img alt='WoS' src=\"./img/wos.png\"></a>";
+						break;
+					case "dimensions":
+						$linkSource = "<a target=\"_blank\" href=\"https://app.dimensions.ai/details/publication/".$papers[$key][$key2]['Publication ID']."\"><img alt='Dimensions' src=\"./img/dimensions.png\"></a>";
 						break;
 				}
-				//Does sending mail to this author should be ignored
-				include "./OverHAL_mails_a_exclure.php";
-				foreach ($EXCLMAILS_LISTE as $value) {
-					if (strtolower($adr) == strtolower($value)) {
-						$noadr = "mail to be ignored";
-						break;
-					}
-				}
-				//Does sending mail's domain to this author should be ignored
-				include "./OverHAL_domaines_a_exclure.php";
-				foreach ($EXCLDOMS_LISTE as $value) {
-					if (stripos($adr, $value) !== false) {
-						$noadr = "domain of mail to be ignored";
-						break;
-					}
-				}
-				//Does a mail have already be sent to the corresponding author for this doi reference?
-				$titreNorm = normalize(utf8_encode(mb_strtolower(utf8_decode($data[$colTitle]))));
-				include ('./OverHAL_mails_envoyes.php');
-				$nouvelEnvoiM = "non";
-				$nouvelEnvoiP = "non";
-				$mailOK = "";
-
-				foreach($MAILS_LISTE AS $i => $valeur) {
-					if ($refdoi != "" && strtolower($MAILS_LISTE[$i]["quoi2"]) == strtolower($refdoi)) //mail already send
-					{
-						$mailOK = "OK";
-					}
-					if ($adr != "" && strtolower($MAILS_LISTE[$i]["qui"]) == strtolower($adr))
-					{
-						$nouvelEnvoiM = "oui";
-						$nouvelEnvoiP = "oui";
-						$lang = strtoupper($MAILS_LISTE[$i]["lang"]);
-					}
-				}
-				//Language to use for the mail
-				$mailValide = "ok";
-				if ($lang == "" && $adr != "")
+				echo "<td align='center' valign='top'>".$linkSource."</td>";
+				//joker column
+				$linkJoker = "";
+				if ($refdoi != "" && $joker != "")
 				{
-					$lang = "FR";//French initially
-					//Is there different adresses for the mail contact?
-					if ((strpos($adr, ";") !== false) || (strpos($adr, ",") !== false))
+					$linkJoker = "<a target=\"_blank\" href=\"".$joker.$refdoi."\"><img alt='Scihub' src=\"./img/scihub.png\"></a>";
+				}
+				echo "<td align='center' valign='top'>".$linkJoker."</td>";
+				//mail column
+				if ($activMailsM == "oui" || $activMailsP == "oui")
+				{
+					$linkMailM = "";
+					$linkMailP = "";
+					$adr = "";
+					$noadr = "";
+					$lang = "";
+					switch($key)
 					{
-						if (strpos($adr, ";") !== false)
-						{
-							$adrMail = explode(";", $adr);
-						}else{
-							$adrMail = explode(",", $adr);
-						}
-						foreach ($adrMail as $a)
-						{
-							$dcp = explode("@", $a);
-							//var_dump($dcp);
-							if (strpos($dcp[1], ".") === false)
+						case "scopus":
+							if (strpos($papers[$key][$key2]['Correspondence Address'], "@") !== false)
 							{
-								$mailValide = "non";
-								break;
+								$pos = strpos($papers[$key][$key2]['Correspondence Address'], "email:");
+								$adr = substr($papers[$key][$key2]['Correspondence Address'], ($pos + 6), strlen($papers[$key][$key2]['Correspondence Address']));
+								$adr= str_replace(" ", "", $adr);
+							}else{
+								$noadr = "no mail";
 							}
-							if (substr($a, -2) != "fr")
+							break;
+						case "pubmed_csv":
+							break;
+						case "zotero":
+							$team = "";
+							if ($papers[$key][$key2]['Rights'] != "")
 							{
-								$lang = "EN";
-								break;
+								$adr = str_replace(" ", "", $papers[$key][$key2]['Rights']);
+								$coll = str_replace(" ", "", $papers[$key][$key2]['Call Number']);
+								if ($coll != "") {$team = $coll;}
+							}else{
+								$noadr = "no mail";
 							}
-						}
-					}else{
-						if (substr($adr, -2) != "fr")
+							break;
+						case "wos_csv":
+							if ($papers[$key][$key2]['EM'] != "")
 							{
-								$dcp = explode("@", $adr);
+								$adr = str_replace(" ", "", $papers[$key][$key2]['EM']);
+							}else{
+								$noadr = "no mail";
+							}
+							break;
+					}
+					//Does sending mail to this author should be ignored
+					include "./OverHAL_mails_a_exclure.php";
+					foreach ($EXCLMAILS_LISTE as $value) {
+						if (strtolower($adr) == strtolower($value)) {
+							$noadr = "mail to be ignored";
+							break;
+						}
+					}
+					//Does sending mail's domain to this author should be ignored
+					include "./OverHAL_domaines_a_exclure.php";
+					foreach ($EXCLDOMS_LISTE as $value) {
+						if (stripos($adr, $value) !== false) {
+							$noadr = "domain of mail to be ignored";
+							break;
+						}
+					}
+					//Does a mail have already be sent to the corresponding author for this doi reference?
+					$titreNorm = normalize(utf8_encode(mb_strtolower(utf8_decode($data[$colTitle]))));
+					include ('./OverHAL_mails_envoyes.php');
+					$nouvelEnvoiM = "non";
+					$nouvelEnvoiP = "non";
+					$mailOK = "";
+
+					foreach($MAILS_LISTE AS $i => $valeur) {
+						if ($refdoi != "" && strtolower($MAILS_LISTE[$i]["quoi2"]) == strtolower($refdoi)) //mail already send
+						{
+							$mailOK = "OK";
+						}
+						if ($adr != "" && strtolower($MAILS_LISTE[$i]["qui"]) == strtolower($adr))
+						{
+							$nouvelEnvoiM = "oui";
+							$nouvelEnvoiP = "oui";
+							$lang = strtoupper($MAILS_LISTE[$i]["lang"]);
+						}
+					}
+					//Language to use for the mail
+					$mailValide = "ok";
+					if ($lang == "" && $adr != "")
+					{
+						$lang = "FR";//French initially
+						//Is there different adresses for the mail contact?
+						if ((strpos($adr, ";") !== false) || (strpos($adr, ",") !== false))
+						{
+							if (strpos($adr, ";") !== false)
+							{
+								$adrMail = explode(";", $adr);
+							}else{
+								$adrMail = explode(",", $adr);
+							}
+							foreach ($adrMail as $a)
+							{
+								$dcp = explode("@", $a);
+								//var_dump($dcp);
 								if (strpos($dcp[1], ".") === false)
 								{
 									$mailValide = "non";
+									break;
 								}
-								$lang = "EN";
+								if (substr($a, -2) != "fr")
+								{
+									$lang = "EN";
+									break;
+								}
 							}
+						}else{
+							if (substr($adr, -2) != "fr")
+								{
+									$dcp = explode("@", $adr);
+									if (strpos($dcp[1], ".") === false)
+									{
+										$mailValide = "non";
+									}
+									$lang = "EN";
+								}
+						}
 					}
-				}
-				//Si interrogation sur UNIV-RENNES1, si Zotero (CSV) et si 'Language' = FR, alors, mail en français
-				if ($teamInit == "UNIV-RENNES1" && $key == "zotero" && $papers[$key][$key2]['Language'] == "FR") {$lang = "FR";}
-				//Stats par laboratoire
-				$callNumber = "";
-				if ($key == "zotero" && isset($papers[$key][$key2]['Call Number'])) {$callNumber = $papers[$key][$key2]['Call Number'];}
-				
-				if ($mailOK == "")
-				{
-					if ($nouvelEnvoiM == "non")
+					//Si interrogation sur UNIV-RENNES1, si Zotero (CSV) et si 'Language' = FR, alors, mail en français
+					if ($teamInit == "UNIV-RENNES1" && $key == "zotero" && $papers[$key][$key2]['Language'] == "FR") {$lang = "FR";}
+					//Stats par laboratoire
+					$callNumber = "";
+					if ($key == "zotero" && isset($papers[$key][$key2]['Call Number'])) {$callNumber = $papers[$key][$key2]['Call Number'];}
+					
+					if ($mailOK == "")
 					{
-						if ($lang == "FR")
+						if ($nouvelEnvoiM == "non")
 						{
-							include "./OverHAL_mails_premier_fr.php";
-						}else{
-							include "./OverHAL_mails_premier_en.php";
+							if ($lang == "FR")
+							{
+								include "./OverHAL_mails_premier_fr.php";
+							}else{
+								include "./OverHAL_mails_premier_en.php";
+							}
+							if ($imgMailM == "")
+							{
+								$imgMailM = "./img/bouton-m.jpg";
+							}
+							$linkMailM = "<div id=\"".$titreNorm."M\"><a href=\"#".$titreNorm."\" onClick=\"majMailsM('".$adr."','".$titreNorm."','".$refdoi."','M','','".strtoupper($lang)."','".$callNumber."'); mailto('".$adr."','".$subjectM."','".$bodyM."');\"><img alt='".$adr."' title='".$adr."' src='".$imgMailM."'></a></div>";
+						}else{//new solicitation
+							if ($lang == "FR")
+							{
+								include "./OverHAL_mails_rappel_fr.php";
+							}else{
+								include "./OverHAL_mails_rappel_en.php";
+							}
+							if ($imgMailM == "")
+							{
+								$imgMailM = "./img/bouton-m.jpg";
+							}
+							$linkMailM = "<div id=\"".$titreNorm."M\"><a href=\"#".$titreNorm."\" onClick=\"majMailsM('".$adr."','".$titreNorm."','".$refdoi."','M','','".strtoupper($lang)."','".$callNumber."'); mailto('".$adr."','".$subjectM."','".$bodyM."');\"><img alt='".$adr."' title='".$adr."' src='".$imgMailM."'></a></div>";
 						}
-						if ($imgMailM == "")
+						if ($nouvelEnvoiP == "non")
 						{
-							$imgMailM = "./img/bouton-m.jpg";
+							if ($lang == "FR")
+							{
+								include "./OverHAL_mails_premier_fr.php";
+							}else{
+								include "./OverHAL_mails_premier_en.php";
+							}
+							if ($imgMailP == "")
+							{
+								$imgMailP = "./img/bouton-p.jpg";
+							}
+							$linkMailP = "<div id=\"".$titreNorm."P\"><a href=\"#".$titreNorm."\" onClick=\"majMailsP('".$adr."','".$titreNorm."','".$refdoi."','P','','".strtoupper($lang)."','".$callNumber."'); mailto('".$adr."','".$subjectP."','".$bodyP."');\"><img alt='".$adr."' title='".$adr."' src='".$imgMailP."'></a></div>";
+						}else{//new solicitation
+							if ($lang == "FR")
+							{
+								include "./OverHAL_mails_rappel_fr.php";
+							}else{
+								include "./OverHAL_mails_rappel_en.php";
+							}
+							if ($imgMailP == "")
+							{
+								$imgMailP = "./img/bouton-p.jpg";
+							}
+							$linkMailP = "<div id=\"".$titreNorm."P\"><a href=\"#".$titreNorm."\" onClick=\"majMailsP('".$adr."','".$titreNorm."','".$refdoi."','P','','".strtoupper($lang)."','".$callNumber."'); mailto('".$adr."','".$subjectP."','".$bodyP."');\"><img alt='".$adr."' title='".$adr."' src='".$imgMailP."'></a></div>";
 						}
-						$linkMailM = "<div id=\"".$titreNorm."M\"><a href=\"#".$titreNorm."\" onClick=\"majMailsM('".$adr."','".$titreNorm."','".$refdoi."','M','','".strtoupper($lang)."','".$callNumber."'); mailto('".$adr."','".$subjectM."','".$bodyM."');\"><img alt='".$adr."' title='".$adr."' src='".$imgMailM."'></a></div>";
-					}else{//new solicitation
-						if ($lang == "FR")
-						{
-							include "./OverHAL_mails_rappel_fr.php";
-						}else{
-							include "./OverHAL_mails_rappel_en.php";
-						}
-						if ($imgMailM == "")
-						{
-							$imgMailM = "./img/bouton-m.jpg";
-						}
-						$linkMailM = "<div id=\"".$titreNorm."M\"><a href=\"#".$titreNorm."\" onClick=\"majMailsM('".$adr."','".$titreNorm."','".$refdoi."','M','','".strtoupper($lang)."','".$callNumber."'); mailto('".$adr."','".$subjectM."','".$bodyM."');\"><img alt='".$adr."' title='".$adr."' src='".$imgMailM."'></a></div>";
+					}else{
+						$linkMailM = "<strong>OK</strong>";
+						$linkMailP = "<strong>OK</strong>";
 					}
-					if ($nouvelEnvoiP == "non")
+					if ($mailValide == "non")
 					{
-						if ($lang == "FR")
-						{
-							include "./OverHAL_mails_premier_fr.php";
-						}else{
-							include "./OverHAL_mails_premier_en.php";
-						}
-						if ($imgMailP == "")
-						{
-							$imgMailP = "./img/bouton-p.jpg";
-						}
-						$linkMailP = "<div id=\"".$titreNorm."P\"><a href=\"#".$titreNorm."\" onClick=\"majMailsP('".$adr."','".$titreNorm."','".$refdoi."','P','','".strtoupper($lang)."','".$callNumber."'); mailto('".$adr."','".$subjectP."','".$bodyP."');\"><img alt='".$adr."' title='".$adr."' src='".$imgMailP."'></a></div>";
-					}else{//new solicitation
-						if ($lang == "FR")
-						{
-							include "./OverHAL_mails_rappel_fr.php";
-						}else{
-							include "./OverHAL_mails_rappel_en.php";
-						}
-						if ($imgMailP == "")
-						{
-							$imgMailP = "./img/bouton-p.jpg";
-						}
-						$linkMailP = "<div id=\"".$titreNorm."P\"><a href=\"#".$titreNorm."\" onClick=\"majMailsP('".$adr."','".$titreNorm."','".$refdoi."','P','','".strtoupper($lang)."','".$callNumber."'); mailto('".$adr."','".$subjectP."','".$bodyP."');\"><img alt='".$adr."' title='".$adr."' src='".$imgMailP."'></a></div>";
+						$linkMailM = "<a href=\"#".$titreNorm."\" onClick=\"errAdr('".$adr."');\"><img alt='".$adr."' title='".$adr."' src='".$imgMailM."'></a>";
+						$linkMailP = "<a href=\"#".$titreNorm."\" onClick=\"errAdr('".$adr."');\"><img alt='".$adr."' title='".$adr."' src='".$imgMailP."'></a>";
 					}
-				}else{
-					$linkMailM = "<strong>OK</strong>";
-					$linkMailP = "<strong>OK</strong>";
-				}
-				if ($mailValide == "non")
-				{
-					$linkMailM = "<a href=\"#".$titreNorm."\" onClick=\"errAdr('".$adr."');\"><img alt='".$adr."' title='".$adr."' src='".$imgMailM."'></a>";
-					$linkMailP = "<a href=\"#".$titreNorm."\" onClick=\"errAdr('".$adr."');\"><img alt='".$adr."' title='".$adr."' src='".$imgMailP."'></a>";
-				}
 
-				if ($noadr == "")
-				{
-					if ($activMailsM == "oui")
+					if ($noadr == "")
 					{
-						echo "<td align='center' valign='top'>".$linkMailM."<a name=\".$titreNorm.\"></a></td>";
-					}else{
-						echo "<td align='center' valign='top'>&nbsp;</td>";
-					}
-					if ($activMailsP == "oui")
-					{
-						echo "<td align='center' valign='top'>".$linkMailP."</td>";
-					}else{
-						echo "<td align='center' valign='top'>&nbsp;</td>";
-					}
-				}else{
-					if ($imgMailM == "" && $imgMailP == "")
-					{
-						$imgMailM = "./img/bouton-mnoadr.jpg";
-						$imgMailP = "./img/bouton-pnoadr.jpg";
-					}else{
-						if ($imgMailM == "./img/bouton-ccby.jpg" && $imgMailP == "./img/bouton-ccby.jpg")
+						if ($activMailsM == "oui")
 						{
-							$imgMailM = "./img/bouton-ccbynoadr.jpg";
-							$imgMailP = "./img/bouton-ccbynoadr.jpg";
+							echo "<td align='center' valign='top'>".$linkMailM."<a name=\".$titreNorm.\"></a></td>";
 						}else{
+							echo "<td align='center' valign='top'>&nbsp;</td>";
+						}
+						if ($activMailsP == "oui")
+						{
+							echo "<td align='center' valign='top'>".$linkMailP."</td>";
+						}else{
+							echo "<td align='center' valign='top'>&nbsp;</td>";
+						}
+					}else{
+						if ($imgMailM == "" && $imgMailP == "")
+						{
 							$imgMailM = "./img/bouton-mnoadr.jpg";
 							$imgMailP = "./img/bouton-pnoadr.jpg";
+						}else{
+							if ($imgMailM == "./img/bouton-ccby.jpg" && $imgMailP == "./img/bouton-ccby.jpg")
+							{
+								$imgMailM = "./img/bouton-ccbynoadr.jpg";
+								$imgMailP = "./img/bouton-ccbynoadr.jpg";
+							}else{
+								$imgMailM = "./img/bouton-mnoadr.jpg";
+								$imgMailP = "./img/bouton-pnoadr.jpg";
+							}
 						}
-					}
-					if ($activMailsM == "oui")
-					{
-						echo "<td align='center' valign='top'><img alt='".$noadr."' title='".$noadr."' src='".$imgMailM."'></td>";
-					}else{
-						echo "<td align='center' valign='top'>&nbsp;</td>";
-					}
-					if ($activMailsP == "oui")
-					{
-						echo "<td align='center' valign='top'><img alt='".$noadr."' title='".$noadr."' src='".$imgMailP."'></td>";
-					}else{
-						echo "<td align='center' valign='top'>&nbsp;</td>";
+						if ($activMailsM == "oui")
+						{
+							echo "<td align='center' valign='top'><img alt='".$noadr."' title='".$noadr."' src='".$imgMailM."'></td>";
+						}else{
+							echo "<td align='center' valign='top'>&nbsp;</td>";
+						}
+						if ($activMailsP == "oui")
+						{
+							echo "<td align='center' valign='top'><img alt='".$noadr."' title='".$noadr."' src='".$imgMailP."'></td>";
+						}else{
+							echo "<td align='center' valign='top'>&nbsp;</td>";
+						}
 					}
 				}
-			}
-			echo "</tr>";
-			//export bibtex
-			switch($key)
-			{
-				case "scopus":
-					$Fnm = "./HAL/OverHAL_scopus.bib";
-					$inF = fopen($Fnm,"a+");
-					fseek($inF, 0);
-					//$chaine = "\xEF\xBB\xBF";
-					$chaine = "";
-					fwrite($inF,$chaine);
-					$inF = fopen($Fnm,"a+");
-					fseek($inF, 0);
-					if (isset($papers[$key][$key2]['Document Type']))
-					{
-						$type = $papers[$key][$key2]['Document Type'];
-						switch($type)
+				echo "</tr>";
+				//export bibtex
+				switch($key)
+				{
+					case "scopus":
+						$Fnm = "./HAL/OverHAL_scopus.bib";
+						$inF = fopen($Fnm,"a+");
+						fseek($inF, 0);
+						//$chaine = "\xEF\xBB\xBF";
+						$chaine = "";
+						fwrite($inF,$chaine);
+						$inF = fopen($Fnm,"a+");
+						fseek($inF, 0);
+						if (isset($papers[$key][$key2]['Document Type']))
 						{
-							case "Article":
-							case "Article in Press":
-							case "Review":
-							case "Erratum":
-							case "Editorial":
-							case "Short Survey":
-							case "Letter":
-							case "Note":
-								$type = "article";
-								break;
-							case "Conference Paper":
-							case "Conference Review":
-								$type = "inproceedings";
-								break;
-							case "Book":
-								$type = "book";
-								break;
-							case "Book Chapter":
-								$type = "inbook";
-								break;
-						}
-						$chaine = chr(13).chr(10)."@".$type."{";
-					}
-					if (isset($papers[$key][$key2]['Authors']))
-					{
-						$auteurs = explode(", ", $papers[$key][$key2]['Authors']);
-						$chaine .= mb_strtolower(normalize(str_replace(" ", "_", $auteurs[0])), 'UTF-8');
-					}
-					if (isset($papers[$key][$key2]['Title']))
-					{
-						$titre = explode(" ", $papers[$key][$key2]['Title']);
-						$chaine .= "_".mb_strtolower(normalize(str_replace(" ", "_", $titre[0])), 'UTF-8');
-					}
-					//add a constant to differenciate same initial identifier
-					if (isset($auteurs) && isset($titre))
-					{
-						$tit = mb_strtolower(str_replace(" ", "_", $auteurs[0]), 'UTF-8')."_".mb_strtolower(normalize(str_replace(" ", "_", $titre[0])), 'UTF-8');
-						if (strpos($listTit, "¤".$tit."¤") !== false)
-						{
-							$cst++;
-							$chaine .= $cst;
-						}
-						$listTit .= $tit."¤";
-					}
-					if (isset($papers[$key][$key2]['Year'])) {$chaine .= "_".mb_strtolower($papers[$key][$key2]['Year'], 'UTF-8');}
-					if (isset($papers[$key][$key2]['Title'])) {$chaine .= ",".chr(13).chr(10)."	title = {".$papers[$key][$key2]['Title']."}";}
-					if (isset($papers[$key][$key2]['Volume'])) {$chaine .= ",".chr(13).chr(10)."	volume = {".$papers[$key][$key2]['Volume']."}";}
-					//if ($issn) {$chaine .= ",".chr(13).chr(10)."	issn = {".$issn."}";}
-					if (isset($papers[$key][$key2]['ISSN'])) {$chaine .= ",".chr(13).chr(10)."	issn = {".$papers[$key][$key2]['ISSN']."}";}
-					if (isset($papers[$key][$key2]['DOI'])) {$chaine .= ",".chr(13).chr(10)."	doi = {".$papers[$key][$key2]['DOI']."}";}
-					if (isset($papers[$key][$key2]['Abstract'])) {$chaine .= ",".chr(13).chr(10)."	abstract = {".str_replace(array("{", "}"), "_", $papers[$key][$key2]['Abstract'])."}";}
-					if (isset($papers[$key][$key2]['Source title'])) {$chaine .= ",".chr(13).chr(10)."	journal = {".$papers[$key][$key2]['Source title']."}";}
-					if (isset($papers[$key][$key2]['Authors'])) {
-						$auteurs = $papers[$key][$key2]['Authors'];
-						//add a comma after the name
-						$i = 0;
-						$autvirg = "";
-						$esp = explode(", ", $auteurs);
-						while ($i < count($esp))
-						{
-							$autesp = strrchr(trim($esp[$i]), " ");
-							if ($i != count($esp) - 1)
+							$type = $papers[$key][$key2]['Document Type'];
+							switch($type)
 							{
-								$autvirg .= str_replace($autesp, ",".$autesp.",", $esp[$i]);
-							}else{
-								$autvirg .= str_replace($autesp, ",".$autesp, $esp[$i]);
+								case "Article":
+								case "Article in Press":
+								case "Review":
+								case "Erratum":
+								case "Editorial":
+								case "Short Survey":
+								case "Letter":
+								case "Note":
+									$type = "article";
+									break;
+								case "Conference Paper":
+								case "Conference Review":
+									$type = "inproceedings";
+									break;
+								case "Book":
+									$type = "book";
+									break;
+								case "Book Chapter":
+									$type = "inbook";
+									break;
 							}
-							$i++;
+							$chaine = chr(13).chr(10)."@".$type."{";
 						}
-						$auteurs = str_replace(".,", ". and ", $autvirg);
-						$chaine .= ",".chr(13).chr(10)."	author = {".$auteurs."}";
-					}
-					if (isset($papers[$key][$key2]['Authors with affiliations'])) {$chaine .= ",".chr(13).chr(10)."	affiliations = {".$papers[$key][$key2]['Authors with affiliations']."}";}
-					if (isset($papers[$key][$key2]['Year'])) {$chaine .= ",".chr(13).chr(10)."	year = {".$papers[$key][$key2]['Year']."}";}
-					if (isset($papers[$key][$key2]['Author Keywords'])) {$chaine .= ",".chr(13).chr(10)."	keywords = {".$papers[$key][$key2]['Author Keywords']."}";}
-					if (isset($papers[$key][$key2]['Page start']) && isset($papers[$key][$key2]['Page end']))
-					{
-						$chaine .= ",".chr(13).chr(10)."	pages = {".$papers[$key][$key2]['Page start']."--".$papers[$key][$key2]['Page end']."}";
-					}else{
-						if (isset($papers[$key][$key2]['Art. No.'])) {$chaine .= ",".chr(13).chr(10)."	pages = {".trim($papers[$key][$key2]['Art. No.'])."}";}
-					}
-					if (isset($papers[$key][$key2]['Funding Details'])) {$chaine .= ",".chr(13).chr(10)."	x-funding = {".$papers[$key][$key2]['Funding Details']."}";}
-					if (isset($papers[$key][$key2]['PubMed ID'])) {$chaine .= ",".chr(13).chr(10)."	pmid = {".$papers[$key][$key2]['PubMed ID']."}";}
-					if (isset($papers[$key][$key2]['Conference location'])) {$chaine .= ",".chr(13).chr(10)."	address = {".$papers[$key][$key2]['Conference location']."}";}
-					if (isset($papers[$key][$key2]['Conference name'])) {$chaine .= ",".chr(13).chr(10)."	booktitle = {".$papers[$key][$key2]['Conference name']."}";}
-					if (isset($papers[$key][$key2]['Conference date']))
-					{
-						//6 September 2015 through 9 September 2015 to 2015-09-06
-						$confdate = $papers[$key][$key2]['Conference date'];
-						if ($confdate != "") {
-							$res = explode(" ", $confdate);
-							if (count($res) > 2) {
-								//year
-								$confdate = trim($res[2])."-";
-								//month
-								switch($res[1])
+						if (isset($papers[$key][$key2]['Authors']))
+						{
+							$auteurs = explode(", ", $papers[$key][$key2]['Authors']);
+							$chaine .= mb_strtolower(normalize(str_replace(" ", "_", $auteurs[0])), 'UTF-8');
+						}
+						if (isset($papers[$key][$key2]['Title']))
+						{
+							$titre = explode(" ", $papers[$key][$key2]['Title']);
+							$chaine .= "_".mb_strtolower(normalize(str_replace(" ", "_", $titre[0])), 'UTF-8');
+						}
+						//add a constant to differenciate same initial identifier
+						if (isset($auteurs) && isset($titre))
+						{
+							$tit = mb_strtolower(str_replace(" ", "_", $auteurs[0]), 'UTF-8')."_".mb_strtolower(normalize(str_replace(" ", "_", $titre[0])), 'UTF-8');
+							if (strpos($listTit, "¤".$tit."¤") !== false)
+							{
+								$cst++;
+								$chaine .= $cst;
+							}
+							$listTit .= $tit."¤";
+						}
+						if (isset($papers[$key][$key2]['Year'])) {$chaine .= "_".mb_strtolower($papers[$key][$key2]['Year'], 'UTF-8');}
+						if (isset($papers[$key][$key2]['Title'])) {$chaine .= ",".chr(13).chr(10)."	title = {".$papers[$key][$key2]['Title']."}";}
+						if (isset($papers[$key][$key2]['Volume'])) {$chaine .= ",".chr(13).chr(10)."	volume = {".$papers[$key][$key2]['Volume']."}";}
+						//if ($issn) {$chaine .= ",".chr(13).chr(10)."	issn = {".$issn."}";}
+						if (isset($papers[$key][$key2]['ISSN'])) {$chaine .= ",".chr(13).chr(10)."	issn = {".$papers[$key][$key2]['ISSN']."}";}
+						if (isset($papers[$key][$key2]['DOI'])) {$chaine .= ",".chr(13).chr(10)."	doi = {".$papers[$key][$key2]['DOI']."}";}
+						if (isset($papers[$key][$key2]['Abstract'])) {$chaine .= ",".chr(13).chr(10)."	abstract = {".str_replace(array("{", "}"), "_", $papers[$key][$key2]['Abstract'])."}";}
+						if (isset($papers[$key][$key2]['Source title'])) {$chaine .= ",".chr(13).chr(10)."	journal = {".$papers[$key][$key2]['Source title']."}";}
+						if (isset($papers[$key][$key2]['Authors'])) {
+							$auteurs = $papers[$key][$key2]['Authors'];
+							//add a comma after the name
+							$i = 0;
+							$autvirg = "";
+							$esp = explode(", ", $auteurs);
+							while ($i < count($esp))
+							{
+								$autesp = strrchr(trim($esp[$i]), " ");
+								if ($i != count($esp) - 1)
 								{
-									case "January":
-										$confdate .= "01-";
-										break;
-									case "February":
-										$confdate .= "02-";
-										break;
-									case "March":
-										$confdate .= "03-";
-										break;
-									case "April":
-										$confdate .= "04-";
-										break;
-									case "May":
-										$confdate .= "05-";
-										break;
-									case "June":
-										$confdate .= "06-";
-										break;
-									case "July":
-										$confdate .= "07-";
-										break;
-									case "August":
-										$confdate .= "08-";
-										break;
-									case "September":
-										$confdate .= "09-";
-										break;
-									case "October":
-										$confdate .= "10-";
-										break;
-									case "November":
-										$confdate .= "11-";
-										break;
-									case "December":
-										$confdate .= "12-";
-										break;
-								}
-								//day
-								if (strlen($res[0]) == 1)
-								{
-									$confdate .= "0".$res[0];
+									$autvirg .= str_replace($autesp, ",".$autesp.",", $esp[$i]);
 								}else{
-									$confdate .= $res[0];
+									$autvirg .= str_replace($autesp, ",".$autesp, $esp[$i]);
+								}
+								$i++;
+							}
+							$auteurs = str_replace(".,", ". and ", $autvirg);
+							$chaine .= ",".chr(13).chr(10)."	author = {".$auteurs."}";
+						}
+						if (isset($papers[$key][$key2]['Authors with affiliations'])) {$chaine .= ",".chr(13).chr(10)."	affiliations = {".$papers[$key][$key2]['Authors with affiliations']."}";}
+						if (isset($papers[$key][$key2]['Year'])) {$chaine .= ",".chr(13).chr(10)."	year = {".$papers[$key][$key2]['Year']."}";}
+						if (isset($papers[$key][$key2]['Author Keywords'])) {$chaine .= ",".chr(13).chr(10)."	keywords = {".$papers[$key][$key2]['Author Keywords']."}";}
+						if (isset($papers[$key][$key2]['Page start']) && isset($papers[$key][$key2]['Page end']))
+						{
+							$chaine .= ",".chr(13).chr(10)."	pages = {".$papers[$key][$key2]['Page start']."--".$papers[$key][$key2]['Page end']."}";
+						}else{
+							if (isset($papers[$key][$key2]['Art. No.'])) {$chaine .= ",".chr(13).chr(10)."	pages = {".trim($papers[$key][$key2]['Art. No.'])."}";}
+						}
+						if (isset($papers[$key][$key2]['Funding Details'])) {$chaine .= ",".chr(13).chr(10)."	x-funding = {".$papers[$key][$key2]['Funding Details']."}";}
+						if (isset($papers[$key][$key2]['PubMed ID'])) {$chaine .= ",".chr(13).chr(10)."	pmid = {".$papers[$key][$key2]['PubMed ID']."}";}
+						if (isset($papers[$key][$key2]['Conference location'])) {$chaine .= ",".chr(13).chr(10)."	address = {".$papers[$key][$key2]['Conference location']."}";}
+						if (isset($papers[$key][$key2]['Conference name'])) {$chaine .= ",".chr(13).chr(10)."	booktitle = {".$papers[$key][$key2]['Conference name']."}";}
+						if (isset($papers[$key][$key2]['Conference date']))
+						{
+							//6 September 2015 through 9 September 2015 to 2015-09-06
+							$confdate = $papers[$key][$key2]['Conference date'];
+							if ($confdate != "") {
+								$res = explode(" ", $confdate);
+								if (count($res) > 2) {
+									//year
+									$confdate = trim($res[2])."-";
+									//month
+									switch($res[1])
+									{
+										case "January":
+											$confdate .= "01-";
+											break;
+										case "February":
+											$confdate .= "02-";
+											break;
+										case "March":
+											$confdate .= "03-";
+											break;
+										case "April":
+											$confdate .= "04-";
+											break;
+										case "May":
+											$confdate .= "05-";
+											break;
+										case "June":
+											$confdate .= "06-";
+											break;
+										case "July":
+											$confdate .= "07-";
+											break;
+										case "August":
+											$confdate .= "08-";
+											break;
+										case "September":
+											$confdate .= "09-";
+											break;
+										case "October":
+											$confdate .= "10-";
+											break;
+										case "November":
+											$confdate .= "11-";
+											break;
+										case "December":
+											$confdate .= "12-";
+											break;
+									}
+									//day
+									if (strlen($res[0]) == 1)
+									{
+										$confdate .= "0".$res[0];
+									}else{
+										$confdate .= $res[0];
+									}
+								}
+							}
+							$chaine .= ",".chr(13).chr(10)."	x-conferencestartdate = {".$confdate."}";
+						}
+						if (isset($papers[$key][$key2]['Editor(s)']))
+						{
+							$editors = str_replace("; ", " and ", $papers[$key][$key2]['Editor(s)']);
+							$chaine .= ",".chr(13).chr(10)."	editor = {".$editors."}";
+						}
+						if (isset($papers[$key][$key2]['ISBN'])) {$chaine .= ",".chr(13).chr(10)."	isbn = {".$papers[$key][$key2]['ISBN']."}";}
+						if (isset($papers[$key][$key2]['Publisher'])) {$chaine .= ",".chr(13).chr(10)."	publisher = {".$papers[$key][$key2]['Publisher']."}";}
+						if (isset($papers[$key][$key2]['Language of Original Document']))
+						{
+							if ($papers[$key][$key2]['Language of Original Document'] != "English" || $papers[$key][$key2]['Language of Original Document'] == "English; French")
+							{
+								$chaine .= ",".chr(13).chr(10)."	x-language = {fr}";
+								$chaine .= ",".chr(13).chr(10)."	x-audience  = {National}";
+							}
+						}
+						$chaine .= chr(13).chr(10)."}".chr(13).chr(10);
+						fwrite($inF, $chaine);
+						break;
+					case "wos_csv":
+						mb_internal_encoding('UTF-8');
+						$Fnm = "./HAL/OverHAL_wos_csv.bib";
+						$inF = fopen($Fnm,"a+");
+						fseek($inF, 0);
+						//$chaine = "\xEF\xBB\xBF";//UTF-8
+						$chaine = "";//ANSI
+						fwrite($inF,$chaine);
+						$inF = fopen($Fnm,"a+");
+						fseek($inF, 0);
+						if (isset($papers[$key][$key2]['PT']))
+						{
+							$type = $papers[$key][$key2]['PT'];
+							switch($type)
+							{
+								case "J":
+									$type = "article";
+									break;
+								case "S":
+									$type = "inproceedings";
+									break;
+								case "B":
+									$type = "book";
+									break;
+								case "P":
+									$type = "patent";
+									break;
+							}
+							$chaine = chr(13).chr(10)."@".$type."{";
+						}
+						if (isset($papers[$key][$key2]['AF']))
+						{
+							$auteurs = explode(", ", $papers[$key][$key2]['AF']);
+							$chaine .= mb_strtolower(normalize(str_replace(" ", "_", $auteurs[0])), 'UTF-8');
+						}
+						if (isset($papers[$key][$key2]['TI']))
+						{
+							$titre = explode(" ", $papers[$key][$key2]['TI']);
+							$chaine .= "_".mb_strtolower(normalize(str_replace(" ", "_", $titre[0])), 'UTF-8');
+						}
+						//add a constant to differenciate same initial identifier
+						if (isset($auteurs) && isset($titre))
+						{
+							$tit = mb_strtolower(normalize(str_replace(" ", "_", $auteurs[0])), 'UTF-8')."_".mb_strtolower(normalize(str_replace(" ", "_", $titre[0])), 'UTF-8');
+							if (strpos($listTit, "¤".$tit."¤") !== false)
+							{
+								$cst++;
+								$chaine .= $cst;
+							}
+							$listTit .= $tit."¤";
+						}
+						if (isset($papers[$key][$key2]['PY']) && $papers[$key][$key2]['PY'] != "") {
+							$chaine .= "_".mb_strtolower($papers[$key][$key2]['PY'], 'UTF-8');
+						}else{
+							if (isset($papers[$key][$key2]['EY']) && $papers[$key][$key2]['EY'] != "") {
+								$chaine .= "_".mb_strtolower($papers[$key][$key2]['EY'], 'UTF-8');
+							}else{
+								if (isset($papers[$key][$key2]['EA']) && $papers[$key][$key2]['EA'] != "") {
+									$chaine .= "_".mb_strtolower(substr($papers[$key][$key2]['EA'], -4), 'UTF-8');
 								}
 							}
 						}
-						$chaine .= ",".chr(13).chr(10)."	x-conferencestartdate = {".$confdate."}";
-					}
-					if (isset($papers[$key][$key2]['Editor(s)']))
-					{
-						$editors = str_replace("; ", " and ", $papers[$key][$key2]['Editor(s)']);
-						$chaine .= ",".chr(13).chr(10)."	editor = {".$editors."}";
-					}
-					if (isset($papers[$key][$key2]['ISBN'])) {$chaine .= ",".chr(13).chr(10)."	isbn = {".$papers[$key][$key2]['ISBN']."}";}
-					if (isset($papers[$key][$key2]['Publisher'])) {$chaine .= ",".chr(13).chr(10)."	publisher = {".$papers[$key][$key2]['Publisher']."}";}
-					if (isset($papers[$key][$key2]['Language of Original Document']))
-					{
-						if ($papers[$key][$key2]['Language of Original Document'] != "English" || $papers[$key][$key2]['Language of Original Document'] == "English; French")
+						if (isset($papers[$key][$key2]['TI'])) {$chaine .= ",".chr(13).chr(10)."	title = {".$papers[$key][$key2]['TI']."}";}
+						if (isset($papers[$key][$key2]['VL'])) {$chaine .= ",".chr(13).chr(10)."	volume = {".$papers[$key][$key2]['VL']."}";}
+						if (isset($papers[$key][$key2]['SN'])) {$chaine .= ",".chr(13).chr(10)."	issn = {".$papers[$key][$key2]['SN']."}";}
+						if (isset($papers[$key][$key2]['DI'])) {$chaine .= ",".chr(13).chr(10)."	doi = {".$papers[$key][$key2]['DI']."}";}
+						if (isset($papers[$key][$key2]['AB'])) {$chaine .= ",".chr(13).chr(10)."	abstract = {".str_replace(array("{", "}"), "_", trim($papers[$key][$key2]['AB']))."}";}
+						if (isset($papers[$key][$key2]['SO'])) {$chaine .= ",".chr(13).chr(10)."	journal = {".minRev($papers[$key][$key2]['SO'])."}";}
+						if (isset($papers[$key][$key2]['AF']))
 						{
-							$chaine .= ",".chr(13).chr(10)."	x-language = {fr}";
-							$chaine .= ",".chr(13).chr(10)."	x-audience  = {National}";
+							$auteurs = str_replace("; ", " and ", $papers[$key][$key2]['AF']);
+							$chaine .= ",".chr(13).chr(10)."	author = {".$auteurs."}";
 						}
-					}
-					$chaine .= chr(13).chr(10)."}".chr(13).chr(10);
-					fwrite($inF, $chaine);
-					break;
-				case "wos_csv":
-					mb_internal_encoding('UTF-8');
-					$Fnm = "./HAL/OverHAL_wos_csv.bib";
-					$inF = fopen($Fnm,"a+");
-					fseek($inF, 0);
-					//$chaine = "\xEF\xBB\xBF";//UTF-8
-					$chaine = "";//ANSI
-					fwrite($inF,$chaine);
-					$inF = fopen($Fnm,"a+");
-					fseek($inF, 0);
-					if (isset($papers[$key][$key2]['PT']))
-					{
-						$type = $papers[$key][$key2]['PT'];
-						switch($type)
-						{
-							case "J":
-								$type = "article";
-								break;
-							case "S":
-								$type = "inproceedings";
-								break;
-							case "B":
-								$type = "book";
-								break;
-							case "P":
-								$type = "patent";
-								break;
-						}
-						$chaine = chr(13).chr(10)."@".$type."{";
-					}
-					if (isset($papers[$key][$key2]['AF']))
-					{
-						$auteurs = explode(", ", $papers[$key][$key2]['AF']);
-						$chaine .= mb_strtolower(normalize(str_replace(" ", "_", $auteurs[0])), 'UTF-8');
-					}
-					if (isset($papers[$key][$key2]['TI']))
-					{
-						$titre = explode(" ", $papers[$key][$key2]['TI']);
-						$chaine .= "_".mb_strtolower(normalize(str_replace(" ", "_", $titre[0])), 'UTF-8');
-					}
-					//add a constant to differenciate same initial identifier
-					if (isset($auteurs) && isset($titre))
-					{
-						$tit = mb_strtolower(normalize(str_replace(" ", "_", $auteurs[0])), 'UTF-8')."_".mb_strtolower(normalize(str_replace(" ", "_", $titre[0])), 'UTF-8');
-						if (strpos($listTit, "¤".$tit."¤") !== false)
-						{
-							$cst++;
-							$chaine .= $cst;
-						}
-						$listTit .= $tit."¤";
-					}
-					if (isset($papers[$key][$key2]['PY']) && $papers[$key][$key2]['PY'] != "") {
-						$chaine .= "_".mb_strtolower($papers[$key][$key2]['PY'], 'UTF-8');
-					}else{
-						if (isset($papers[$key][$key2]['EY']) && $papers[$key][$key2]['EY'] != "") {
-							$chaine .= "_".mb_strtolower($papers[$key][$key2]['EY'], 'UTF-8');
+						if (isset($papers[$key][$key2]['C1'])) {$chaine .= ",".chr(13).chr(10)."	affiliations = {".$papers[$key][$key2]['C1']."}";}
+						if (isset($papers[$key][$key2]['PY']) && $papers[$key][$key2]['PY'] != "") {
+							$chaine .= ",".chr(13).chr(10)."	year = {".$papers[$key][$key2]['PY']."}";
 						}else{
-							if (isset($papers[$key][$key2]['EA']) && $papers[$key][$key2]['EA'] != "") {
-								$chaine .= "_".mb_strtolower(substr($papers[$key][$key2]['EA'], -4), 'UTF-8');
-							}
-						}
-					}
-					if (isset($papers[$key][$key2]['TI'])) {$chaine .= ",".chr(13).chr(10)."	title = {".$papers[$key][$key2]['TI']."}";}
-					if (isset($papers[$key][$key2]['VL'])) {$chaine .= ",".chr(13).chr(10)."	volume = {".$papers[$key][$key2]['VL']."}";}
-					if (isset($papers[$key][$key2]['SN'])) {$chaine .= ",".chr(13).chr(10)."	issn = {".$papers[$key][$key2]['SN']."}";}
-					if (isset($papers[$key][$key2]['DI'])) {$chaine .= ",".chr(13).chr(10)."	doi = {".$papers[$key][$key2]['DI']."}";}
-					if (isset($papers[$key][$key2]['AB'])) {$chaine .= ",".chr(13).chr(10)."	abstract = {".str_replace(array("{", "}"), "_", trim($papers[$key][$key2]['AB']))."}";}
-					if (isset($papers[$key][$key2]['SO'])) {$chaine .= ",".chr(13).chr(10)."	journal = {".minRev($papers[$key][$key2]['SO'])."}";}
-					if (isset($papers[$key][$key2]['AF']))
-					{
-						$auteurs = str_replace("; ", " and ", $papers[$key][$key2]['AF']);
-						$chaine .= ",".chr(13).chr(10)."	author = {".$auteurs."}";
-					}
-					if (isset($papers[$key][$key2]['C1'])) {$chaine .= ",".chr(13).chr(10)."	affiliations = {".$papers[$key][$key2]['C1']."}";}
-					if (isset($papers[$key][$key2]['PY']) && $papers[$key][$key2]['PY'] != "") {
-						$chaine .= ",".chr(13).chr(10)."	year = {".$papers[$key][$key2]['PY']."}";
-					}else{
-						if (isset($papers[$key][$key2]['EY']) && $papers[$key][$key2]['EY'] != "") {
-							$chaine .= ",".chr(13).chr(10)."	year = {".$papers[$key][$key2]['EY']."}";
-						}else{
-							if (isset($papers[$key][$key2]['EA']) && $papers[$key][$key2]['EA'] != "") {
-								$chaine .= ",".chr(13).chr(10)."	year = {".substr($papers[$key][$key2]['EA'], -4)."}";
-							}
-						}
-					}
-					if (isset($papers[$key][$key2]['DE'])) {$chaine .= ",".chr(13).chr(10)."	keywords = {".strtolower($papers[$key][$key2]['DE'])."}";}
-					if (isset($papers[$key][$key2]['BP']) && isset($papers[$key][$key2]['EP']))
-					{
-						$chaine .= ",".chr(13).chr(10)."	pages = {".$papers[$key][$key2]['BP']."--".$papers[$key][$key2]['EP']."}";
-					}else{
-						if (isset($papers[$key][$key2]['AR'])) {$chaine .= ",".chr(13).chr(10)."	pages = {".$papers[$key][$key2]['AR']."}";}
-					}
-					if (isset($papers[$key][$key2]['FU'])) {$chaine .= ",".chr(13).chr(10)."	x-funding = {".$papers[$key][$key2]['FU']."}";}
-					if (isset($papers[$key][$key2]['PM'])) {$chaine .= ",".chr(13).chr(10)."	pmid = {".$papers[$key][$key2]['PM']."}";}
-					if (isset($papers[$key][$key2]['IS'])) {$chaine .= ",".chr(13).chr(10)."	number = {".$papers[$key][$key2]['IS']."}";}
-					if (isset($papers[$key][$key2]['CL'])) {$chaine .= ",".chr(13).chr(10)."	address = {".$papers[$key][$key2]['CL']."}";}
-					if (isset($papers[$key][$key2]['CT'])) {$chaine .= ",".chr(13).chr(10)."	booktitle = {".$papers[$key][$key2]['CT']."}";}
-					if (isset($papers[$key][$key2]['CY']))
-					{
-						//OCT 19-23, 2014 to 2014-10-19
-						$confdate = $papers[$key][$key2]['CY'];
-						if ($confdate != "") {
-							$res = explode(" ", $confdate);
-							if (count($res) == 3) {
-								//year
-								$confdate = trim($res[2])."-";
-								//month
-								switch($res[0])
-								{
-									case "JAN":
-										$confdate .= "01-";
-										break;
-									case "FEB":
-										$confdate .= "02-";
-										break;
-									case "MAR":
-										$confdate .= "03-";
-										break;
-									case "APR":
-										$confdate .= "04-";
-										break;
-									case "MAY":
-										$confdate .= "05-";
-										break;
-									case "JUN":
-										$confdate .= "06-";
-										break;
-									case "JUL":
-										$confdate .= "07-";
-										break;
-									case "AUG":
-										$confdate .= "08-";
-										break;
-									case "SEP":
-										$confdate .= "09-";
-										break;
-									case "OCT":
-										$confdate .= "10-";
-										break;
-									case "NOV":
-										$confdate .= "11-";
-										break;
-									case "DEC":
-										$confdate .= "12-";
-										break;
+							if (isset($papers[$key][$key2]['EY']) && $papers[$key][$key2]['EY'] != "") {
+								$chaine .= ",".chr(13).chr(10)."	year = {".$papers[$key][$key2]['EY']."}";
+							}else{
+								if (isset($papers[$key][$key2]['EA']) && $papers[$key][$key2]['EA'] != "") {
+									$chaine .= ",".chr(13).chr(10)."	year = {".substr($papers[$key][$key2]['EA'], -4)."}";
 								}
-								//day
-								$confdate .= substr($res[1], 0, 2);
-							}
-							if (count($res) == 4) {//MAR 31-APR 05, 2019 to 2019-03-31 and 2019-04-05
-								//year
-								$confDate = trim($res[3])."-";
-								//month
-								switch($res[0])
-								{
-									case "JAN":
-										$confStartDate .= "01-";
-										break;
-									case "FEB":
-										$confStartDate .= "02-";
-										break;
-									case "MAR":
-										$confStartDate .= "03-";
-										break;
-									case "APR":
-										$confStartDate .= "04-";
-										break;
-									case "MAY":
-										$confStartDate .= "05-";
-										break;
-									case "JUN":
-										$confStartDate .= "06-";
-										break;
-									case "JUL":
-										$confStartDate .= "07-";
-										break;
-									case "AUG":
-										$confStartDate .= "08-";
-										break;
-									case "SEP":
-										$confStartDate .= "09-";
-										break;
-									case "OCT":
-										$confStartDate .= "10-";
-										break;
-									case "NOV":
-										$confStartDate .= "11-";
-										break;
-									case "DEC":
-										$confStartDate .= "12-";
-										break;
-								}
-								//day
-								$confdate .= substr($res[1], 0, 2);
 							}
 						}
-						$chaine .= ",".chr(13).chr(10)."	x-conferencestartdate = {".$confdate."}";
-					}
-					if (isset($papers[$key][$key2]['BE']))
-					{
-						$editors = str_replace("; ", " and ", $papers[$key][$key2]['BE']);
-						$chaine .= ",".chr(13).chr(10)."	editor = {".$editors."}";
-					}
-					if (isset($papers[$key][$key2]['BN'])) {$chaine .= ",".chr(13).chr(10)."	isbn = {".$papers[$key][$key2]['BN']."}";}
-					if (isset($papers[$key][$key2]['PU'])) {$chaine .= ",".chr(13).chr(10)."	publisher = {".$papers[$key][$key2]['PU']."}";}
-					if (isset($papers[$key][$key2]['SE'])) {$chaine .= ",".chr(13).chr(10)."	series = {".$papers[$key][$key2]['SE']."}";}
-					if (isset($papers[$key][$key2]['LA']))
-					{
-						if ($papers[$key][$key2]['LA'] != "English")
+						if (isset($papers[$key][$key2]['DE'])) {$chaine .= ",".chr(13).chr(10)."	keywords = {".strtolower($papers[$key][$key2]['DE'])."}";}
+						if (isset($papers[$key][$key2]['BP']) && isset($papers[$key][$key2]['EP']))
 						{
-							$chaine .= ",".chr(13).chr(10)."	x-language = {fr}";
-							$chaine .= ",".chr(13).chr(10)."	x-audience  = {National}";
-						}
-					}
-					$chaine .= chr(13).chr(10)."}".chr(13).chr(10);
-					fwrite($inF, $chaine);
-					break;
-				case "scifin":
-					$Fnm = "./HAL/OverHAL_scifin.bib";
-					$inF = fopen($Fnm,"a+");
-					fseek($inF, 0);
-					$chaine = "\xEF\xBB\xBF";
-					fwrite($inF,$chaine);
-					$inF = fopen($Fnm,"a+");
-					fseek($inF, 0);
-					if (isset($papers[$key][$key2]['Document Type']))
-					{
-						$type = $papers[$key][$key2]['Document Type'];
-						switch($type)
-						{
-							case "Journal; Online Computer File":
-							case "Journal":
-							case "Preprint":
-							case "Journal; General Review; Online Computer File":
-								$type = "article";
-								break;
-							case "Patent":
-								$type = "patent";
-								break;
-						}
-						$chaine = chr(13).chr(10)."@".$type."{";
-					}
-					if (isset($papers[$key][$key2]['Author']))
-					{
-						$auteurs = explode(", ", $papers[$key][$key2]['Author']);
-						$chaine .= mb_strtolower(normalize(str_replace(" ", "_", $auteurs[0])), 'UTF-8');
-					}
-					if (isset($papers[$key][$key2]['Title']))
-					{
-						$titre = explode(" ", $papers[$key][$key2]['Title']);
-						$chaine .= "_".mb_strtolower(normalize(str_replace(" ", "_", $titre[0])), 'UTF-8');
-					}
-					//add a constant to differenciate same initial identifier
-					if (isset($auteurs) && isset($titre))
-					{
-						$tit = mb_strtolower(normalize(str_replace(" ", "_", $auteurs[0])), 'UTF-8')."_".mb_strtolower(normalize(str_replace(" ", "_", $titre[0])), 'UTF-8');
-						if (strpos($listTit, "¤".$tit."¤") !== false)
-						{
-							$cst++;
-							$chaine .= $cst;
-						}
-						$listTit .= $tit."¤";
-					}
-					if (isset($papers[$key][$key2]['Publication Year'])) {$chaine .= "_".mb_strtolower($papers[$key][$key2]['Publication Year'], 'UTF-8');}
-					if (isset($papers[$key][$key2]['Title'])) {$chaine .= ",".chr(13).chr(10)."	title = {".$papers[$key][$key2]['Title']."}";}
-					if (isset($papers[$key][$key2]['Volume'])) {$chaine .= ",".chr(13).chr(10)."	volume = {".$papers[$key][$key2]['Volume']."}";}
-					if (isset($papers[$key][$key2]['Internat.Standard Doc. Number'])) {$chaine .= ",".chr(13).chr(10)."	issn = {".$papers[$key][$key2]['Internat.Standard Doc. Number']."}";}
-					if (isset($papers[$key][$key2]['DOI'])) {$chaine .= ",".chr(13).chr(10)."	doi = {".$papers[$key][$key2]['DOI']."}";}
-					if (isset($papers[$key][$key2]['Abstract'])) {$chaine .= ",".chr(13).chr(10)."	abstract = {".str_replace(array("{", "}"), "_", trim($papers[$key][$key2]['Abstract']))."}";}
-					if (isset($papers[$key][$key2]['Journal Title'])) {$chaine .= ",".chr(13).chr(10)."	journal = {".$papers[$key][$key2]['Journal Title']."}";}
-					if (isset($papers[$key][$key2]['Author']))
-					{
-						$auteurs = str_replace("; ", " and ",$papers[$key][$key2]['Author']);
-						$chaine .= ",".chr(13).chr(10)."	author = {".$auteurs."}";
-					}
-					if (isset($papers[$key][$key2]['Publication Year'])) {$chaine .= ",".chr(13).chr(10)."	year = {".$papers[$key][$key2]['Publication Year']."}";}
-					if (isset($papers[$key][$key2]['Page'])) {$chaine .= ",".chr(13).chr(10)."	pages = {".$papers[$key][$key2]['Page']."}";}
-					if (isset($papers[$key][$key2]['Language']))
-					{
-						if ($papers[$key][$key2]['Language'] != "written in English")
-						{
-							$chaine .= ",".chr(13).chr(10)."	x-language = {fr}";
-							$chaine .= ",".chr(13).chr(10)."	x-audience  = {National}";
-						}
-					}
-					$chaine .= chr(13).chr(10)."}".chr(13).chr(10);
-					fwrite($inF, $chaine);
-					break;
-				case "zotero":
-					$Fnm = "./HAL/OverHAL_zotero.bib";
-					$inF = fopen($Fnm,"a+");
-					fseek($inF, 0);
-					$chaine = "\xEF\xBB\xBF";
-					fwrite($inF,$chaine);
-					$inF = fopen($Fnm,"a+");
-					fseek($inF, 0);
-					if (isset($papers[$key][$key2]['Item Type']))
-					{
-						$type = $papers[$key][$key2]['Item Type'];
-						switch($type)
-						{
-							case "journalArticle":
-								$type = "article";
-								break;
-							case "conferencePaper":
-								$type = "inproceedings";
-								break;
-							case "book":
-								$type = "book";
-								break;
-							case "bookSection":
-								$type = "inbook";
-								break;
-							case "patent":
-								$type = "patent";
-								break;
-						}
-						$chaine = chr(13).chr(10)."@".$type."{";
-					}
-					if (isset($papers[$key][$key2]['Author']))
-					{
-						$auteurs = explode(", ", $papers[$key][$key2]['Author']);
-						$chaine .= mb_strtolower(normalize(str_replace(" ", "_", $auteurs[0])), 'UTF-8');
-					}
-					if (isset($papers[$key][$key2]['Title']))
-					{
-						$titre = explode(" ", $papers[$key][$key2]['Title']);
-						$chaine .= "_".mb_strtolower(normalize(str_replace(" ", "_", $titre[0])), 'UTF-8');
-					}
-					//add a constant to differenciate same initial identifier
-					if (isset($auteurs) && isset($titre))
-					{
-						$tit = mb_strtolower(normalize(str_replace(" ", "_", $auteurs[0])), 'UTF-8')."_".mb_strtolower(normalize(str_replace(" ", "_", $titre[0])), 'UTF-8');
-						if (strpos($listTit, "¤".$tit."¤") !== false)
-						{
-							$cst++;
-							$chaine .= $cst;
-						}
-						$listTit .= $tit."¤";
-					}
-					if (isset($papers[$key][$key2]['Publication Year'])) {$chaine .= "_".mb_strtolower($papers[$key][$key2]['Publication Year'], 'UTF-8');}
-					if (isset($papers[$key][$key2]['Title'])) {$chaine .= ",".chr(13).chr(10)."	title = {".$papers[$key][$key2]['Title']."}";}
-					if (isset($papers[$key][$key2]['Volume'])) {$chaine .= ",".chr(13).chr(10)."	volume = {".str_replace(array("N° ", "VOL. "), "", $papers[$key][$key2]['Volume'])."}";}
-					if (isset($papers[$key][$key2]['ISSN'])) {$chaine .= ",".chr(13).chr(10)."	issn = {".$papers[$key][$key2]['ISSN']."}";}
-					if (isset($papers[$key][$key2]['DOI']) && $papers[$key][$key2]['DOI'] != "") {$chaine .= ",".chr(13).chr(10)."	doi = {".$papers[$key][$key2]['DOI']."}";}
-					if (isset($papers[$key][$key2]['Abstract Note'])) {$chaine .= ",".chr(13).chr(10)."	abstract = {".str_replace(array("{", "}"), "_", trim($papers[$key][$key2]['Abstract Note']))."}";}
-					if (isset($papers[$key][$key2]['Publication Title']))
-					{
-						$titreJ = $papers[$key][$key2]['Publication Title'];
-						$titreJVal = $papers[$key][$key2]['Publication Title'];
-						if (substr($titreJ, 0, 4) == "The ")//Suppression of initials characters 'The ' for journal title
-						{
-							$titreJVal = ucfirst(substr($titreJ, 4));
-						}
-						if (strpos($titreJ, "(") !== false && strpos($titreJ, ")") !== false)//Suppression of text in brackets
-						{
-							$titreJTmp = preg_replace("#\([^\)]+\)#", "¤", $titreJ);
-							$titreJVal = str_replace(" ¤", "", $titreJTmp);
-						}
-						if ($type == "inbook") {
-							$chaine .= ",".chr(13).chr(10)."	booktitle = {".$titreJVal."}";
+							$chaine .= ",".chr(13).chr(10)."	pages = {".$papers[$key][$key2]['BP']."--".$papers[$key][$key2]['EP']."}";
 						}else{
-							$chaine .= ",".chr(13).chr(10)."	journal = {".$titreJVal."}";
+							if (isset($papers[$key][$key2]['AR'])) {$chaine .= ",".chr(13).chr(10)."	pages = {".$papers[$key][$key2]['AR']."}";}
 						}
-					}
-					if (isset($papers[$key][$key2]['Url'])) {$chaine .= ",".chr(13).chr(10)."	publisherLink = {".$papers[$key][$key2]['Url']."}";}
-					
-					if (isset($_POST['author']) && $_POST['author'] != "" && isset($papers[$key][$key2]['Author']) && $papers[$key][$key2]['Author'] == "")
-					{
-						$auteurs = str_replace("; ", " and ", $_POST['author']);
-						$chaine .= ",".chr(13).chr(10)."	author = {".$auteurs."}";
-					}else{
+						if (isset($papers[$key][$key2]['FU'])) {$chaine .= ",".chr(13).chr(10)."	x-funding = {".$papers[$key][$key2]['FU']."}";}
+						if (isset($papers[$key][$key2]['PM'])) {$chaine .= ",".chr(13).chr(10)."	pmid = {".$papers[$key][$key2]['PM']."}";}
+						if (isset($papers[$key][$key2]['IS'])) {$chaine .= ",".chr(13).chr(10)."	number = {".$papers[$key][$key2]['IS']."}";}
+						if (isset($papers[$key][$key2]['CL'])) {$chaine .= ",".chr(13).chr(10)."	address = {".$papers[$key][$key2]['CL']."}";}
+						if (isset($papers[$key][$key2]['CT'])) {$chaine .= ",".chr(13).chr(10)."	booktitle = {".$papers[$key][$key2]['CT']."}";}
+						if (isset($papers[$key][$key2]['CY']))
+						{
+							//OCT 19-23, 2014 to 2014-10-19
+							$confdate = $papers[$key][$key2]['CY'];
+							if ($confdate != "") {
+								$res = explode(" ", $confdate);
+								if (count($res) == 3) {
+									//year
+									$confdate = trim($res[2])."-";
+									//month
+									switch($res[0])
+									{
+										case "JAN":
+											$confdate .= "01-";
+											break;
+										case "FEB":
+											$confdate .= "02-";
+											break;
+										case "MAR":
+											$confdate .= "03-";
+											break;
+										case "APR":
+											$confdate .= "04-";
+											break;
+										case "MAY":
+											$confdate .= "05-";
+											break;
+										case "JUN":
+											$confdate .= "06-";
+											break;
+										case "JUL":
+											$confdate .= "07-";
+											break;
+										case "AUG":
+											$confdate .= "08-";
+											break;
+										case "SEP":
+											$confdate .= "09-";
+											break;
+										case "OCT":
+											$confdate .= "10-";
+											break;
+										case "NOV":
+											$confdate .= "11-";
+											break;
+										case "DEC":
+											$confdate .= "12-";
+											break;
+									}
+									//day
+									$confdate .= substr($res[1], 0, 2);
+								}
+								if (count($res) == 4) {//MAR 31-APR 05, 2019 to 2019-03-31 and 2019-04-05
+									//year
+									$confDate = trim($res[3])."-";
+									//month
+									switch($res[0])
+									{
+										case "JAN":
+											$confStartDate .= "01-";
+											break;
+										case "FEB":
+											$confStartDate .= "02-";
+											break;
+										case "MAR":
+											$confStartDate .= "03-";
+											break;
+										case "APR":
+											$confStartDate .= "04-";
+											break;
+										case "MAY":
+											$confStartDate .= "05-";
+											break;
+										case "JUN":
+											$confStartDate .= "06-";
+											break;
+										case "JUL":
+											$confStartDate .= "07-";
+											break;
+										case "AUG":
+											$confStartDate .= "08-";
+											break;
+										case "SEP":
+											$confStartDate .= "09-";
+											break;
+										case "OCT":
+											$confStartDate .= "10-";
+											break;
+										case "NOV":
+											$confStartDate .= "11-";
+											break;
+										case "DEC":
+											$confStartDate .= "12-";
+											break;
+									}
+									//day
+									$confdate .= substr($res[1], 0, 2);
+								}
+							}
+							$chaine .= ",".chr(13).chr(10)."	x-conferencestartdate = {".$confdate."}";
+						}
+						if (isset($papers[$key][$key2]['BE']))
+						{
+							$editors = str_replace("; ", " and ", $papers[$key][$key2]['BE']);
+							$chaine .= ",".chr(13).chr(10)."	editor = {".$editors."}";
+						}
+						if (isset($papers[$key][$key2]['BN'])) {$chaine .= ",".chr(13).chr(10)."	isbn = {".$papers[$key][$key2]['BN']."}";}
+						if (isset($papers[$key][$key2]['PU'])) {$chaine .= ",".chr(13).chr(10)."	publisher = {".$papers[$key][$key2]['PU']."}";}
+						if (isset($papers[$key][$key2]['SE'])) {$chaine .= ",".chr(13).chr(10)."	series = {".$papers[$key][$key2]['SE']."}";}
+						if (isset($papers[$key][$key2]['LA']))
+						{
+							if ($papers[$key][$key2]['LA'] != "English")
+							{
+								$chaine .= ",".chr(13).chr(10)."	x-language = {fr}";
+								$chaine .= ",".chr(13).chr(10)."	x-audience  = {National}";
+							}
+						}
+						$chaine .= chr(13).chr(10)."}".chr(13).chr(10);
+						fwrite($inF, $chaine);
+						break;
+					case "scifin":
+						$Fnm = "./HAL/OverHAL_scifin.bib";
+						$inF = fopen($Fnm,"a+");
+						fseek($inF, 0);
+						$chaine = "\xEF\xBB\xBF";
+						fwrite($inF,$chaine);
+						$inF = fopen($Fnm,"a+");
+						fseek($inF, 0);
+						if (isset($papers[$key][$key2]['Document Type']))
+						{
+							$type = $papers[$key][$key2]['Document Type'];
+							switch($type)
+							{
+								case "Journal; Online Computer File":
+								case "Journal":
+								case "Preprint":
+								case "Journal; General Review; Online Computer File":
+									$type = "article";
+									break;
+								case "Patent":
+									$type = "patent";
+									break;
+							}
+							$chaine = chr(13).chr(10)."@".$type."{";
+						}
 						if (isset($papers[$key][$key2]['Author']))
 						{
-							$auteurs = str_replace("; ", " and ", $papers[$key][$key2]['Author']);
+							$auteurs = explode(", ", $papers[$key][$key2]['Author']);
+							$chaine .= mb_strtolower(normalize(str_replace(" ", "_", $auteurs[0])), 'UTF-8');
+						}
+						if (isset($papers[$key][$key2]['Title']))
+						{
+							$titre = explode(" ", $papers[$key][$key2]['Title']);
+							$chaine .= "_".mb_strtolower(normalize(str_replace(" ", "_", $titre[0])), 'UTF-8');
+						}
+						//add a constant to differenciate same initial identifier
+						if (isset($auteurs) && isset($titre))
+						{
+							$tit = mb_strtolower(normalize(str_replace(" ", "_", $auteurs[0])), 'UTF-8')."_".mb_strtolower(normalize(str_replace(" ", "_", $titre[0])), 'UTF-8');
+							if (strpos($listTit, "¤".$tit."¤") !== false)
+							{
+								$cst++;
+								$chaine .= $cst;
+							}
+							$listTit .= $tit."¤";
+						}
+						if (isset($papers[$key][$key2]['Publication Year'])) {$chaine .= "_".mb_strtolower($papers[$key][$key2]['Publication Year'], 'UTF-8');}
+						if (isset($papers[$key][$key2]['Title'])) {$chaine .= ",".chr(13).chr(10)."	title = {".$papers[$key][$key2]['Title']."}";}
+						if (isset($papers[$key][$key2]['Volume'])) {$chaine .= ",".chr(13).chr(10)."	volume = {".$papers[$key][$key2]['Volume']."}";}
+						if (isset($papers[$key][$key2]['Internat.Standard Doc. Number'])) {$chaine .= ",".chr(13).chr(10)."	issn = {".$papers[$key][$key2]['Internat.Standard Doc. Number']."}";}
+						if (isset($papers[$key][$key2]['DOI'])) {$chaine .= ",".chr(13).chr(10)."	doi = {".$papers[$key][$key2]['DOI']."}";}
+						if (isset($papers[$key][$key2]['Abstract'])) {$chaine .= ",".chr(13).chr(10)."	abstract = {".str_replace(array("{", "}"), "_", trim($papers[$key][$key2]['Abstract']))."}";}
+						if (isset($papers[$key][$key2]['Journal Title'])) {$chaine .= ",".chr(13).chr(10)."	journal = {".$papers[$key][$key2]['Journal Title']."}";}
+						if (isset($papers[$key][$key2]['Author']))
+						{
+							$auteurs = str_replace("; ", " and ",$papers[$key][$key2]['Author']);
 							$chaine .= ",".chr(13).chr(10)."	author = {".$auteurs."}";
 						}
-					}
-					$keywords = "";
-					if (isset($_POST['bibtex']) && $_POST['bibtex'] == "oui") {
-						if (isset($papers[$key][$key2]['Automatic Tags']) && $papers[$key][$key2]['Automatic Tags'] != "")
-						{
-							$keywords = $_POST['keywords'].'; ';
-						}else{
-							$keywords = $_POST['keywords'];
-						}
-					}
-					if (isset($papers[$key][$key2]['Automatic Tags'])) {$chaine .= ",".chr(13).chr(10)."	keywords = {".$keywords.$papers[$key][$key2]['Automatic Tags']."}";}
-					if (isset($papers[$key][$key2]['Pages'])) {$chaine .= ",".chr(13).chr(10)."	pages = {".$papers[$key][$key2]['Pages']."}";}
-					if (isset($papers[$key][$key2]['Extra'])) {
-						$pmid = $papers[$key][$key2]['Extra'];
-						if (strpos($pmid, "PMCID") !== false)//PMID + PMCID
-						{
-							$pmidVal = str_replace(array("PMID: ", "PMCID: "), "", $pmid);
-							$pmidValT = explode(" ", $pmidVal);
-							$chaine .= ",".chr(13).chr(10)."	pmid = {".$pmidValT[0]."}";
-							$chaine .= ",".chr(13).chr(10)."	pmcid = {".$pmidValT[1]."}";
-						}else{//only PMID
-							$pmidVal = str_replace("PMID: ", "", $pmid);
-							$chaine .= ",".chr(13).chr(10)."	pmid = {".$pmidVal."}";
-						}
-					}
-					if (isset($papers[$key][$key2]['Conference Name'])) {$chaine .= ",".chr(13).chr(10)."	booktitle = {".$papers[$key][$key2]['Conference Name']."}";}
-					if (isset($papers[$key][$key2]['Editor']))
-					{
-						$editors = str_replace("; ", " and ", $papers[$key][$key2]['Editor']);
-						$chaine .= ",".chr(13).chr(10)."	editor = {".$editors."}";
-					}
-					if (isset($papers[$key][$key2]['ISBN'])) {$chaine .= ",".chr(13).chr(10)."	isbn = {".$papers[$key][$key2]['ISBN']."}";}
-					if (isset($papers[$key][$key2]['Publisher'])) {$chaine .= ",".chr(13).chr(10)."	publisher = {".$papers[$key][$key2]['Publisher']."}";}
-					if (isset($papers[$key][$key2]['Series'])) {$chaine .= ",".chr(13).chr(10)."	series = {".$papers[$key][$key2]['Series']."}";}
-					if (isset($_POST['bibtex']) && $_POST['bibtex'] == "oui") {
-						if (isset($papers[$key][$key2]['Date'])) {$chaine .= ",".chr(13).chr(10)."	year = {".$papers[$key][$key2]['Date']."}";}
-					}else{
 						if (isset($papers[$key][$key2]['Publication Year'])) {$chaine .= ",".chr(13).chr(10)."	year = {".$papers[$key][$key2]['Publication Year']."}";}
-					}
-					if (isset($_POST['bibtex']) && $_POST['bibtex'] == "oui")
-					{
-						$chaine .= ",".chr(13).chr(10)."	x-language = {fr}";
-						$chaine .= ",".chr(13).chr(10)."	x-audience  = {National}";
-					}else{
+						if (isset($papers[$key][$key2]['Page'])) {$chaine .= ",".chr(13).chr(10)."	pages = {".$papers[$key][$key2]['Page']."}";}
 						if (isset($papers[$key][$key2]['Language']))
 						{
-							if ($papers[$key][$key2]['Language'] == "")
+							if ($papers[$key][$key2]['Language'] != "written in English")
 							{
-								$chaine .= ",".chr(13).chr(10)."	x-language = {en}";
-								$chaine .= ",".chr(13).chr(10)."	x-audience  = {International}";
+								$chaine .= ",".chr(13).chr(10)."	x-language = {fr}";
+								$chaine .= ",".chr(13).chr(10)."	x-audience  = {National}";
+							}
+						}
+						$chaine .= chr(13).chr(10)."}".chr(13).chr(10);
+						fwrite($inF, $chaine);
+						break;
+					case "zotero":
+						$Fnm = "./HAL/OverHAL_zotero.bib";
+						$inF = fopen($Fnm,"a+");
+						fseek($inF, 0);
+						$chaine = "\xEF\xBB\xBF";
+						fwrite($inF,$chaine);
+						$inF = fopen($Fnm,"a+");
+						fseek($inF, 0);
+						if (isset($papers[$key][$key2]['Item Type']))
+						{
+							$type = $papers[$key][$key2]['Item Type'];
+							switch($type)
+							{
+								case "journalArticle":
+									$type = "article";
+									break;
+								case "conferencePaper":
+									$type = "inproceedings";
+									break;
+								case "book":
+									$type = "book";
+									break;
+								case "bookSection":
+									$type = "inbook";
+									break;
+								case "patent":
+									$type = "patent";
+									break;
+							}
+							$chaine = chr(13).chr(10)."@".$type."{";
+						}
+						if (isset($papers[$key][$key2]['Author']))
+						{
+							$auteurs = explode(", ", $papers[$key][$key2]['Author']);
+							$chaine .= mb_strtolower(normalize(str_replace(" ", "_", $auteurs[0])), 'UTF-8');
+						}
+						if (isset($papers[$key][$key2]['Title']))
+						{
+							$titre = explode(" ", $papers[$key][$key2]['Title']);
+							$chaine .= "_".mb_strtolower(normalize(str_replace(" ", "_", $titre[0])), 'UTF-8');
+						}
+						//add a constant to differenciate same initial identifier
+						if (isset($auteurs) && isset($titre))
+						{
+							$tit = mb_strtolower(normalize(str_replace(" ", "_", $auteurs[0])), 'UTF-8')."_".mb_strtolower(normalize(str_replace(" ", "_", $titre[0])), 'UTF-8');
+							if (strpos($listTit, "¤".$tit."¤") !== false)
+							{
+								$cst++;
+								$chaine .= $cst;
+							}
+							$listTit .= $tit."¤";
+						}
+						if (isset($papers[$key][$key2]['Publication Year'])) {$chaine .= "_".mb_strtolower($papers[$key][$key2]['Publication Year'], 'UTF-8');}
+						if (isset($papers[$key][$key2]['Title'])) {$chaine .= ",".chr(13).chr(10)."	title = {".$papers[$key][$key2]['Title']."}";}
+						if (isset($papers[$key][$key2]['Volume'])) {$chaine .= ",".chr(13).chr(10)."	volume = {".str_replace(array("N° ", "VOL. "), "", $papers[$key][$key2]['Volume'])."}";}
+						if (isset($papers[$key][$key2]['ISSN'])) {$chaine .= ",".chr(13).chr(10)."	issn = {".$papers[$key][$key2]['ISSN']."}";}
+						if (isset($papers[$key][$key2]['DOI']) && $papers[$key][$key2]['DOI'] != "") {$chaine .= ",".chr(13).chr(10)."	doi = {".$papers[$key][$key2]['DOI']."}";}
+						if (isset($papers[$key][$key2]['Abstract Note'])) {$chaine .= ",".chr(13).chr(10)."	abstract = {".str_replace(array("{", "}"), "_", trim($papers[$key][$key2]['Abstract Note']))."}";}
+						if (isset($papers[$key][$key2]['Publication Title']))
+						{
+							$titreJ = $papers[$key][$key2]['Publication Title'];
+							$titreJVal = $papers[$key][$key2]['Publication Title'];
+							if (substr($titreJ, 0, 4) == "The ")//Suppression of initials characters 'The ' for journal title
+							{
+								$titreJVal = ucfirst(substr($titreJ, 4));
+							}
+							if (strpos($titreJ, "(") !== false && strpos($titreJ, ")") !== false)//Suppression of text in brackets
+							{
+								$titreJTmp = preg_replace("#\([^\)]+\)#", "¤", $titreJ);
+								$titreJVal = str_replace(" ¤", "", $titreJTmp);
+							}
+							if ($type == "inbook") {
+								$chaine .= ",".chr(13).chr(10)."	booktitle = {".$titreJVal."}";
 							}else{
-								if ($papers[$key][$key2]['Language'] != "English" && $papers[$key][$key2]['Language'] != "ENG" && $papers[$key][$key2]['Language'] != "EN" && $papers[$key][$key2]['Language'] != "eng" && $papers[$key][$key2]['Language'] != "en")
+								$chaine .= ",".chr(13).chr(10)."	journal = {".$titreJVal."}";
+							}
+						}
+						if (isset($papers[$key][$key2]['Url'])) {$chaine .= ",".chr(13).chr(10)."	publisherLink = {".$papers[$key][$key2]['Url']."}";}
+						
+						if (isset($_POST['author']) && $_POST['author'] != "" && isset($papers[$key][$key2]['Author']) && $papers[$key][$key2]['Author'] == "")
+						{
+							$auteurs = str_replace("; ", " and ", $_POST['author']);
+							$chaine .= ",".chr(13).chr(10)."	author = {".$auteurs."}";
+						}else{
+							if (isset($papers[$key][$key2]['Author']))
+							{
+								$auteurs = str_replace("; ", " and ", $papers[$key][$key2]['Author']);
+								$chaine .= ",".chr(13).chr(10)."	author = {".$auteurs."}";
+							}
+						}
+						$keywords = "";
+						if (isset($_POST['bibtex']) && $_POST['bibtex'] == "oui") {
+							if (isset($papers[$key][$key2]['Automatic Tags']) && $papers[$key][$key2]['Automatic Tags'] != "")
+							{
+								$keywords = $_POST['keywords'].'; ';
+							}else{
+								$keywords = $_POST['keywords'];
+							}
+						}
+						if (isset($papers[$key][$key2]['Automatic Tags'])) {$chaine .= ",".chr(13).chr(10)."	keywords = {".$keywords.$papers[$key][$key2]['Automatic Tags']."}";}
+						if (isset($papers[$key][$key2]['Pages'])) {$chaine .= ",".chr(13).chr(10)."	pages = {".$papers[$key][$key2]['Pages']."}";}
+						if (isset($papers[$key][$key2]['Extra'])) {
+							$pmid = $papers[$key][$key2]['Extra'];
+							if (strpos($pmid, "PMCID") !== false)//PMID + PMCID
+							{
+								$pmidVal = str_replace(array("PMID: ", "PMCID: "), "", $pmid);
+								$pmidValT = explode(" ", $pmidVal);
+								$chaine .= ",".chr(13).chr(10)."	pmid = {".$pmidValT[0]."}";
+								$chaine .= ",".chr(13).chr(10)."	pmcid = {".$pmidValT[1]."}";
+							}else{//only PMID
+								$pmidVal = str_replace("PMID: ", "", $pmid);
+								$chaine .= ",".chr(13).chr(10)."	pmid = {".$pmidVal."}";
+							}
+						}
+						if (isset($papers[$key][$key2]['Conference Name'])) {$chaine .= ",".chr(13).chr(10)."	booktitle = {".$papers[$key][$key2]['Conference Name']."}";}
+						if (isset($papers[$key][$key2]['Editor']))
+						{
+							$editors = str_replace("; ", " and ", $papers[$key][$key2]['Editor']);
+							$chaine .= ",".chr(13).chr(10)."	editor = {".$editors."}";
+						}
+						if (isset($papers[$key][$key2]['ISBN'])) {$chaine .= ",".chr(13).chr(10)."	isbn = {".$papers[$key][$key2]['ISBN']."}";}
+						if (isset($papers[$key][$key2]['Publisher'])) {$chaine .= ",".chr(13).chr(10)."	publisher = {".$papers[$key][$key2]['Publisher']."}";}
+						if (isset($papers[$key][$key2]['Series'])) {$chaine .= ",".chr(13).chr(10)."	series = {".$papers[$key][$key2]['Series']."}";}
+						if (isset($_POST['bibtex']) && $_POST['bibtex'] == "oui") {
+							if (isset($papers[$key][$key2]['Date'])) {$chaine .= ",".chr(13).chr(10)."	year = {".$papers[$key][$key2]['Date']."}";}
+						}else{
+							if (isset($papers[$key][$key2]['Publication Year'])) {$chaine .= ",".chr(13).chr(10)."	year = {".$papers[$key][$key2]['Publication Year']."}";}
+						}
+						if (isset($_POST['bibtex']) && $_POST['bibtex'] == "oui")
+						{
+							$chaine .= ",".chr(13).chr(10)."	x-language = {fr}";
+							$chaine .= ",".chr(13).chr(10)."	x-audience  = {National}";
+						}else{
+							if (isset($papers[$key][$key2]['Language']))
+							{
+								if ($papers[$key][$key2]['Language'] == "")
 								{
-									$chaine .= ",".chr(13).chr(10)."	x-language = {fr}";
-									$chaine .= ",".chr(13).chr(10)."	x-audience  = {National}";
-								}else{
 									$chaine .= ",".chr(13).chr(10)."	x-language = {en}";
 									$chaine .= ",".chr(13).chr(10)."	x-audience  = {International}";
+								}else{
+									if ($papers[$key][$key2]['Language'] != "English" && $papers[$key][$key2]['Language'] != "ENG" && $papers[$key][$key2]['Language'] != "EN" && $papers[$key][$key2]['Language'] != "eng" && $papers[$key][$key2]['Language'] != "en")
+									{
+										$chaine .= ",".chr(13).chr(10)."	x-language = {fr}";
+										$chaine .= ",".chr(13).chr(10)."	x-audience  = {National}";
+									}else{
+										$chaine .= ",".chr(13).chr(10)."	x-language = {en}";
+										$chaine .= ",".chr(13).chr(10)."	x-audience  = {International}";
+									}
 								}
 							}
 						}
-					}
-					$chaine .= chr(13).chr(10)."}".chr(13).chr(10);
-					fwrite($inF, $chaine);
-					break;
-					case "pubmed_csv":
-					$Fnm = "./HAL/OverHAL_pubmed_csv.bib";
-					$inF = fopen($Fnm,"a+");
-					fseek($inF, 0);
-					$chaine = "\xEF\xBB\xBF";
-					fwrite($inF,$chaine);
-					$inF = fopen($Fnm,"a+");
-					fseek($inF, 0);
-					if (isset($papers[$key][$key2]['Type']))
-					{
-						$type = $papers[$key][$key2]['Type'];
-						$chaine = chr(13).chr(10)."@".$type."{";
-					}
-					if (isset($papers[$key][$key2]['Description']))
-					{
-						$auteurs = explode(", ", $papers[$key][$key2]['Description']);
-						$chaine .= mb_strtolower(normalize(str_replace(" ", "_", $auteurs[0])), 'UTF-8');
-					}
-					if (isset($papers[$key][$key2]['Title']))
-					{
-						$titre = explode(" ", $papers[$key][$key2]['Title']);
-						$chaine .= "_".mb_strtolower(normalize(str_replace(" ", "_", $titre[0])), 'UTF-8');
-					}
-					//add a constant to differenciate same initial identifier
-					if (isset($auteurs) && isset($titre))
-					{
-						$tit = mb_strtolower(normalize(str_replace(" ", "_", $auteurs[0])), 'UTF-8')."_".mb_strtolower(normalize(str_replace(" ", "_", $titre[0])), 'UTF-8');
-						if (strpos($listTit, "¤".$tit."¤") !== false)
+						$chaine .= chr(13).chr(10)."}".chr(13).chr(10);
+						fwrite($inF, $chaine);
+						break;
+						case "pubmed_csv":
+						$Fnm = "./HAL/OverHAL_pubmed_csv.bib";
+						$inF = fopen($Fnm,"a+");
+						fseek($inF, 0);
+						$chaine = "\xEF\xBB\xBF";
+						fwrite($inF,$chaine);
+						$inF = fopen($Fnm,"a+");
+						fseek($inF, 0);
+						if (isset($papers[$key][$key2]['Type']))
 						{
-							$cst++;
-							$chaine .= $cst;
+							$type = $papers[$key][$key2]['Type'];
+							$chaine = chr(13).chr(10)."@".$type."{";
 						}
-						$listTit .= $tit."¤";
-					}
-					//Publication year
-					$pyear = "";
-					if (isset($papers[$key][$key2]['ShortDetails'])) {
-						$pyear = substr($papers[$key][$key2]['ShortDetails'], -4);
-						$chaine .= "_".mb_strtolower($pyear, 'UTF-8');
-					}
-					if (isset($papers[$key][$key2]['Title'])) {$chaine .= ",".chr(13).chr(10)."	title = {".$papers[$key][$key2]['Title']."}";}
-					//Volume, number and pages
-					if (isset($papers[$key][$key2]['Details']) && strpos($papers[$key][$key2]['Details'], ";") !== false) {
-						$tabEXT = explode(";", $papers[$key][$key2]['Details']);
-						$resi = $tabEXT[1];
-						$resTAB = explode(" ", $resi);
-						$resf = $resTAB[0];
-						$volume = "";
-						$number = "";
-						$pages = "";
-						if (strpos($resf, "(") !== false && strpos($resf, ")") !== false) {
-							$number = substr($resf, (strpos($resf, "(") + 1), (strpos($resf, ")") - strpos($resf, "(") - 1));
-							$resf = str_replace("(".$number.")", "", $resf);
-						}
-						$resu = explode(":", $resf);
-						if (isset($resu[0])) {$volume = str_replace(".", "", $resu[0]);}
-						if (isset($resu[1])) {$pages = str_replace(".", "", $resu[1]);}
-						
-						if ($volume != "") {$chaine .= ",".chr(13).chr(10)."	volume = {".$volume."}";}
-						if ($number != "") {$chaine .= ",".chr(13).chr(10)."	number = {".$number."}";}
-						if ($pages != "" && is_numeric(str_replace("-", "", $pages))) {$chaine .= ",".chr(13).chr(10)."	pages = {".$pages."}";}
-					} 
-					//DOI
-					if (isset($papers[$key][$key2]['Details'])  && strpos($papers[$key][$key2]['Details'], "doi: ") !== false) {
-						$tabEXT = explode("doi: ", $papers[$key][$key2]['Details']);
-						$tabDOI = explode(" ", trim($tabEXT[1]));
-						$chaine .= ",".chr(13).chr(10)."	doi = {".str_replace(".", "", $tabDOI[0])."}";
-					}
-					//Journal
-					if (isset($papers[$key][$key2]['ShortDetails'])) {
-						$titreJ = trim(str_replace(" ".$pyear, "", $papers[$key][$key2]['ShortDetails']));
-						$titreJVal = $titreJ;
-						if (substr($titreJ, 0, 4) == "The ")//Suppression of initials characters 'The ' for journal title
-						{
-							$titreJVal = ucfirst(substr($titreJ, 4));
-						}
-						if (strpos($titreJ, "(") !== false && strpos($titreJ, ")") !== false)//Suppression of text in brackets
-						{
-							$titreJTmp = preg_replace("#\([^\)]+\)#", "¤", $titreJ);
-							$titreJVal = str_replace(" ¤", "", $titreJTmp);
-						}
-						$chaine .= ",".chr(13).chr(10)."	journal = {".$titreJVal."}";
-					
-					}
-					//Authors
-					if (isset($_POST['author']) && $_POST['author'] != "" && isset($papers[$key][$key2]['Description']) && $papers[$key][$key2]['Description'] == "")
-					{
-						$auteurs = str_replace("; ", " and ", $_POST['author']);
-						$chaine .= ",".chr(13).chr(10)."	author = {".$auteurs."}";
-					}else{
 						if (isset($papers[$key][$key2]['Description']))
 						{
-							$auteurs = str_replace("; ", " and ", $papers[$key][$key2]['Description']);
+							$auteurs = explode(", ", $papers[$key][$key2]['Description']);
+							$chaine .= mb_strtolower(normalize(str_replace(" ", "_", $auteurs[0])), 'UTF-8');
+						}
+						if (isset($papers[$key][$key2]['Title']))
+						{
+							$titre = explode(" ", $papers[$key][$key2]['Title']);
+							$chaine .= "_".mb_strtolower(normalize(str_replace(" ", "_", $titre[0])), 'UTF-8');
+						}
+						//add a constant to differenciate same initial identifier
+						if (isset($auteurs) && isset($titre))
+						{
+							$tit = mb_strtolower(normalize(str_replace(" ", "_", $auteurs[0])), 'UTF-8')."_".mb_strtolower(normalize(str_replace(" ", "_", $titre[0])), 'UTF-8');
+							if (strpos($listTit, "¤".$tit."¤") !== false)
+							{
+								$cst++;
+								$chaine .= $cst;
+							}
+							$listTit .= $tit."¤";
+						}
+						//Publication year
+						$pyear = "";
+						if (isset($papers[$key][$key2]['ShortDetails'])) {
+							$pyear = substr($papers[$key][$key2]['ShortDetails'], -4);
+							$chaine .= "_".mb_strtolower($pyear, 'UTF-8');
+						}
+						if (isset($papers[$key][$key2]['Title'])) {$chaine .= ",".chr(13).chr(10)."	title = {".$papers[$key][$key2]['Title']."}";}
+						//Volume, number and pages
+						if (isset($papers[$key][$key2]['Details']) && strpos($papers[$key][$key2]['Details'], ";") !== false) {
+							$tabEXT = explode(";", $papers[$key][$key2]['Details']);
+							$resi = $tabEXT[1];
+							$resTAB = explode(" ", $resi);
+							$resf = $resTAB[0];
+							$volume = "";
+							$number = "";
+							$pages = "";
+							if (strpos($resf, "(") !== false && strpos($resf, ")") !== false) {
+								$number = substr($resf, (strpos($resf, "(") + 1), (strpos($resf, ")") - strpos($resf, "(") - 1));
+								$resf = str_replace("(".$number.")", "", $resf);
+							}
+							$resu = explode(":", $resf);
+							if (isset($resu[0])) {$volume = str_replace(".", "", $resu[0]);}
+							if (isset($resu[1])) {$pages = str_replace(".", "", $resu[1]);}
+							
+							if ($volume != "") {$chaine .= ",".chr(13).chr(10)."	volume = {".$volume."}";}
+							if ($number != "") {$chaine .= ",".chr(13).chr(10)."	number = {".$number."}";}
+							if ($pages != "" && is_numeric(str_replace("-", "", $pages))) {$chaine .= ",".chr(13).chr(10)."	pages = {".$pages."}";}
+						} 
+						//DOI
+						if (isset($papers[$key][$key2]['Details'])  && strpos($papers[$key][$key2]['Details'], "doi: ") !== false) {
+							$tabEXT = explode("doi: ", $papers[$key][$key2]['Details']);
+							$tabDOI = explode(" ", trim($tabEXT[1]));
+							$chaine .= ",".chr(13).chr(10)."	doi = {".str_replace(".", "", $tabDOI[0])."}";
+						}
+						//Journal
+						if (isset($papers[$key][$key2]['ShortDetails'])) {
+							$titreJ = trim(str_replace(" ".$pyear, "", $papers[$key][$key2]['ShortDetails']));
+							$titreJVal = $titreJ;
+							if (substr($titreJ, 0, 4) == "The ")//Suppression of initials characters 'The ' for journal title
+							{
+								$titreJVal = ucfirst(substr($titreJ, 4));
+							}
+							if (strpos($titreJ, "(") !== false && strpos($titreJ, ")") !== false)//Suppression of text in brackets
+							{
+								$titreJTmp = preg_replace("#\([^\)]+\)#", "¤", $titreJ);
+								$titreJVal = str_replace(" ¤", "", $titreJTmp);
+							}
+							$chaine .= ",".chr(13).chr(10)."	journal = {".$titreJVal."}";
+						
+						}
+						//Authors
+						if (isset($_POST['author']) && $_POST['author'] != "" && isset($papers[$key][$key2]['Description']) && $papers[$key][$key2]['Description'] == "")
+						{
+							$auteurs = str_replace("; ", " and ", $_POST['author']);
 							$chaine .= ",".chr(13).chr(10)."	author = {".$auteurs."}";
-						}
-					}
-					$keywords = "";
-					if (isset($_POST['bibtex']) && $_POST['bibtex'] == "oui") {
-						if (isset($papers[$key][$key2]['Automatic Tags']) && $papers[$key][$key2]['Automatic Tags'] != "")
-						{
-							$keywords = $_POST['keywords'].'; ';
 						}else{
-							$keywords = $_POST['keywords'];
+							if (isset($papers[$key][$key2]['Description']))
+							{
+								$auteurs = str_replace("; ", " and ", $papers[$key][$key2]['Description']);
+								$chaine .= ",".chr(13).chr(10)."	author = {".$auteurs."}";
+							}
 						}
-					}
-					if (isset($papers[$key][$key2]['Pages'])) {$chaine .= ",".chr(13).chr(10)."	pages = {".$papers[$key][$key2]['Pages']."}";}
-					if (isset($papers[$key][$key2]['Identifiers'])) {
-						$pmid = $papers[$key][$key2]['Identifiers'];
-						if (strpos($pmid, "PMCID:PMC") !== false)//PMID + PMCID
-						{
-							$pmidVal = str_replace(array("PMID:", "PMCID:PMC"), "", $pmid);
-							$pmidValT = explode(" | ", $pmidVal);
-							$chaine .= ",".chr(13).chr(10)."	pmid = {".$pmidValT[0]."}";
-							$chaine .= ",".chr(13).chr(10)."	pmcid = {".$pmidValT[1]."}";
-						}else{//only PMID
-							$pmidVal = str_replace("PMID:", "", $pmid);
-							$chaine .= ",".chr(13).chr(10)."	pmid = {".$pmidVal."}";
+						$keywords = "";
+						if (isset($_POST['bibtex']) && $_POST['bibtex'] == "oui") {
+							if (isset($papers[$key][$key2]['Automatic Tags']) && $papers[$key][$key2]['Automatic Tags'] != "")
+							{
+								$keywords = $_POST['keywords'].'; ';
+							}else{
+								$keywords = $_POST['keywords'];
+							}
 						}
-					}
-					if (isset($_POST['bibtex']) && $_POST['bibtex'] == "oui") {
-						if (isset($pyear) && $pyear != "") {$chaine .= ",".chr(13).chr(10)."	year = {".$pyear."}";}
-					}
-					if (isset($_POST['bibtex']) && $_POST['bibtex'] == "oui")
-					{
-						$chaine .= ",".chr(13).chr(10)."	x-language = {fr}";
-						$chaine .= ",".chr(13).chr(10)."	x-audience  = {National}";
-					}
-					$chaine .= chr(13).chr(10)."}".chr(13).chr(10);
-					fwrite($inF, $chaine);
-					break;
-			}
-			//export TEI
-			$limNbAut = $limTEI;//If more authors than this limit, no export is done > too long time to process
-			switch($key)
-			{
-				case "wos_csv":
-					$aut = $papers[$key][$key2]['AU'];
-					$autTab = explode("; ",$aut);
-					if (count($autTab) < $limNbAut)
-					{
-						//affiliation
-						$autTab = array();
-						$labTab = array();
-						$autInd = 0;
-						$docid = 0;
-						$label = "";
-						$code = "";
-						$cuHAL = "";
-						$type = "";
-						$pays = "";
-						$quoi = $papers[$key][$key2]['C1'];
-						$quoi = trimUltime($quoi);
-						$validHAL = "";//to privilegy the search by the unit code number rather than acronym
-						//echo "<br>".$j." - ".$quoi."<br>";
-						$diffQuoi = explode("; [", $quoi);
-						//var_dump($diffQuoi);
-						for ($d = 0; $d < count($diffQuoi); $d++)
+						if (isset($papers[$key][$key2]['Pages'])) {$chaine .= ",".chr(13).chr(10)."	pages = {".$papers[$key][$key2]['Pages']."}";}
+						if (isset($papers[$key][$key2]['Identifiers'])) {
+							$pmid = $papers[$key][$key2]['Identifiers'];
+							if (strpos($pmid, "PMCID:PMC") !== false)//PMID + PMCID
+							{
+								$pmidVal = str_replace(array("PMID:", "PMCID:PMC"), "", $pmid);
+								$pmidValT = explode(" | ", $pmidVal);
+								$chaine .= ",".chr(13).chr(10)."	pmid = {".$pmidValT[0]."}";
+								$chaine .= ",".chr(13).chr(10)."	pmcid = {".$pmidValT[1]."}";
+							}else{//only PMID
+								$pmidVal = str_replace("PMID:", "", $pmid);
+								$chaine .= ",".chr(13).chr(10)."	pmid = {".$pmidVal."}";
+							}
+						}
+						if (isset($_POST['bibtex']) && $_POST['bibtex'] == "oui") {
+							if (isset($pyear) && $pyear != "") {$chaine .= ",".chr(13).chr(10)."	year = {".$pyear."}";}
+						}
+						if (isset($_POST['bibtex']) && $_POST['bibtex'] == "oui")
 						{
-							$urlHAL = "";
+							$chaine .= ",".chr(13).chr(10)."	x-language = {fr}";
+							$chaine .= ",".chr(13).chr(10)."	x-audience  = {National}";
+						}
+						$chaine .= chr(13).chr(10)."}".chr(13).chr(10);
+						fwrite($inF, $chaine);
+						break;
+				}
+				//export TEI
+				$limNbAut = $limTEI;//If more authors than this limit, no export is done > too long time to process
+				switch($key)
+				{
+					case "wos_csv":
+						$aut = $papers[$key][$key2]['AU'];
+						$autTab = explode("; ",$aut);
+						if (count($autTab) < $limNbAut)
+						{
+							//affiliation
+							$autTab = array();
+							$labTab = array();
+							$autInd = 0;
 							$docid = 0;
 							$label = "";
 							$code = "";
 							$cuHAL = "";
 							$type = "";
 							$pays = "";
-							//Search for distinctive acronyms
-							//echo $diffQuoi[$d].'<br>';
-							searchAcro($diffQuoi[$d], $cuHAL, $urlHAL, $validHAL, $retTest);
-							//echo $urlHAL.'<br>';
-							if ($urlHAL != "")//affiliation with code unit or acronym found
+							$quoi = $papers[$key][$key2]['C1'];
+							$quoi = trimUltime($quoi);
+							$validHAL = "";//to privilegy the search by the unit code number rather than acronym
+							//echo "<br>".$j." - ".$quoi."<br>";
+							$diffQuoi = explode("; [", $quoi);
+							//var_dump($diffQuoi);
+							for ($d = 0; $d < count($diffQuoi); $d++)
 							{
+								$urlHAL = "";
+								$docid = 0;
+								$label = "";
+								$code = "";
+								$cuHAL = "";
+								$type = "";
+								$pays = "";
+								//Search for distinctive acronyms
 								//echo $diffQuoi[$d].'<br>';
-								idaureHal($urlHAL, $cuHAL, $docid, $label, $code, $type);
-							}
-							//echo $docid.' - '.$urlHAL.'<br>';
-							if($docid != 0)
-							{
-								affilId($diffQuoi[$d], $docid, $label, $code, $type, $pays, $validHAL);//Assigning idAffil to authors
-								while ($retTest != "") {
-									$aTester = $retTest;
-									$autInd = 0;
-									$urlHAL = "";
-									$docid = 0;
-									$label = "";
-									$code = "";
-									$cuHAL = "";
-									$type = "";
-									$pays = "";
-									//Search for distinctive acronyms
-									//echo 'toto : '.$aTester.'<br>';
-									searchAcro($aTester, $cuHAL, $urlHAL, $validHAL, $retTest);
-									//echo 'titi : '.$urlHAL.'<br>';
-									if ($urlHAL != "")//affiliation with code unit or acronym found
-									{
-										idaureHal($urlHAL, $cuHAL, $docid, $label, $code, $type);
-									}
-									//echo $urlHAL.' - '.$docid.'<br>';
-									if($docid != 0)
-									{
-										affilId($aTester, $docid, $label, $code, $type, $pays, $validHAL);
-									}
-								}
-							}else{//no specific affiliation found > we store whole results
-								//echo $diffQuoi[$d].'<br>';
-								$validHAL = "--";
-								$eltTab = explode("] ",$diffQuoi[$d]);
-								include './OverHAL_affiliation_termes.php';
-								if (isset($eltTab[1])) {$label = supprAmp(trim($eltTab[1]));}
-								$label = str_ireplace($search, $replace, $label);
-								//echo $label.'<br>';
-								include './OverHAL_univ_termes.php';
-								$queTab = explode(",", $label);
-								$quePay = count($queTab) - 1;
-								$labFin = "";
-								$iq = 0;
-								$trm = "University ";
-								foreach($queTab as $elt)
+								searchAcro($diffQuoi[$d], $cuHAL, $urlHAL, $validHAL, $retTest);
+								//echo $urlHAL.'<br>';
+								if ($urlHAL != "")//affiliation with code unit or acronym found
 								{
-									$elt = trim($elt);
-									if(stripos($elt, "univ") !== false) {//term 'Univ' is present
-										$pays = trim($queTab[$quePay]);
-										$kT = array_search($pays, array_column($UNIV_LISTE, "pays"));
-										if ($kT !== false) {$trm = $UNIV_LISTE[$kT]["univ"];}
-									}
-									if(stripos($elt, "University") === false) {//term 'University' is absent
-										$elt = str_replace(array("Univ ", "univ "), $trm, $elt);
-									}
-									if ($iq > 0) {$labFin .= ", ";}
-									$labFin .= $elt;
-									$iq++;
+									//echo $diffQuoi[$d].'<br>';
+									idaureHal($urlHAL, $cuHAL, $docid, $label, $code, $type);
 								}
-								//$docid = 999999;
-								$docid = $labFin;
-								$code = $labFin;
-								$type = 'institution';
-								affilId($diffQuoi[$d], $docid, $label, $code, $type, $pays, $validHAL);
+								//echo $docid.' - '.$urlHAL.'<br>';
+								if($docid != 0)
+								{
+									affilId($diffQuoi[$d], $docid, $label, $code, $type, $pays, $validHAL);//Assigning idAffil to authors
+									while ($retTest != "") {
+										$aTester = $retTest;
+										$autInd = 0;
+										$urlHAL = "";
+										$docid = 0;
+										$label = "";
+										$code = "";
+										$cuHAL = "";
+										$type = "";
+										$pays = "";
+										//Search for distinctive acronyms
+										//echo 'toto : '.$aTester.'<br>';
+										searchAcro($aTester, $cuHAL, $urlHAL, $validHAL, $retTest);
+										//echo 'titi : '.$urlHAL.'<br>';
+										if ($urlHAL != "")//affiliation with code unit or acronym found
+										{
+											idaureHal($urlHAL, $cuHAL, $docid, $label, $code, $type);
+										}
+										//echo $urlHAL.' - '.$docid.'<br>';
+										if($docid != 0)
+										{
+											affilId($aTester, $docid, $label, $code, $type, $pays, $validHAL);
+										}
+									}
+								}else{//no specific affiliation found > we store whole results
+									//echo $diffQuoi[$d].'<br>';
+									$validHAL = "--";
+									$eltTab = explode("] ",$diffQuoi[$d]);
+									include './OverHAL_affiliation_termes.php';
+									if (isset($eltTab[1])) {$label = supprAmp(trim($eltTab[1]));}
+									$label = str_ireplace($search, $replace, $label);
+									//echo $label.'<br>';
+									include './OverHAL_univ_termes.php';
+									$queTab = explode(",", $label);
+									$quePay = count($queTab) - 1;
+									$labFin = "";
+									$iq = 0;
+									$trm = "University ";
+									foreach($queTab as $elt)
+									{
+										$elt = trim($elt);
+										if(stripos($elt, "univ") !== false) {//term 'Univ' is present
+											$pays = trim($queTab[$quePay]);
+											$kT = array_search($pays, array_column($UNIV_LISTE, "pays"));
+											if ($kT !== false) {$trm = $UNIV_LISTE[$kT]["univ"];}
+										}
+										if(stripos($elt, "University") === false) {//term 'University' is absent
+											$elt = str_replace(array("Univ ", "univ "), $trm, $elt);
+										}
+										if ($iq > 0) {$labFin .= ", ";}
+										$labFin .= $elt;
+										$iq++;
+									}
+									//$docid = 999999;
+									$docid = $labFin;
+									$code = $labFin;
+									$type = 'institution';
+									affilId($diffQuoi[$d], $docid, $label, $code, $type, $pays, $validHAL);
+								}
 							}
-						}
-						//var_dump($autTab);
-						//var_dump($labTab);
-						$strTab = array();
-						$ddn = supprAmp(str_replace("WOS:", "", $papers[$key][$key2]['UT']));//Document Delivery Number > Accession Number
-						mb_internal_encoding('UTF-8');
-						$zip = new ZipArchive();
-						$FnmZ = "./HAL/OverHAL_wos_csv.zip";
-						if ($zip->open($FnmZ, ZipArchive::CREATE)!==TRUE) {
-							exit("Impossible d'ouvrir le fichier <$FnmZ>\n");
-						}
-						$Fnm = "./HAL/OverHAL_wos_csv_".$ddn.".xml";
-						$inF = fopen($Fnm,"a+");
-						fseek($inF, 0);
-						//$chaine = "\xEF\xBB\xBF";//UTF-8
-						$chaine = "";//ANSI
-						$chaine .= '<?xml version="1.0" encoding="UTF-8"?>'."\r\n";
-						$chaine .= '<TEI xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.tei-c.org/ns/1.0" xmlns:hal="http://hal.archives-ouvertes.fr/" xsi:schemaLocation="http://www.tei-c.org/ns/1.0 http://api.archives-ouvertes.fr/documents/aofr-sword.xsd">'."\r\n";
-						$chaine .= '  <text>'."\r\n".
-											 '    <body>'."\r\n".
-											 '      <listBibl>'."\r\n".
-											 '        <biblFull>'."\r\n".
-											 '          <titleStmt>'."\r\n";
-						//funder
-						$chaine .= '            <funder>'.supprAmp($papers[$key][$key2]['FU']).'</funder>'."\r\n";
-						$chaine .= '          </titleStmt>'."\r\n";
-						//if DOI exists searching an OA PDF file
-						if (isset($papers[$key][$key2]['DI']) && $papers[$key][$key2]['DI'] != "")
-						{
-							$urlT = "https://api.oadoi.org/v2/".$papers[$key][$key2]['DI'];
-							$volT = $papers[$key][$key2]['VL'];
-							$issT = $papers[$key][$key2]['IS'];
-							$pagT = $papers[$key][$key2]['BP'];
-							if (isset($papers[$key][$key2]['PY']) && $papers[$key][$key2]['PY'] != "") {
-								$datT = $papers[$key][$key2]['PY'];
-							}else{
-								if (isset($papers[$key][$key2]['EY']) && $papers[$key][$key2]['EY'] != "") {
-									$datT = $papers[$key][$key2]['EY'];
+							//var_dump($autTab);
+							//var_dump($labTab);
+							$strTab = array();
+							$ddn = supprAmp(str_replace("WOS:", "", $papers[$key][$key2]['UT']));//Document Delivery Number > Accession Number
+							mb_internal_encoding('UTF-8');
+							$zip = new ZipArchive();
+							$FnmZ = "./HAL/OverHAL_wos_csv.zip";
+							if ($zip->open($FnmZ, ZipArchive::CREATE)!==TRUE) {
+								exit("Impossible d'ouvrir le fichier <$FnmZ>\n");
+							}
+							$Fnm = "./HAL/OverHAL_wos_csv_".$ddn.".xml";
+							$inF = fopen($Fnm,"a+");
+							fseek($inF, 0);
+							//$chaine = "\xEF\xBB\xBF";//UTF-8
+							$chaine = "";//ANSI
+							$chaine .= '<?xml version="1.0" encoding="UTF-8"?>'."\r\n";
+							$chaine .= '<TEI xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.tei-c.org/ns/1.0" xmlns:hal="http://hal.archives-ouvertes.fr/" xsi:schemaLocation="http://www.tei-c.org/ns/1.0 http://api.archives-ouvertes.fr/documents/aofr-sword.xsd">'."\r\n";
+							$chaine .= '  <text>'."\r\n".
+												 '    <body>'."\r\n".
+												 '      <listBibl>'."\r\n".
+												 '        <biblFull>'."\r\n".
+												 '          <titleStmt>'."\r\n";
+							//funder
+							$chaine .= '            <funder>'.supprAmp($papers[$key][$key2]['FU']).'</funder>'."\r\n";
+							$chaine .= '          </titleStmt>'."\r\n";
+							//if DOI exists searching an OA PDF file
+							if (isset($papers[$key][$key2]['DI']) && $papers[$key][$key2]['DI'] != "")
+							{
+								$urlT = "https://api.oadoi.org/v2/".$papers[$key][$key2]['DI'];
+								$volT = $papers[$key][$key2]['VL'];
+								$issT = $papers[$key][$key2]['IS'];
+								$pagT = $papers[$key][$key2]['BP'];
+								if (isset($papers[$key][$key2]['PY']) && $papers[$key][$key2]['PY'] != "") {
+									$datT = $papers[$key][$key2]['PY'];
 								}else{
-									if (isset($papers[$key][$key2]['EA']) && $papers[$key][$key2]['EA'] != "") {
-										$datT = substr($papers[$key][$key2]['EA'], -4);
-									}
-								}
-							}
-							$pdfCR = "";//Eventual URL PDF file found with crossRef via CrosHAL.php > null here
-
-							testOALic($urlT, $volT, $issT, $pagT, $datT, $pdfCR, $evd, $titLic, $typLic, $compNC, $compND, $compSA, $urlPDF);
-
-							if ($urlPDF != "")//an OA PDF file has benn found
-							{
-								$urlPDF = htmlspecialchars($urlPDF);
-								$chaine .= '          <editionStmt>'."\r\n".
-													 '            <edition>'."\r\n".
-													 '              <ref type="file" subtype="'.$evd.'" n="1" target="'.$urlPDF.'"></ref>'."\r\n".
-													 '            </edition>'."\r\n".
-													 '          </editionStmt>'."\r\n";
-								$avail = 'http://creativecommons.org/licenses/by';
-								if ($compNC != "") {$avail .= '-nc';}
-								if ($compND != "") {$avail .= '-nd';}
-								if ($compSA != "") {$avail .= '-sa';}
-								$avail .= '/';
-								$chaine .= '          <publicationStmt>'."\r\n".
-													 '            <availability>'."\r\n".
-													 '              <licence target="'.$avail.'"/>'."\r\n".
-													 '            </availability>'."\r\n".
-													 '          </publicationStmt>'."\r\n";
-							}
-						}
-						$chaine .= '          <seriesStmt>'."\r\n".
-											 '          </seriesStmt>'."\r\n".
-											 '          <notesStmt>'."\r\n".
-						//Audience
-						$aud = "";
-						if (isset($papers[$key][$key2]['LA']))
-						{
-							if ($papers[$key][$key2]['LA'] == "English") {
-								$chaine .= '          	<note type="audience" n="2"/>'."\r\n";
-							}else{
-								$chaine .= '          	<note type="audience" n="3"/>'."\r\n";
-							}
-						}
-						$chaine .= '						<note type="popular" n="0">No</note>'."\r\n";
-						$chaine .= '						<note type="peer" n="1">Yes</note>'."\r\n";
-						$chaine .= '          </notesStmt>'."\r\n".
-											 '          <sourceDesc>'."\r\n".
-											 '            <biblStruct>'."\r\n".
-											 '              <analytic>'."\r\n";
-						$lng = "";
-						//langue + titre
-						if (isset($papers[$key][$key2]['LA']))
-						{
-							if ($papers[$key][$key2]['LA'] == "French") {$lng = "fr";}
-							if ($papers[$key][$key2]['LA'] == "English") {$lng = "en";}
-						}
-						$chaine .= '                <title xml:lang="'.$lng.'">'.str_replace("troli2points", ": ", supprAmp(str_replace(": ", "troli2points", $papers[$key][$key2]['TI']))).'</title>'."\r\n";
-						//auteurs
-						$aut = explode(";", $papers[$key][$key2]['AF']);
-						$iTp = 0;
-						foreach ($aut as $qui) {
-							$quiTab = explode(",", $qui);
-							if (isset($quiTab[1]))//in case of no comma for one author
-							{
-								$prenom = supprAmp(trim($quiTab[1]));
-							}else{
-								$prenom = " ";
-							}
-							$nom = supprAmp(trim($quiTab[0]));
-							$nompre = $nom .", ".$prenom;
-							$rolAut = "aut";
-							if (stripos($papers[$key][$key2]['RP'], $nom .", ".substr($prenom, 0, 1)) !== false) {$rolAut = "crp";}
-							if ($prenom != "") {
-								$chaine .= '                <author role="'.$rolAut.'">'."\r\n";
-								$chaine .= '                  <persName>'."\r\n";
-								$chaine .= '                    <forename type="first">'.$prenom.'</forename>'."\r\n";
-								$chaine .= '                    <surname>'.$nom.'</surname>'."\r\n";
-								$chaine .= '                  </persName>'."\r\n";
-								if (isset($papers[$key][$key2]['EM']))
-								{//email > il faut limiter à une seule entrée car il y en a parfois plusieurs et le TEI ne sera alors pas valide
-									$tabMail = explode(";", $papers[$key][$key2]['EM']);
-									foreach ($tabMail as $elt) {
-										if (stripos(trim(normalize($elt)), normalize($nom)) !== false)
-										{
-											$chaine .= '                  <email>'.trim($elt).'</email>'."\r\n";
-											break;//email ajouté > on sort de la boucle
-										}
-									}
-								}
-								if (isset($papers[$key][$key2]['OI']))
-								{//ORCID
-									$tabOrcid = explode(";", $papers[$key][$key2]['OI']);
-									foreach ($tabOrcid as $elt) {
-										if (stripos(trim(normalize($elt)), normalize($nom.', '.$prenom)) !== false)
-										{
-											$chaine .= '                  <idno type="https://orcid.org/">'.str_ireplace($nom.", ".$prenom."/", "", trim($elt)).'</idno>'."\r\n";
-											break;//Orcid ajouté > on sort de la boucle
-										}
-									}
-								}
-								$kT = array_search($nompre, $autTab);
-								//echo $kT." - ".$nom."<br>";
-								//var_dump($labTab);
-								if ($kT !== FALSE) {
-									foreach ($labTab[$nompre] as $lab) {
-										//$str = array_search($labTab[$nompre][$kT], $strTab);
-										$str = array_search($lab, $strTab);
-										if ($str === FALSE) {
-											$iTp += 1;
-											$kTp = $iTp;
-											array_push($strTab, $lab);
-										}else{
-											$kTp = $str + 1;
-										}
-										$chaine .= '                  <affiliation ref="#localStruct-Aff'.$kTp.'"/>'."\r\n";
-										//echo $kTp." - ".$nom." - ".$labTab[$kT]."<br>";
-									}
-								}
-								$chaine .= '                </author>'."\r\n";
-							}
-						}
-						//var_dump($strTab);
-						$chaine .= '              </analytic>'."\r\n";
-						//journal
-						$chaine .= '              <monogr>'."\r\n";
-						//ISSN
-						$chaine .= '                <idno type="issn">'.supprAmp($papers[$key][$key2]['SN']).'</idno>'."\r\n";
-						//EISSN
-						$chaine .= '                <idno type="eissn">'.supprAmp($papers[$key][$key2]['EI']).'</idno>'."\r\n";
-						if (isset($papers[$key][$key2]['PT']))
-						{
-							$typDoc = "";
-							$typDocp = "";
-							$type = $papers[$key][$key2]['PT'];
-							switch($type)
-							{
-								case "J"://article
-									$chaine .= '                <title level="j">'.supprAmp(minRev($papers[$key][$key2]['SO'])).'</title>'."\r\n";
-									$chaine .= '                <imprint>'."\r\n";
-									$chaine .= '                  <publisher>'.supprAmp($papers[$key][$key2]['PU']).'</publisher>'."\r\n";
-									$chaine .= '                  <biblScope unit="volume">'.supprAmp($papers[$key][$key2]['VL']).'</biblScope>'."\r\n";
-									$chaine .= '                  <biblScope unit="issue">'.supprAmp($papers[$key][$key2]['IS']).'</biblScope>'."\r\n";
-									$chaine .= '                  <biblScope unit="pp">'.supprAmp($papers[$key][$key2]['BP']).'-'.$papers[$key][$key2]['EP'].'</biblScope>'."\r\n";
-									if (isset($papers[$key][$key2]['PY']) && $papers[$key][$key2]['PY'] != "") {
-										$chaine .= '                  <date type="datePub">'.supprAmp($papers[$key][$key2]['PY']).'</date>'."\r\n";
+									if (isset($papers[$key][$key2]['EY']) && $papers[$key][$key2]['EY'] != "") {
+										$datT = $papers[$key][$key2]['EY'];
 									}else{
-										if (isset($papers[$key][$key2]['EY']) && $papers[$key][$key2]['EY'] != "") {
-											$chaine .= '                  <date type="datePub">'.supprAmp($papers[$key][$key2]['EY']).'</date>'."\r\n";
-										}else{
-											if (isset($papers[$key][$key2]['EA']) && $papers[$key][$key2]['EA'] != "") {
-												$chaine .= '                  <date type="datePub">'.supprAmp(substr($papers[$key][$key2]['EA'], -4)).'</date>'."\r\n";
+										if (isset($papers[$key][$key2]['EA']) && $papers[$key][$key2]['EA'] != "") {
+											$datT = substr($papers[$key][$key2]['EA'], -4);
+										}
+									}
+								}
+								$pdfCR = "";//Eventual URL PDF file found with crossRef via CrosHAL.php > null here
+
+								testOALic($urlT, $volT, $issT, $pagT, $datT, $pdfCR, $evd, $titLic, $typLic, $compNC, $compND, $compSA, $urlPDF);
+
+								if ($urlPDF != "")//an OA PDF file has benn found
+								{
+									$urlPDF = htmlspecialchars($urlPDF);
+									$chaine .= '          <editionStmt>'."\r\n".
+														 '            <edition>'."\r\n".
+														 '              <ref type="file" subtype="'.$evd.'" n="1" target="'.$urlPDF.'"></ref>'."\r\n".
+														 '            </edition>'."\r\n".
+														 '          </editionStmt>'."\r\n";
+									$avail = 'http://creativecommons.org/licenses/by';
+									if ($compNC != "") {$avail .= '-nc';}
+									if ($compND != "") {$avail .= '-nd';}
+									if ($compSA != "") {$avail .= '-sa';}
+									$avail .= '/';
+									$chaine .= '          <publicationStmt>'."\r\n".
+														 '            <availability>'."\r\n".
+														 '              <licence target="'.$avail.'"/>'."\r\n".
+														 '            </availability>'."\r\n".
+														 '          </publicationStmt>'."\r\n";
+								}
+							}
+							$chaine .= '          <seriesStmt>'."\r\n".
+												 '          </seriesStmt>'."\r\n".
+												 '          <notesStmt>'."\r\n".
+							//Audience
+							$aud = "";
+							if (isset($papers[$key][$key2]['LA']))
+							{
+								if ($papers[$key][$key2]['LA'] == "English") {
+									$chaine .= '          	<note type="audience" n="2"/>'."\r\n";
+								}else{
+									$chaine .= '          	<note type="audience" n="3"/>'."\r\n";
+								}
+							}
+							$chaine .= '						<note type="popular" n="0">No</note>'."\r\n";
+							$chaine .= '						<note type="peer" n="1">Yes</note>'."\r\n";
+							$chaine .= '          </notesStmt>'."\r\n".
+												 '          <sourceDesc>'."\r\n".
+												 '            <biblStruct>'."\r\n".
+												 '              <analytic>'."\r\n";
+							$lng = "";
+							//langue + titre
+							if (isset($papers[$key][$key2]['LA']))
+							{
+								if ($papers[$key][$key2]['LA'] == "French") {$lng = "fr";}
+								if ($papers[$key][$key2]['LA'] == "English") {$lng = "en";}
+							}
+							$chaine .= '                <title xml:lang="'.$lng.'">'.str_replace("troli2points", ": ", supprAmp(str_replace(": ", "troli2points", $papers[$key][$key2]['TI']))).'</title>'."\r\n";
+							//auteurs
+							$aut = explode(";", $papers[$key][$key2]['AF']);
+							$iTp = 0;
+							foreach ($aut as $qui) {
+								$quiTab = explode(",", $qui);
+								if (isset($quiTab[1]))//in case of no comma for one author
+								{
+									$prenom = supprAmp(trim($quiTab[1]));
+								}else{
+									$prenom = " ";
+								}
+								$nom = supprAmp(trim($quiTab[0]));
+								$nompre = $nom .", ".$prenom;
+								$rolAut = "aut";
+								if (stripos($papers[$key][$key2]['RP'], $nom .", ".substr($prenom, 0, 1)) !== false) {$rolAut = "crp";}
+								if ($prenom != "") {
+									$chaine .= '                <author role="'.$rolAut.'">'."\r\n";
+									$chaine .= '                  <persName>'."\r\n";
+									$chaine .= '                    <forename type="first">'.$prenom.'</forename>'."\r\n";
+									$chaine .= '                    <surname>'.$nom.'</surname>'."\r\n";
+									$chaine .= '                  </persName>'."\r\n";
+									if (isset($papers[$key][$key2]['EM']))
+									{//email > il faut limiter à une seule entrée car il y en a parfois plusieurs et le TEI ne sera alors pas valide
+										$tabMail = explode(";", $papers[$key][$key2]['EM']);
+										foreach ($tabMail as $elt) {
+											if (stripos(trim(normalize($elt)), normalize($nom)) !== false)
+											{
+												$chaine .= '                  <email>'.trim($elt).'</email>'."\r\n";
+												break;//email ajouté > on sort de la boucle
 											}
 										}
 									}
-									$chaine .= '                </imprint>'."\r\n";
-									$typeDoc = "ART";
-									$typeDocp = "Journal articles";
-									break;
-								case "S"://inproceedings
-								case "B"://book
-									if ($papers[$key][$key2]['DT'] == "Proceedings Paper") {
-										$chaine .= '                <title level="j">'.supprAmp($papers[$key][$key2]['SO']).'</title>'."\r\n";
-										$chaine .= '                <title level="m">'.supprAmp($papers[$key][$key2]['CT']).'</title>'."\r\n";
-										$chaine .= '                <meeting>'."\r\n";
-										$chaine .= '                  <title>'.supprAmp($papers[$key][$key2]['CT']).'</title>'."\r\n";
-										$confStartDate = "";
-										$confEndDate = "";
-										if (isset($papers[$key][$key2]['CY']))
-										{
-											$confdate = $papers[$key][$key2]['CY'];
-											if ($confdate != "") {
-												$res = explode(" ", $confdate);
-												if (count($res) == 3) {//OCT 19-23, 2014 to 2014-10-19
-													//year
-													$confStartDate = trim($res[2])."-";
-													$confEndDate = trim($res[2])."-";
-													//month
-													switch($res[0])
-													{
-														case "JAN":
-															$confStartDate .= "01-";
-															$confEndDate .= "01-";
-															break;
-														case "FEB":
-															$confStartDate .= "02-";
-															$confEndDate .= "02-";
-															break;
-														case "MAR":
-															$confStartDate .= "03-";
-															$confEndDate .= "03-";
-															break;
-														case "APR":
-															$confStartDate .= "04-";
-															$confEndDate .= "04-";
-															break;
-														case "MAY":
-															$confStartDate .= "05-";
-															$confEndDate .= "05-";
-															break;
-														case "JUN":
-															$confStartDate .= "06-";
-															$confEndDate .= "06-";
-															break;
-														case "JUL":
-															$confStartDate .= "07-";
-															$confEndDate .= "07-";
-															break;
-														case "AUG":
-															$confStartDate .= "08-";
-															$confEndDate .= "08-";
-															break;
-														case "SEP":
-															$confStartDate .= "09-";
-															$confEndDate .= "09-";
-															break;
-														case "OCT":
-															$confStartDate .= "10-";
-															$confEndDate .= "10-";
-															break;
-														case "NOV":
-															$confStartDate .= "11-";
-															$confEndDate .= "11-";
-															break;
-														case "DEC":
-															$confStartDate .= "12-";
-															$confEndDate .= "12-";
-															break;
-													}
-													//day
-													$confStartDate .= substr($res[1], 0, 2);
-													$confEndDate .= substr($res[1], 3, 2);
-												}
-												if (count($res) == 4) {//MAR 31-APR 05, 2019 to 2019-03-31 and 2019-04-05
-													//year
-													$confStartDate = trim($res[3])."-";
-													$confEndDate = trim($res[3])."-";
-													//month
-													switch($res[0])//startdate
-													{
-														case "JAN":
-															$confStartDate .= "01-";
-															break;
-														case "FEB":
-															$confStartDate .= "02-";
-															break;
-														case "MAR":
-															$confStartDate .= "03-";
-															break;
-														case "APR":
-															$confStartDate .= "04-";
-															break;
-														case "MAY":
-															$confStartDate .= "05-";
-															break;
-														case "JUN":
-															$confStartDate .= "06-";
-															break;
-														case "JUL":
-															$confStartDate .= "07-";
-															break;
-														case "AUG":
-															$confStartDate .= "08-";
-															break;
-														case "SEP":
-															$confStartDate .= "09-";
-															break;
-														case "OCT":
-															$confStartDate .= "10-";
-															break;
-														case "NOV":
-															$confStartDate .= "11-";
-															break;
-														case "DEC":
-															$confStartDate .= "12-";
-															break;
-													}
-													//enddate
-													$tabCD = explode("-", trim($res[1]));
-													switch($tabCD[1])
-													{
-														case "JAN":
-															$confEndDate .= "01-";
-															break;
-														case "FEB":
-															$confEndDate .= "02-";
-															break;
-														case "MAR":
-															$confEndDate .= "03-";
-															break;
-														case "APR":
-															$confEndDate .= "04-";
-															break;
-														case "MAY":
-															$confEndDate .= "05-";
-															break;
-														case "JUN":
-															$confEndDate .= "06-";
-															break;
-														case "JUL":
-															$confEndDate .= "07-";
-															break;
-														case "AUG":
-															$confEndDate .= "08-";
-															break;
-														case "SEP":
-															$confEndDate .= "09-";
-															break;
-														case "OCT":
-															$confEndDate .= "10-";
-															break;
-														case "NOV":
-															$confEndDate .= "11-";
-															break;
-														case "DEC":
-															$confEndDate .= "12-";
-															break;
-													}
-													//day
-													$confStartDate .= $tabCD[0];
-													$confEndDate .= substr($res[2], 0, 2);
-												}
+									if (isset($papers[$key][$key2]['OI']))
+									{//ORCID
+										$tabOrcid = explode(";", $papers[$key][$key2]['OI']);
+										foreach ($tabOrcid as $elt) {
+											if (stripos(trim(normalize($elt)), normalize($nom.', '.$prenom)) !== false)
+											{
+												$chaine .= '                  <idno type="https://orcid.org/">'.str_ireplace($nom.", ".$prenom."/", "", trim($elt)).'</idno>'."\r\n";
+												break;//Orcid ajouté > on sort de la boucle
 											}
 										}
-										$chaine .= '                  <date type="start">'.$confStartDate.'</date>'."\r\n";//comment différencier date début et fin ?
-										$chaine .= '                  <date type="end">'.$confEndDate.'</date>'."\r\n";//comment différencier date début et fin ?
-										if (strpos(supprAmp($papers[$key][$key2]['CL']), ", ") !== false) {
-											$tabSettlement = explode(", ", supprAmp($papers[$key][$key2]['CL']));
-											$chaine .= '                  <settlement>'.$tabSettlement[0].'</settlement>'."\r\n";
-											$codePays = "";
-											$codePays = array_search(strtoupper($tabSettlement[1]), $countries);
-											if ($codePays != "") {$chaine .= '                  <country key="'.$codePays.'"/>'."\r\n";}
-										}else{
-											$chaine .= '                  <settlement>'.supprAmp($papers[$key][$key2]['CL']).'</settlement>'."\r\n";
-										}
-										$chaine .= '                </meeting>'."\r\n";
-										$chaine .= '                <editor>'.supprAmp($papers[$key][$key2]['BE']).'</editor>'."\r\n";
-										$chaine .= '                <imprint>'."\r\n";
-										$chaine .= '                  <publisher>'.supprAmp($papers[$key][$key2]['PU']).'</publisher>'."\r\n";
-										if (isset($papers[$key][$key2]['PY']) && $papers[$key][$key2]['PY'] != "") {
-											$chaine .= '                  <date type="datePub">'.supprAmp($papers[$key][$key2]['PY']).'</date>'."\r\n";
-										}else{
-											if (isset($papers[$key][$key2]['EY']) && $papers[$key][$key2]['EY'] != "") {
-												$chaine .= '                  <date type="datePub">'.supprAmp($papers[$key][$key2]['EY']).'</date>'."\r\n";
+									}
+									$kT = array_search($nompre, $autTab);
+									//echo $kT." - ".$nom."<br>";
+									//var_dump($labTab);
+									if ($kT !== FALSE) {
+										foreach ($labTab[$nompre] as $lab) {
+											//$str = array_search($labTab[$nompre][$kT], $strTab);
+											$str = array_search($lab, $strTab);
+											if ($str === FALSE) {
+												$iTp += 1;
+												$kTp = $iTp;
+												array_push($strTab, $lab);
 											}else{
-												if (isset($papers[$key][$key2]['EA']) && $papers[$key][$key2]['EA'] != "") {
-													$chaine .= '                  <date type="datePub">'.supprAmp(substr($papers[$key][$key2]['EA'], -4)).'</date>'."\r\n";
-												}
+												$kTp = $str + 1;
 											}
+											$chaine .= '                  <affiliation ref="#localStruct-Aff'.$kTp.'"/>'."\r\n";
+											//echo $kTp." - ".$nom." - ".$labTab[$kT]."<br>";
 										}
-										$chaine .= '                </imprint>'."\r\n";
-										$typeDoc = "COMM";
-										$typeDocp = "Conference papers";
 									}
-									//review, book chapter
-									if ($papers[$key][$key2]['DT'] == "Book" || $papers[$key][$key2]['DT'] == "Review; Book Chapter" || $papers[$key][$key2]['DT'] == "Editorial Material; Book Chapter" || $papers[$key][$key2]['DT'] == "Article; Book Chapter") {
-										$chaine .= '                <idno type="isbn">'.supprAmp($papers[$key][$key2]['BN']).'</idno>'."\r\n";
-										if ($papers[$key][$key2]['PT'] == "S" || $papers[$key][$key2]['PT'] == "B") {
-											$chaine .= '                <title level="m">'.supprAmp($papers[$key][$key2]['SO']).'</title>'."\r\n";
-										}else{
-											$chaine .= '                <title level="m">'.supprAmp($papers[$key][$key2]['SE']).'</title>'."\r\n";
-										}
-										$chaine .= '                <editor>'.supprAmp($papers[$key][$key2]['BE']).'</editor>'."\r\n";
+									$chaine .= '                </author>'."\r\n";
+								}
+							}
+							//var_dump($strTab);
+							$chaine .= '              </analytic>'."\r\n";
+							//journal
+							$chaine .= '              <monogr>'."\r\n";
+							//ISSN
+							$chaine .= '                <idno type="issn">'.supprAmp($papers[$key][$key2]['SN']).'</idno>'."\r\n";
+							//EISSN
+							$chaine .= '                <idno type="eissn">'.supprAmp($papers[$key][$key2]['EI']).'</idno>'."\r\n";
+							if (isset($papers[$key][$key2]['PT']))
+							{
+								$typDoc = "";
+								$typDocp = "";
+								$type = $papers[$key][$key2]['PT'];
+								switch($type)
+								{
+									case "J"://article
+										$chaine .= '                <title level="j">'.supprAmp(minRev($papers[$key][$key2]['SO'])).'</title>'."\r\n";
 										$chaine .= '                <imprint>'."\r\n";
 										$chaine .= '                  <publisher>'.supprAmp($papers[$key][$key2]['PU']).'</publisher>'."\r\n";
-										$chaine .= '                  <pubPlace>'.supprAmp($papers[$key][$key2]['PI']).'</pubPlace>'."\r\n";
-										$chaine .= '                  <biblScope unit="serie">'.supprAmp($papers[$key][$key2]['SE']).'</biblScope>'."\r\n";
 										$chaine .= '                  <biblScope unit="volume">'.supprAmp($papers[$key][$key2]['VL']).'</biblScope>'."\r\n";
 										$chaine .= '                  <biblScope unit="issue">'.supprAmp($papers[$key][$key2]['IS']).'</biblScope>'."\r\n";
 										$chaine .= '                  <biblScope unit="pp">'.supprAmp($papers[$key][$key2]['BP']).'-'.$papers[$key][$key2]['EP'].'</biblScope>'."\r\n";
@@ -3546,1020 +3375,2140 @@ foreach ($souBib as $key => $subTab)
 											}
 										}
 										$chaine .= '                </imprint>'."\r\n";
-										if ($papers[$key][$key2]['PT'] == "S" || $papers[$key][$key2]['PT'] == "B") {
-											$typeDoc = "COUV";
-											$typeDocp = "Book sections";//???
-										}else{
-											$typeDoc = "BOOK";
-											$typeDocp = "Book";//???
-										}
-									}
-									break;
-								case "P"://patent > il n'y en a pas dans WoS
-									$typeDoc = "PATENT";
-									$typeDocp = "Patent";//???
-									break;
-							}
-						}
-						$chaine .= '              </monogr>'."\r\n";
-						if (isset($papers[$key][$key2]['DI']) && $papers[$key][$key2]['DI'] != "")
-						{
-							$chaine .= '              <idno type="doi">'.supprAmp($papers[$key][$key2]['DI']).'</idno>'."\r\n";
-						}
-						if (isset($papers[$key][$key2]['PM']) && $papers[$key][$key2]['PM'] != "")
-						{
-							$chaine .= '              <idno type="pubmed">'.supprAmp(str_replace("WOS:", "", $papers[$key][$key2]['PM'])).'</idno>'."\r\n";
-						}
-						$chaine .= '            </biblStruct>'."\r\n";
-						$chaine .= '          </sourceDesc>'."\r\n";
-						$chaine .= '          <profileDesc>'."\r\n";
-						//langue
-						$chaine .= '            <langUsage>'."\r\n";
-						$chaine .= '              <language ident="'.$lng.'">'.supprAmp($papers[$key][$key2]['LA']).'</language>'."\r\n";
-						$chaine .= '            </langUsage>'."\r\n";
-						$chaine .= '            <textClass>'."\r\n";
-						//mots-clés
-						if (isset($papers[$key][$key2]['DE']) && $papers[$key][$key2]['DE'] != "")
-						{
-							$chaine .= '             <keywords scheme="author">'."\r\n";
-							$aut = explode(";", $papers[$key][$key2]['DE']);
-							foreach ($aut as $qui) {
-								$chaine .= '              <term xml:lang="'.$lng.'">'.supprAmp(trim($qui)).'</term>'."\r\n";
-							}
-							$chaine .= '             </keywords>'."\r\n";
-						}
-						//domaine HAL
-						//$chaine .= '             <classCode scheme="halDomain" n="">'.supprAmp($papers[$key][$key2]['WC']).'</classCode>'."\r\n";
-						//Typologie
-						$chaine .= '             <classCode scheme="halTypology" n="'.$typeDoc.'">'.$typeDocp.'</classCode>'."\r\n";
-						$chaine .= '            </textClass>'."\r\n";
-						$chaine .= '            <abstract xml:lang="'.$lng.'">'.supprAmp($papers[$key][$key2]['AB']).'</abstract>'."\r\n";
-						$chaine .= '          </profileDesc>'."\r\n";
-						$chaine .= '        </biblFull>'."\r\n";
-						$chaine .= '      </listBibl>'."\r\n";
-						$chaine .= '    </body>'."\r\n";
-						if (count($strTab) > 0) {//Existence of one or more affiliation(s)
-							$chaine .= '      <back>'."\r\n";
-							$chaine .= '        <listOrg type="structures">'."\r\n";
-							$indT = 1;
-							foreach ($strTab as $labElt) {
-								$pays = "";
-								$codePays = "";
-								$eltTab = explode("~|~", $labElt);
-								$pays = $eltTab[count($eltTab)-1];
-								$codePays = array_search(strtoupper($pays), $countries);
-								$chaine .= '          <org type="'.$eltTab[3].'" xml:id="localStruct-Aff'.$indT.'">'."\r\n";
-								$orgName = $eltTab[2];
-								$orgName = str_replace(array("UR1", " UR1"), "", $orgName);
-								if ($eltTab[3] == "institution") {//abbreviation between crochet
-									if (strpos($orgName, "CHU") !== false) {
-										$nameTab = explode(",", $orgName);
-										$ville = $nameTab[count($nameTab)-2];
-										$ville = str_ireplace(" cedex", "", $ville);
-										$villeTab = explode(" ", $ville);
-										$orgName = "CHU ".$villeTab[count($villeTab)-1];
-									}
-									$nameTab = explode(",", $orgName);
-									$orgName = "";
-									$oN = 0;
-									$iName = 0;
-									foreach ($nameTab as $name) {
-										if ($iName != count($nameTab)-2) {//do not insert the penultimate term = address
-											if ($name == "Universite CHU") {
-												$ville = $nameTab[count($nameTab)-2];
-												$ville = str_ireplace(" cedex", "", $ville);
-												$villeTab = explode(" ", $ville);
-												$name = $name.' '.$villeTab[count($villeTab)-1];
+										$typeDoc = "ART";
+										$typeDocp = "Journal articles";
+										break;
+									case "S"://inproceedings
+									case "B"://book
+										if ($papers[$key][$key2]['DT'] == "Proceedings Paper") {
+											$chaine .= '                <title level="j">'.supprAmp($papers[$key][$key2]['SO']).'</title>'."\r\n";
+											$chaine .= '                <title level="m">'.supprAmp($papers[$key][$key2]['CT']).'</title>'."\r\n";
+											$chaine .= '                <meeting>'."\r\n";
+											$chaine .= '                  <title>'.supprAmp($papers[$key][$key2]['CT']).'</title>'."\r\n";
+											$confStartDate = "";
+											$confEndDate = "";
+											if (isset($papers[$key][$key2]['CY']))
+											{
+												$confdate = $papers[$key][$key2]['CY'];
+												if ($confdate != "") {
+													$res = explode(" ", $confdate);
+													if (count($res) == 3) {//OCT 19-23, 2014 to 2014-10-19
+														//year
+														$confStartDate = trim($res[2])."-";
+														$confEndDate = trim($res[2])."-";
+														//month
+														switch($res[0])
+														{
+															case "JAN":
+																$confStartDate .= "01-";
+																$confEndDate .= "01-";
+																break;
+															case "FEB":
+																$confStartDate .= "02-";
+																$confEndDate .= "02-";
+																break;
+															case "MAR":
+																$confStartDate .= "03-";
+																$confEndDate .= "03-";
+																break;
+															case "APR":
+																$confStartDate .= "04-";
+																$confEndDate .= "04-";
+																break;
+															case "MAY":
+																$confStartDate .= "05-";
+																$confEndDate .= "05-";
+																break;
+															case "JUN":
+																$confStartDate .= "06-";
+																$confEndDate .= "06-";
+																break;
+															case "JUL":
+																$confStartDate .= "07-";
+																$confEndDate .= "07-";
+																break;
+															case "AUG":
+																$confStartDate .= "08-";
+																$confEndDate .= "08-";
+																break;
+															case "SEP":
+																$confStartDate .= "09-";
+																$confEndDate .= "09-";
+																break;
+															case "OCT":
+																$confStartDate .= "10-";
+																$confEndDate .= "10-";
+																break;
+															case "NOV":
+																$confStartDate .= "11-";
+																$confEndDate .= "11-";
+																break;
+															case "DEC":
+																$confStartDate .= "12-";
+																$confEndDate .= "12-";
+																break;
+														}
+														//day
+														$confStartDate .= substr($res[1], 0, 2);
+														$confEndDate .= substr($res[1], 3, 2);
+													}
+													if (count($res) == 4) {//MAR 31-APR 05, 2019 to 2019-03-31 and 2019-04-05
+														//year
+														$confStartDate = trim($res[3])."-";
+														$confEndDate = trim($res[3])."-";
+														//month
+														switch($res[0])//startdate
+														{
+															case "JAN":
+																$confStartDate .= "01-";
+																break;
+															case "FEB":
+																$confStartDate .= "02-";
+																break;
+															case "MAR":
+																$confStartDate .= "03-";
+																break;
+															case "APR":
+																$confStartDate .= "04-";
+																break;
+															case "MAY":
+																$confStartDate .= "05-";
+																break;
+															case "JUN":
+																$confStartDate .= "06-";
+																break;
+															case "JUL":
+																$confStartDate .= "07-";
+																break;
+															case "AUG":
+																$confStartDate .= "08-";
+																break;
+															case "SEP":
+																$confStartDate .= "09-";
+																break;
+															case "OCT":
+																$confStartDate .= "10-";
+																break;
+															case "NOV":
+																$confStartDate .= "11-";
+																break;
+															case "DEC":
+																$confStartDate .= "12-";
+																break;
+														}
+														//enddate
+														$tabCD = explode("-", trim($res[1]));
+														switch($tabCD[1])
+														{
+															case "JAN":
+																$confEndDate .= "01-";
+																break;
+															case "FEB":
+																$confEndDate .= "02-";
+																break;
+															case "MAR":
+																$confEndDate .= "03-";
+																break;
+															case "APR":
+																$confEndDate .= "04-";
+																break;
+															case "MAY":
+																$confEndDate .= "05-";
+																break;
+															case "JUN":
+																$confEndDate .= "06-";
+																break;
+															case "JUL":
+																$confEndDate .= "07-";
+																break;
+															case "AUG":
+																$confEndDate .= "08-";
+																break;
+															case "SEP":
+																$confEndDate .= "09-";
+																break;
+															case "OCT":
+																$confEndDate .= "10-";
+																break;
+															case "NOV":
+																$confEndDate .= "11-";
+																break;
+															case "DEC":
+																$confEndDate .= "12-";
+																break;
+														}
+														//day
+														$confStartDate .= $tabCD[0];
+														$confEndDate .= substr($res[2], 0, 2);
+													}
+												}
 											}
-											if ($oN == 0) {
-												$oN = 1;
+											$chaine .= '                  <date type="start">'.$confStartDate.'</date>'."\r\n";//comment différencier date début et fin ?
+											$chaine .= '                  <date type="end">'.$confEndDate.'</date>'."\r\n";//comment différencier date début et fin ?
+											if (strpos(supprAmp($papers[$key][$key2]['CL']), ", ") !== false) {
+												$tabSettlement = explode(", ", supprAmp($papers[$key][$key2]['CL']));
+												$chaine .= '                  <settlement>'.$tabSettlement[0].'</settlement>'."\r\n";
+												$codePays = "";
+												$codePays = array_search(strtoupper($tabSettlement[1]), $countries);
+												if ($codePays != "") {$chaine .= '                  <country key="'.$codePays.'"/>'."\r\n";}
 											}else{
-												$orgName .= ", ";
+												$chaine .= '                  <settlement>'.supprAmp($papers[$key][$key2]['CL']).'</settlement>'."\r\n";
 											}
-											$eltNameTab = explode(" ", trim($name));
-											$oNE = 0;
-											foreach ($eltNameTab as $elt) {
-												if ($oNE == 0) {
-													$oNE = 1;
+											$chaine .= '                </meeting>'."\r\n";
+											$chaine .= '                <editor>'.supprAmp($papers[$key][$key2]['BE']).'</editor>'."\r\n";
+											$chaine .= '                <imprint>'."\r\n";
+											$chaine .= '                  <publisher>'.supprAmp($papers[$key][$key2]['PU']).'</publisher>'."\r\n";
+											if (isset($papers[$key][$key2]['PY']) && $papers[$key][$key2]['PY'] != "") {
+												$chaine .= '                  <date type="datePub">'.supprAmp($papers[$key][$key2]['PY']).'</date>'."\r\n";
+											}else{
+												if (isset($papers[$key][$key2]['EY']) && $papers[$key][$key2]['EY'] != "") {
+													$chaine .= '                  <date type="datePub">'.supprAmp($papers[$key][$key2]['EY']).'</date>'."\r\n";
 												}else{
-													$orgName .= " ";
+													if (isset($papers[$key][$key2]['EA']) && $papers[$key][$key2]['EA'] != "") {
+														$chaine .= '                  <date type="datePub">'.supprAmp(substr($papers[$key][$key2]['EA'], -4)).'</date>'."\r\n";
+													}
 												}
-												if (ctype_upper(trim($elt)) && !is_numeric(trim($elt)) && strlen(trim($elt)) > 3 && trim($elt) != "CNRS" && trim($elt) != "INSERM" && trim($elt) != "INRA" && trim($elt) != "INRIA" && trim($elt) != "IRSTEA") {
-												//if (ctype_upper(trim($elt)) && strlen(trim($elt)) > 3 && trim($elt) != "CNRS" && trim($elt) != "INSERM" && trim($elt) != "INRA" && trim($elt) != "INRIA" && trim($elt) != "IRSTEA") {
-												//if (ctype_upper(trim($elt)) && strlen(trim($elt)) > 3) {
-													$orgName .= "[".trim($elt)."]";
+											}
+											$chaine .= '                </imprint>'."\r\n";
+											$typeDoc = "COMM";
+											$typeDocp = "Conference papers";
+										}
+										//review, book chapter
+										if ($papers[$key][$key2]['DT'] == "Book" || $papers[$key][$key2]['DT'] == "Review; Book Chapter" || $papers[$key][$key2]['DT'] == "Editorial Material; Book Chapter" || $papers[$key][$key2]['DT'] == "Article; Book Chapter") {
+											$chaine .= '                <idno type="isbn">'.supprAmp($papers[$key][$key2]['BN']).'</idno>'."\r\n";
+											if ($papers[$key][$key2]['PT'] == "S" || $papers[$key][$key2]['PT'] == "B") {
+												$chaine .= '                <title level="m">'.supprAmp($papers[$key][$key2]['SO']).'</title>'."\r\n";
+											}else{
+												$chaine .= '                <title level="m">'.supprAmp($papers[$key][$key2]['SE']).'</title>'."\r\n";
+											}
+											$chaine .= '                <editor>'.supprAmp($papers[$key][$key2]['BE']).'</editor>'."\r\n";
+											$chaine .= '                <imprint>'."\r\n";
+											$chaine .= '                  <publisher>'.supprAmp($papers[$key][$key2]['PU']).'</publisher>'."\r\n";
+											$chaine .= '                  <pubPlace>'.supprAmp($papers[$key][$key2]['PI']).'</pubPlace>'."\r\n";
+											$chaine .= '                  <biblScope unit="serie">'.supprAmp($papers[$key][$key2]['SE']).'</biblScope>'."\r\n";
+											$chaine .= '                  <biblScope unit="volume">'.supprAmp($papers[$key][$key2]['VL']).'</biblScope>'."\r\n";
+											$chaine .= '                  <biblScope unit="issue">'.supprAmp($papers[$key][$key2]['IS']).'</biblScope>'."\r\n";
+											$chaine .= '                  <biblScope unit="pp">'.supprAmp($papers[$key][$key2]['BP']).'-'.$papers[$key][$key2]['EP'].'</biblScope>'."\r\n";
+											if (isset($papers[$key][$key2]['PY']) && $papers[$key][$key2]['PY'] != "") {
+												$chaine .= '                  <date type="datePub">'.supprAmp($papers[$key][$key2]['PY']).'</date>'."\r\n";
+											}else{
+												if (isset($papers[$key][$key2]['EY']) && $papers[$key][$key2]['EY'] != "") {
+													$chaine .= '                  <date type="datePub">'.supprAmp($papers[$key][$key2]['EY']).'</date>'."\r\n";
 												}else{
-													$orgName .= "".trim($elt);
-												}
-											}
-										}
-										$iName += 1;
-									}
-								}
-								//suppression/remplacement divers
-								$orgName = str_replace(array("(", ")"), "", $orgName);
-								$orgName = str_replace("/", " ", $orgName);
-								//test présence 'Department' ou 'Service d' pour suppression
-								$orgTab = explode(", ", $orgName);
-								if (stripos($orgTab[0], "Department") !== false || stripos($orgTab[0], "Service d") !== false) {
-									$orgTab[0] = "";
-									$orgName = "";
-									for($dpt = 0; $dpt < count($orgTab); $dpt++) {
-										if ($orgTab[$dpt] != "") {$orgName .= $orgTab[$dpt]. ", ";}
-									}
-									$orgName = substr($orgName, 0, (strlen($orgName) - 2));
-								}
-								$chaine .= '            <orgName>'.$orgName.'</orgName>'."\r\n";
-								$pays = str_replace(".", "", strtoupper($eltTab[4]));
-								if ($pays != "")
-								{
-									$keyP = array_search($pays, $countries, true); 
-									$chaine .= '            <desc>'."\r\n";
-									$chaine .= '              <address>'."\r\n";
-									$chaine .= '                <country key="'.$keyP.'"></country>'."\r\n";
-									$chaine .= '              </address>'."\r\n";
-									$chaine .= '            </desc>'."\r\n";
-								}
-								$chaine .= '          </org>'."\r\n";
-								$indT++;
-							}
-							$chaine .= '        </listOrg>'."\r\n";
-							$chaine .= '      </back>'."\r\n";
-						}
-						$chaine .= '  </text>'."\r\n";
-						$chaine .= '</TEI>';
-						fwrite($inF,$chaine);
-						fclose($inF);
-						$zip->addFile($Fnm);
-						$zip->close();
-						unlink($Fnm);
-					}
-					break;
-
-				case "scopus":
-					$aut = $papers[$key][$key2]['Authors'];
-					$autTab = explode(", ",$aut);
-					if (count($autTab) < $limNbAut)
-					{
-						//affiliation
-						$autTab = array();
-						$labTab = array();
-						$autInd = 0;
-						$docid = 0;
-						$label = "";
-						$code = "";
-						$cuHAL = "";
-						$type = "";
-						$pays = "";
-						$quoi = $papers[$key][$key2]['Authors with affiliations'];
-						$quoi = trimUltime($quoi);
-						$validHAL = "";//to privilegy the search by the unit code number rather than acronym
-						//echo "<br>".$j." - ".$quoi."<br>";
-						$diffQuoi = explode(";", $quoi);
-						//var_dump($diffQuoi);
-						for ($d = 0; $d < count($diffQuoi); $d++)
-						{
-							$urlHAL = "";
-							$docid = 0;
-							$label = "";
-							$code = "";
-							$cuHAL = "";
-							$type = "";
-							$pays = "";
-							$eltTab = explode(",", $diffQuoi[$d]);
-							$aTester = "";
-							if (isset($eltTab[0]) && isset($eltTab[1])) {$aTester = "[".$eltTab[0].",".$eltTab[1]."]";}//to retrieve the WoS structure for affilId function
-							for ($t = 2; $t < count($eltTab); $t++)
-							{
-								if ($t != 2) {$aTester .= ", ".trim($eltTab[$t]);}else{$aTester .= $eltTab[$t];}
-							}
-							//echo $aTester.'<br>';
-							//Search for distinctive acronyms
-							searchAcro($aTester, $cuHAL, $urlHAL, $validHAL, $retTest);
-							//echo 'toto : '.$aTester.' - '.$urlHAL.'<br>';
-							if ($urlHAL != "")//affiliation with code unit or acronym found
-							{
-								//echo $aTester.'<br>';
-								idaureHal($urlHAL, $cuHAL, $docid, $label, $code, $type);
-							}
-							//echo $docid.'<br>';
-							if($docid != 0)
-							{
-								affilId($aTester, $docid, $label, $code, $type, $pays, $validHAL);//Assigning idAffil to authors
-								while ($retTest != "") {
-									$aTester = $retTest;
-									$autInd = 0;
-									$urlHAL = "";
-									$docid = 0;
-									$label = "";
-									$code = "";
-									$cuHAL = "";
-									$type = "";
-									$pays = "";
-									//Search for distinctive acronyms
-									//echo 'toto : '.$aTester.'<br>';
-									searchAcro($aTester, $cuHAL, $urlHAL, $validHAL, $retTest);
-									//echo 'titi : '.$urlHAL.'<br>';
-									if ($urlHAL != "")//affiliation with code unit or acronym found
-									{
-										idaureHal($urlHAL, $cuHAL, $docid, $label, $code, $type);
-									}
-									//echo $urlHAL.' - '.$docid.'<br>';
-									if($docid != 0)
-									{
-										affilId($aTester, $docid, $label, $code, $type, $pays, $validHAL);
-									}
-								}
-							}else{//no specific affiliation found > we store whole results
-								//echo $aTester.'<br>';
-								$validHAL = "--";
-								$eltTab = explode("] ",$aTester);
-								include './OverHAL_unites_termes.php';
-								if (isset($eltTab[1])) {$label = supprAmp(trim($eltTab[1]));}
-								$label = str_ireplace($search, $replace, $label);
-								//echo 'titi : '.$label.'<br>';
-								//$docid = 999999;
-								$docid = $label;
-								$code = $label;
-								$type = 'institution';
-								//echo $aTester.'<br>';
-								affilId($aTester, $docid, $label, $code, $type, $pays, $validHAL);
-							}
-						}
-						//var_dump($autTab);
-						//var_dump($labTab);
-						$strTab = array();
-						$eid = supprAmp($papers[$key][$key2]['EID']);//unique academic work identifier assigned in Scopus bibliographic database
-						mb_internal_encoding('UTF-8');
-						$zip = new ZipArchive();
-						$FnmZ = "./HAL/OverHAL_scopus.zip";
-						if ($zip->open($FnmZ, ZipArchive::CREATE)!==TRUE) {
-							exit("Impossible d'ouvrir le fichier <$FnmZ>\n");
-						}
-						$Fnm = "./HAL/OverHAL_scopus_".$eid.".xml";
-						$inF = fopen($Fnm,"a+");
-						fseek($inF, 0);
-						//$chaine = "\xEF\xBB\xBF";//UTF-8
-						$chaine = "";//ANSI
-						$chaine .= '<?xml version="1.0" encoding="UTF-8"?>'."\r\n";
-						$chaine .= '<TEI xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.tei-c.org/ns/1.0" xmlns:hal="http://hal.archives-ouvertes.fr/" xsi:schemaLocation="http://www.tei-c.org/ns/1.0 http://api.archives-ouvertes.fr/documents/aofr-sword.xsd">'."\r\n";
-						$chaine .= '  <text>'."\r\n".
-											 '    <body>'."\r\n".
-											 '      <listBibl>'."\r\n".
-											 '        <biblFull>'."\r\n".
-											 '          <titleStmt>'."\r\n";
-						//funder
-						if (isset($papers[$key][$key2]['Funding Details'])) {
-							$chaine .= '            <funder>'.supprAmp($papers[$key][$key2]['Funding Details']).'</funder>'."\r\n";
-						}
-						$chaine .= '          </titleStmt>'."\r\n";
-
-						//if DOI exists searching an OA PDF file
-						if (isset($papers[$key][$key2]['DOI']) && $papers[$key][$key2]['DOI'] != "")
-						{
-							$urlT = "https://api.oadoi.org/v2/".$papers[$key][$key2]['DOI'];
-							$volT = $papers[$key][$key2]['Volume'];
-							$issT = $papers[$key][$key2]['Issue'];
-							$pagT = $papers[$key][$key2]['Page start'];
-							$datT = $papers[$key][$key2]['Year'];
-							$pdfCR = "";//Eventual URL PDF file found with crossRef via CrosHAL.php > null here
-
-							testOALic($urlT, $volT, $issT, $pagT, $datT, $pdfCR, $evd, $titLic, $typLic, $compNC, $compND, $compSA, $urlPDF);
-
-							if ($urlPDF != "")//an OA PDF file has benn found
-							{
-								$urlPDF = htmlspecialchars($urlPDF);
-								$chaine .= '          <editionStmt>'."\r\n".
-													 '            <edition>'."\r\n".
-													 '              <ref type="file" subtype="'.$evd.'" n="1" target="'.$urlPDF.'"></ref>'."\r\n".
-													 '            </edition>'."\r\n".
-													 '          </editionStmt>'."\r\n";
-								$avail = 'http://creativecommons.org/licenses/by';
-								if ($compNC != "") {$avail .= '-nc';}
-								if ($compND != "") {$avail .= '-nd';}
-								if ($compSA != "") {$avail .= '-sa';}
-								$avail .= '/';
-								$chaine .= '          <publicationStmt>'."\r\n".
-													 '            <availability>'."\r\n".
-													 '              <licence target="'.$avail.'"/>'."\r\n".
-													 '            </availability>'."\r\n".
-													 '          </publicationStmt>'."\r\n";
-							}
-						}
-						$chaine .= '          <seriesStmt>'."\r\n".
-											 '          </seriesStmt>'."\r\n".
-											 '          <notesStmt>'."\r\n".
-						//Audience
-						$aud = "";
-						if (isset($papers[$key][$key2]['Language of Original Document']))
-						{
-							if ($papers[$key][$key2]['Language of Original Document'] == "English") {
-								$chaine .= '          	<note type="audience" n="2"/>'."\r\n";
-							}else{
-								$chaine .= '          	<note type="audience" n="3"/>'."\r\n";
-							}
-						}
-						$chaine .= '						<note type="popular" n="0">No</note>'."\r\n";
-						$chaine .= '						<note type="peer" n="1">Yes</note>'."\r\n";
-						$chaine .= '          </notesStmt>'."\r\n".
-											 '          <sourceDesc>'."\r\n".
-											 '            <biblStruct>'."\r\n".
-											 '              <analytic>'."\r\n";
-						$lng = "";
-						//langue + titre
-						if (isset($papers[$key][$key2]['Language of Original Document']))
-						{
-							if ($papers[$key][$key2]['Language of Original Document'] == "French") {$lng = "fr";}
-							if ($papers[$key][$key2]['Language of Original Document'] == "English") {$lng = "en";}
-						}
-						$chaine .= '                <title xml:lang="'.$lng.'">'.supprAmp($papers[$key][$key2]['Title']).'</title>'."\r\n";
-						//auteurs
-						$aut = explode(",", $papers[$key][$key2]['Authors']);
-						//var_dump($aut);
-						$iTp = 0;
-						foreach ($aut as $qui) {
-							$nom = "";
-							$prenom = "";
-							$quiTab = explode(" ", trim($qui));
-							if (!isset($quiTab[1])) {$prenom = "";}//in case of no comma for one author
-							//var_dump($quiTab);
-							foreach($quiTab as $elt) {
-								if (strpos($elt, ".") === false)//no point > part of the name
-								{
-									$nom .= " ".supprAmp(trim($elt));
-								}else{
-									$prenom .= supprAmp(trim($elt));
-								}
-							}
-							$nom = trim($nom);
-							$nompre = $nom .", ".$prenom;
-							$rolAut = "aut";
-							if (stripos($papers[$key][$key2]['Correspondence Address'], $nom .", ".substr($prenom, 0, 1)) !== false) {$rolAut = "crp";}
-							//echo $nompre.'<br>';
-							if ($prenom != "") {
-								$chaine .= '                <author role="'.$rolAut.'">'."\r\n";
-								$chaine .= '                  <persName>'."\r\n";
-								$chaine .= '                    <forename type="first">'.$prenom.'</forename>'."\r\n";
-								$chaine .= '                    <surname>'.$nom.'</surname>'."\r\n";
-								$chaine .= '                  </persName>'."\r\n";
-								//Si auteur correspondant, recherche du mail
-								if ($rolAut == "crp") {
-									if (stripos($papers[$key][$key2]['Correspondence Address'], "email") !== false) {
-										$tabCrp = explode("email:", $papers[$key][$key2]['Correspondence Address']);
-										$chaine .= '                  <email>'.trim($tabCrp[1]).'</email>'."\r\n";
-									}
-								}
-								$kT = array_search($nompre, $autTab);
-								//echo $kT." - ".$nom." - ".$labTab[$nompre][$kT]."<br>";
-								if ($kT !== FALSE) {
-									foreach ($labTab[$nompre] as $lab) {
-										//$str = array_search($labTab[$nompre][$kT], $strTab);
-										$str = array_search($lab, $strTab);
-										if ($str === FALSE) {
-											$iTp += 1;
-											$kTp = $iTp;
-											array_push($strTab, $lab);
-										}else{
-											$kTp = $str + 1;
-										}
-										$chaine .= '                  <affiliation ref="#localStruct-Aff'.$kTp.'"/>'."\r\n";
-										//echo $kTp." - ".$nom." - ".$labTab[$kT]."<br>";
-									}
-								}
-								$chaine .= '                </author>'."\r\n";
-							}
-						}
-						//var_dump($strTab);
-						$chaine .= '              </analytic>'."\r\n";
-						//journal
-						$chaine .= '              <monogr>'."\r\n";
-						//ISSN
-						$chaine .= '                <idno type="issn">'.supprAmp($papers[$key][$key2]['ISSN']).'</idno>'."\r\n";
-						//ISBN
-						$chaine .= '                <idno type="isbn">'.supprAmp($papers[$key][$key2]['ISBN']).'</idno>'."\r\n";
-						if (isset($papers[$key][$key2]['Document Type']))
-						{
-							$typDoc = "";
-							$typDocp = "";
-							$type = $papers[$key][$key2]['Document Type'];
-							switch($type)
-							{
-								case "Article"://article
-								case "Article in Press":
-								case "Review":
-								case "Erratum":
-								case "Editorial":
-								case "Short Survey":
-								case "Letter":
-								case "Note":
-									$chaine .= '                <title level="j">'.supprAmp($papers[$key][$key2]['Source title']).'</title>'."\r\n";
-									$chaine .= '                <imprint>'."\r\n";
-									$chaine .= '                  <publisher>'.supprAmp($papers[$key][$key2]['Publisher']).'</publisher>'."\r\n";
-									$chaine .= '                  <biblScope unit="volume">'.supprAmp($papers[$key][$key2]['Volume']).'</biblScope>'."\r\n";
-									$chaine .= '                  <biblScope unit="issue">'.supprAmp($papers[$key][$key2]['Issue']).'</biblScope>'."\r\n";
-									if ($papers[$key][$key2]['Page start'] != "" && $papers[$key][$key2]['Page end'] != "") {
-										$chaine .= '                  <biblScope unit="pp">'.supprAmp($papers[$key][$key2]['Page start']).'-'.$papers[$key][$key2]['Page end'].'</biblScope>'."\r\n";
-									}else{
-										if ($papers[$key][$key2]['Art. No.'] != "") {
-											$chaine .= '                  <biblScope unit="pp">'.supprAmp($papers[$key][$key2]['Art. No.']).'</biblScope>'."\r\n";
-										}
-									}                  $chaine .= '                  <date type="datePub">'.supprAmp($papers[$key][$key2]['Year']).'</date>'."\r\n";
-									$chaine .= '                </imprint>'."\r\n";
-									$typeDoc = "ART";
-									$typeDocp = "Journal articles";
-									break;
-								case "Conference Paper"://inproceedings
-								case "Conference Review":
-									//Source Title
-									$chaine .= '                <title level="j">'.supprAmp($papers[$key][$key2]['Source title']).'</title>'."\r\n";
-									$chaine .= '                <meeting>'."\r\n";
-									$chaine .= '                  <title>'.supprAmp($papers[$key][$key2]['Conference name']).'</title>'."\r\n";
-									$confStartDate = "";
-									$confEndDate = "";
-									if (isset($papers[$key][$key2]['Conference date']))
-									{
-										//Is it a valid date?
-										if (strpos($papers[$key][$key2]['Conference date'], "through") === false)
-										{
-											$chaine = "";
-											fclose($inF);
-											break 2;
-										}else{
-											//6 September 2015 through 9 September 2015 to 2015-09-06
-											$confdate = $papers[$key][$key2]['Conference date'];
-											if ($confdate != "") {
-												$res = explode(" ", $confdate);
-												if (count($res) > 2) {
-													//year
-													$confStartDate = trim($res[2])."-";
-													$confEndDate = trim($res[6])."-";
-													//start month
-													switch($res[1])
-													{
-														case "January":
-															$confStartDate .= "01-";
-															break;
-														case "February":
-															$confStartDate .= "02-";
-															break;
-														case "March":
-															$confStartDate .= "03-";
-															break;
-														case "April":
-															$confStartDate .= "04-";
-															break;
-														case "May":
-															$confStartDate .= "05-";
-															break;
-														case "June":
-															$confStartDate .= "06-";
-															break;
-														case "July":
-															$confStartDate .= "07-";
-															$confEndDate .= "07-";
-															break;
-														case "August":
-															$confStartDate .= "08-";
-															break;
-														case "September":
-															$confStartDate .= "09-";
-															break;
-														case "October":
-															$confStartDate .= "10-";
-															break;
-														case "November":
-															$confStartDate .= "11-";
-															break;
-														case "December":
-															$confStartDate .= "12-";
-															break;
-													}
-													//start month
-													switch($res[5])
-													{
-														case "January":
-															$confEndDate .= "01-";
-															break;
-														case "February":
-															$confEndDate .= "02-";
-															break;
-														case "March":
-															$confEndDate .= "03-";
-															break;
-														case "April":
-															$confEndDate .= "04-";
-															break;
-														case "May":
-															$confEndDate .= "05-";
-															break;
-														case "June":
-															$confEndDate .= "06-";
-															break;
-														case "July":
-															$confEndDate .= "07-";
-															break;
-														case "August":
-															$confEndDate .= "08-";
-															break;
-														case "September":
-															$confEndDate .= "09-";
-															break;
-														case "October":
-															$confEndDate .= "10-";
-															break;
-														case "November":
-															$confEndDate .= "11-";
-															break;
-														case "December":
-															$confEndDate .= "12-";
-															break;
-													}
-													//start day
-													if (strlen($res[0]) == 1)
-													{
-														$confStartDate .= "0".$res[0];
-													}else{
-														$confStartDate .= $res[0];
-													}
-													//end day
-													if (strlen($res[4]) == 1)
-													{
-														$confEndDate .= "0".$res[4];
-													}else{
-														$confEndDate .= $res[4];
+													if (isset($papers[$key][$key2]['EA']) && $papers[$key][$key2]['EA'] != "") {
+														$chaine .= '                  <date type="datePub">'.supprAmp(substr($papers[$key][$key2]['EA'], -4)).'</date>'."\r\n";
 													}
 												}
 											}
+											$chaine .= '                </imprint>'."\r\n";
+											if ($papers[$key][$key2]['PT'] == "S" || $papers[$key][$key2]['PT'] == "B") {
+												$typeDoc = "COUV";
+												$typeDocp = "Book sections";//???
+											}else{
+												$typeDoc = "BOOK";
+												$typeDocp = "Book";//???
+											}
 										}
-									}else{
-										$confStartDate = $papers[$key][$key2]['Year'];
-										$confEndDate = $papers[$key][$key2]['Year'];
-									}
-									$chaine .= '                  <date type="start">'.$confStartDate.'</date>'."\r\n";//comment différencier date début et fin ?
-									$chaine .= '                  <date type="end">'.$confEndDate.'</date>'."\r\n";//comment différencier date début et fin ?
-									$chaine .= '                  <settlement>'.supprAmp($papers[$key][$key2]['Conference location']).'</settlement>'."\r\n";
-									$chaine .= '                </meeting>'."\r\n";
-									$chaine .= '                <editor>'.supprAmp($papers[$key][$key2]['Editors']).'</editor>'."\r\n";
-									$chaine .= '                <imprint>'."\r\n";
-									$chaine .= '                  <publisher>'.supprAmp($papers[$key][$key2]['Publisher']).'</publisher>'."\r\n";
-									$chaine .= '                  <biblScope unit="volume">'.supprAmp($papers[$key][$key2]['Volume']).'</biblScope>'."\r\n";
-									$chaine .= '                  <biblScope unit="issue">'.supprAmp($papers[$key][$key2]['Issue']).'</biblScope>'."\r\n";
-									if ($papers[$key][$key2]['Page start'] != "" && $papers[$key][$key2]['Page end'] != "") {
-										$chaine .= '                  <biblScope unit="pp">'.supprAmp($papers[$key][$key2]['Page start']).'-'.$papers[$key][$key2]['Page end'].'</biblScope>'."\r\n";
-									}else{
-										if ($papers[$key][$key2]['Art. No.'] != "") {
-											$chaine .= '                  <biblScope unit="pp">'.supprAmp($papers[$key][$key2]['Art. No.']).'</biblScope>'."\r\n";
-										}
-									}
-									$chaine .= '                  <date type="datePub">'.supprAmp($papers[$key][$key2]['Year']).'</date>'."\r\n";
-									$chaine .= '                </imprint>'."\r\n";
-									$typeDoc = "COMM";
-									$typeDocp = "Conference papers";
-									break;
-								case "Book"://book
-								case "Book Chapter":
-									$chaine .= '                <idno type="isbn">'.supprAmp($papers[$key][$key2]['ISBN']).'</idno>'."\r\n";
-									$chaine .= '                <title level="m">'.supprAmp($papers[$key][$key2]['Source title']).'</title>'."\r\n";
-									$chaine .= '                <editor>'.supprAmp($papers[$key][$key2]['Editors']).'</editor>'."\r\n";
-									$chaine .= '                <imprint>'."\r\n";
-									$chaine .= '                  <publisher>'.supprAmp($papers[$key][$key2]['Publisher']).'</publisher>'."\r\n";
-									$chaine .= '                  <biblScope unit="volume">'.supprAmp($papers[$key][$key2]['Volume']).'</biblScope>'."\r\n";
-									$chaine .= '                  <biblScope unit="issue">'.supprAmp($papers[$key][$key2]['Issue']).'</biblScope>'."\r\n";
-									$chaine .= '                  <biblScope unit="pp">'.supprAmp($papers[$key][$key2]['Page start']).'-'.$papers[$key][$key2]['Page end'].'</biblScope>'."\r\n";
-									$chaine .= '                  <date type="datePub">'.supprAmp($papers[$key][$key2]['Year']).'</date>'."\r\n";
-									$chaine .= '                </imprint>'."\r\n";
-									if ($type == "Book") {
-										$typeDoc = "OUV";
-										$typeDocp = "Ouv";
-									}else{
-										$typeDoc = "COUV";
-										$typeDocp = "Couv";
-									}
-									break;
-								case "P"://patent > il n'y en a pas dans WoS
-									$typeDoc = "PATENT";
-									$typeDocp = "Patent";//???
-									break;
+										break;
+									case "P"://patent > il n'y en a pas dans WoS
+										$typeDoc = "PATENT";
+										$typeDocp = "Patent";//???
+										break;
+								}
 							}
-						}
-						$chaine .= '              </monogr>'."\r\n";
-						if (isset($papers[$key][$key2]['DOI']) && $papers[$key][$key2]['DOI'] != "")
-						{
-							$chaine .= '              <idno type="doi">'.supprAmp($papers[$key][$key2]['DOI']).'</idno>'."\r\n";
-						}
-						if (isset($papers[$key][$key2]['PubMed ID']) && $papers[$key][$key2]['PubMed ID'] != "")
-						{
-							$chaine .= '              <idno type="pubmed">'.supprAmp($papers[$key][$key2]['PubMed ID']).'</idno>'."\r\n";
-						}
-						$chaine .= '            </biblStruct>'."\r\n";
-						$chaine .= '          </sourceDesc>'."\r\n";
-						$chaine .= '          <profileDesc>'."\r\n";
-						//langue
-						$chaine .= '            <langUsage>'."\r\n";
-						$chaine .= '              <language ident="'.$lng.'">'.supprAmp($papers[$key][$key2]['Language of Original Document']).'</language>'."\r\n";
-						$chaine .= '            </langUsage>'."\r\n";
-						$chaine .= '            <textClass>'."\r\n";
-						//mots-clés
-						if (isset($papers[$key][$key2]['Author Keywords']) && $papers[$key][$key2]['Author Keywords'] != "")
-						{
-							$chaine .= '             <keywords scheme="author">'."\r\n";
-							$aut = explode(";", $papers[$key][$key2]['Author Keywords']);
-							foreach ($aut as $qui) {
-								$chaine .= '              <term xml:lang="'.$lng.'">'.supprAmp(trim($qui)).'</term>'."\r\n";
+							$chaine .= '              </monogr>'."\r\n";
+							if (isset($papers[$key][$key2]['DI']) && $papers[$key][$key2]['DI'] != "")
+							{
+								$chaine .= '              <idno type="doi">'.supprAmp($papers[$key][$key2]['DI']).'</idno>'."\r\n";
 							}
-							$chaine .= '             </keywords>'."\r\n";
-						}else{
-							if (isset($papers[$key][$key2]['Index Keywords']) && $papers[$key][$key2]['Index Keywords'] != "")
+							if (isset($papers[$key][$key2]['PM']) && $papers[$key][$key2]['PM'] != "")
+							{
+								$chaine .= '              <idno type="pubmed">'.supprAmp(str_replace("WOS:", "", $papers[$key][$key2]['PM'])).'</idno>'."\r\n";
+							}
+							$chaine .= '            </biblStruct>'."\r\n";
+							$chaine .= '          </sourceDesc>'."\r\n";
+							$chaine .= '          <profileDesc>'."\r\n";
+							//langue
+							$chaine .= '            <langUsage>'."\r\n";
+							$chaine .= '              <language ident="'.$lng.'">'.supprAmp($papers[$key][$key2]['LA']).'</language>'."\r\n";
+							$chaine .= '            </langUsage>'."\r\n";
+							$chaine .= '            <textClass>'."\r\n";
+							//mots-clés
+							if (isset($papers[$key][$key2]['DE']) && $papers[$key][$key2]['DE'] != "")
 							{
 								$chaine .= '             <keywords scheme="author">'."\r\n";
-								$aut = explode(";", $papers[$key][$key2]['Index Keywords']);
+								$aut = explode(";", $papers[$key][$key2]['DE']);
 								foreach ($aut as $qui) {
 									$chaine .= '              <term xml:lang="'.$lng.'">'.supprAmp(trim($qui)).'</term>'."\r\n";
 								}
 								$chaine .= '             </keywords>'."\r\n";
 							}
-						}
-						//domaine HAL
-						//$chaine .= '             <classCode scheme="halDomain" n="">'.supprAmp($papers[$key][$key2]['WC']).'</classCode>'."\r\n";
-						//Typologie
-						$chaine .= '             <classCode scheme="halTypology" n="'.$typeDoc.'">'.$typeDocp.'</classCode>'."\r\n";
-						$chaine .= '            </textClass>'."\r\n";
-						$chaine .= '            <abstract xml:lang="'.$lng.'">'.supprAmp($papers[$key][$key2]['Abstract']).'</abstract>'."\r\n";
-						$chaine .= '          </profileDesc>'."\r\n";
-						$chaine .= '        </biblFull>'."\r\n";
-						$chaine .= '      </listBibl>'."\r\n";
-						$chaine .= '    </body>'."\r\n";
-						if (count($strTab) > 0) {//Existence of one or more affiliation(s)
-							$chaine .= '      <back>'."\r\n";
-							$chaine .= '        <listOrg type="structures">'."\r\n";
-							$indT = 1;
-							foreach ($strTab as $labElt) {
-								$pays = "";
-								$codePays = "";
-								$eltTab = explode("~|~", $labElt);
-								$pays = $eltTab[count($eltTab)-1];
-								$codePays = array_search(strtoupper($pays), $countries);
-								$chaine .= '          <org type="'.$eltTab[3].'" xml:id="localStruct-Aff'.$indT.'">'."\r\n";
-								$orgName = $eltTab[2];
-								if ($eltTab[3] == "institution") {//abbreviation between crochet
-									if (strpos($orgName, "CHU") !== false) {
-										$nameTab = explode(",", $orgName);
-										$ville = trim(netNum($nameTab[count($nameTab)-2]));
-										$ville = str_ireplace(" cedex", "", $ville);
-										$villeTab = explode(" ", $ville);
-										//$orgName = "CHU ".$villeTab[count($villeTab)-1];
-										$orgName = "CHU ".$villeTab[0];
-									}
-									$nameTab = explode(",", $orgName);
-									$orgName = "";
-									$oN = 0;
-									if (count($nameTab) > 2) {//penultimate term > only if there is more than 2 elements
-										$iName = 0;
-									}else{
-										$iName = count($nameTab);
-									}
-									foreach ($nameTab as $name) {
-										if ($iName != count($nameTab)-2) {//do not insert the penultimate term = address
-											if ($name == "Universite CHU") {
-												$ville = $nameTab[count($nameTab)-2];
-												$ville = str_ireplace(" cedex", "", $ville);
-												$villeTab = explode(" ", $ville);
-												$name = $name.' '.$villeTab[count($villeTab)-1];
-											}
-											if ($oN == 0) {
-												$oN = 1;
-											}else{
-												$orgName .= ", ";
-											}
-											$eltNameTab = explode(" ", trim($name));
-											$oNE = 0;
-											foreach ($eltNameTab as $elt) {
-												if ($oNE == 0) {
-													$oNE = 1;
-												}else{
-													$orgName .= " ";
-												}
-												if (ctype_upper(trim($elt)) && !is_numeric(trim($elt)) &&  strlen(trim($elt)) > 3 && trim($elt) != "CNRS" && trim($elt) != "INSERM" && trim($elt) != "INRA" && trim($elt) != "INRIA" && trim($elt) != "IRSTEA") {
-												//if (ctype_upper(trim($elt)) && strlen(trim($elt)) > 3 && trim($elt) != "CNRS" && trim($elt) != "INSERM" && trim($elt) != "INRA" && trim($elt) != "INRIA" && trim($elt) != "IRSTEA") {
-													$orgName .= "[".trim($elt)."]";
-												}else{
-													$orgName .= "".trim($elt);
-												}
-											}
+							//domaine HAL
+							//$chaine .= '             <classCode scheme="halDomain" n="">'.supprAmp($papers[$key][$key2]['WC']).'</classCode>'."\r\n";
+							//Typologie
+							$chaine .= '             <classCode scheme="halTypology" n="'.$typeDoc.'">'.$typeDocp.'</classCode>'."\r\n";
+							$chaine .= '            </textClass>'."\r\n";
+							$chaine .= '            <abstract xml:lang="'.$lng.'">'.supprAmp($papers[$key][$key2]['AB']).'</abstract>'."\r\n";
+							$chaine .= '          </profileDesc>'."\r\n";
+							$chaine .= '        </biblFull>'."\r\n";
+							$chaine .= '      </listBibl>'."\r\n";
+							$chaine .= '    </body>'."\r\n";
+							if (count($strTab) > 0) {//Existence of one or more affiliation(s)
+								$chaine .= '      <back>'."\r\n";
+								$chaine .= '        <listOrg type="structures">'."\r\n";
+								$indT = 1;
+								foreach ($strTab as $labElt) {
+									$pays = "";
+									$codePays = "";
+									$eltTab = explode("~|~", $labElt);
+									$pays = $eltTab[count($eltTab)-1];
+									$codePays = array_search(strtoupper($pays), $countries);
+									$chaine .= '          <org type="'.$eltTab[3].'" xml:id="localStruct-Aff'.$indT.'">'."\r\n";
+									$orgName = $eltTab[2];
+									$orgName = str_replace(array("UR1", " UR1"), "", $orgName);
+									if ($eltTab[3] == "institution") {//abbreviation between crochet
+										if (strpos($orgName, "CHU") !== false) {
+											$nameTab = explode(",", $orgName);
+											$ville = $nameTab[count($nameTab)-2];
+											$ville = str_ireplace(" cedex", "", $ville);
+											$villeTab = explode(" ", $ville);
+											$orgName = "CHU ".$villeTab[count($villeTab)-1];
 										}
-										$iName += 1;
+										$nameTab = explode(",", $orgName);
+										$orgName = "";
+										$oN = 0;
+										$iName = 0;
+										foreach ($nameTab as $name) {
+											if ($iName != count($nameTab)-2) {//do not insert the penultimate term = address
+												if ($name == "Universite CHU") {
+													$ville = $nameTab[count($nameTab)-2];
+													$ville = str_ireplace(" cedex", "", $ville);
+													$villeTab = explode(" ", $ville);
+													$name = $name.' '.$villeTab[count($villeTab)-1];
+												}
+												if ($oN == 0) {
+													$oN = 1;
+												}else{
+													$orgName .= ", ";
+												}
+												$eltNameTab = explode(" ", trim($name));
+												$oNE = 0;
+												foreach ($eltNameTab as $elt) {
+													if ($oNE == 0) {
+														$oNE = 1;
+													}else{
+														$orgName .= " ";
+													}
+													if (ctype_upper(trim($elt)) && !is_numeric(trim($elt)) && strlen(trim($elt)) > 3 && trim($elt) != "CNRS" && trim($elt) != "INSERM" && trim($elt) != "INRA" && trim($elt) != "INRIA" && trim($elt) != "IRSTEA") {
+													//if (ctype_upper(trim($elt)) && strlen(trim($elt)) > 3 && trim($elt) != "CNRS" && trim($elt) != "INSERM" && trim($elt) != "INRA" && trim($elt) != "INRIA" && trim($elt) != "IRSTEA") {
+													//if (ctype_upper(trim($elt)) && strlen(trim($elt)) > 3) {
+														$orgName .= "[".trim($elt)."]";
+													}else{
+														$orgName .= "".trim($elt);
+													}
+												}
+											}
+											$iName += 1;
+										}
 									}
-								}
-								//suppression/remplacement divers
-								$orgName = str_replace(array("(", ")"), "", $orgName);
-								$orgName = str_replace("/", " ", $orgName);
-								//test présence 'Department' ou 'Service d' pour suppression
-								$orgTab = explode(", ", $orgName);
-								if (stripos($orgTab[0], "Department") !== false || stripos($orgTab[0], "Service d") !== false) {
-									$orgTab[0] = "";
-									$orgName = "";
-									for($dpt = 0; $dpt < count($orgTab); $dpt++) {
-										if ($orgTab[$dpt] != "") {$orgName .= $orgTab[$dpt]. ", ";}
+									//suppression/remplacement divers
+									$orgName = str_replace(array("(", ")"), "", $orgName);
+									$orgName = str_replace("/", " ", $orgName);
+									//test présence 'Department' ou 'Service d' pour suppression
+									$orgTab = explode(", ", $orgName);
+									if (stripos($orgTab[0], "Department") !== false || stripos($orgTab[0], "Service d") !== false) {
+										$orgTab[0] = "";
+										$orgName = "";
+										for($dpt = 0; $dpt < count($orgTab); $dpt++) {
+											if ($orgTab[$dpt] != "") {$orgName .= $orgTab[$dpt]. ", ";}
+										}
+										$orgName = substr($orgName, 0, (strlen($orgName) - 2));
 									}
-									$orgName = substr($orgName, 0, (strlen($orgName) - 2));
+									$chaine .= '            <orgName>'.$orgName.'</orgName>'."\r\n";
+									$pays = str_replace(".", "", strtoupper($eltTab[4]));
+									if ($pays != "")
+									{
+										$keyP = array_search($pays, $countries, true); 
+										$chaine .= '            <desc>'."\r\n";
+										$chaine .= '              <address>'."\r\n";
+										$chaine .= '                <country key="'.$keyP.'"></country>'."\r\n";
+										$chaine .= '              </address>'."\r\n";
+										$chaine .= '            </desc>'."\r\n";
+									}
+									$chaine .= '          </org>'."\r\n";
+									$indT++;
 								}
-								$chaine .= '            <orgName>'.$orgName.'</orgName>'."\r\n";
-								$pays = str_replace(".", "", strtoupper($eltTab[4]));
-								if ($codePays != "") {
-									$chaine .= '            <desc>'."\r\n";
-									$chaine .= '              <address>'."\r\n";
-									$chaine .= '                <country key="'.$codePays.'"/>'."\r\n";
-									$chaine .= '              </address>'."\r\n";
-									$chaine .= '            </desc>'."\r\n";
-								}
-								$chaine .= '          </org>'."\r\n";
-								$indT++;
+								$chaine .= '        </listOrg>'."\r\n";
+								$chaine .= '      </back>'."\r\n";
 							}
-							$chaine .= '        </listOrg>'."\r\n";
-							$chaine .= '      </back>'."\r\n";
+							$chaine .= '  </text>'."\r\n";
+							$chaine .= '</TEI>';
+							fwrite($inF,$chaine);
+							fclose($inF);
+							$zip->addFile($Fnm);
+							$zip->close();
+							unlink($Fnm);
 						}
-						$chaine .= '  </text>'."\r\n";
-						$chaine .= '</TEI>';
-						fwrite($inF,$chaine);
-						fclose($inF);
-						$zip->addFile($Fnm);
-						$zip->close();
-						unlink($Fnm);
-					}
-					break;
-					
-				case "pubmed_xml":
-				case "pubmed_txt":
-					$aut = $papers[$key][$key2]['Auteurs'];
-					$autTab = explode("; ",$aut);
-					if (count($autTab) < $limNbAut)
-					{
-						//affiliation
-						$autTab = array();
-						$labTab = array();
-						$autInd = 0;
-						$docid = 0;
-						$label = "";
-						$code = "";
-						$cuHAL = "";
-						$type = "";
-						$pays = "";
-						$quoi = $papers[$key][$key2]['Affiliation'];
-						$quoi = trimUltime($quoi);
-						$validHAL = "";//to privilegy the search by the unit code number rather than acronym
-						//echo "<br>".$j." - ".$quoi."<br>";
-						$diffQuoi = explode("; [", $quoi);
-						//var_dump($diffQuoi);
-						for ($d = 0; $d < count($diffQuoi); $d++)
+						break;
+
+					case "scopus":
+						$aut = $papers[$key][$key2]['Authors'];
+						$autTab = explode(", ",$aut);
+						if (count($autTab) < $limNbAut)
 						{
-							$urlHAL = "";
+							//affiliation
+							$autTab = array();
+							$labTab = array();
+							$autInd = 0;
 							$docid = 0;
 							$label = "";
 							$code = "";
 							$cuHAL = "";
 							$type = "";
 							$pays = "";
-							//Search for distinctive acronyms
-							//echo $diffQuoi[$d].'<br>';
-							searchAcro($diffQuoi[$d], $cuHAL, $urlHAL, $validHAL, $retTest);
-							//echo $urlHAL.'<br>';
-							if ($urlHAL != "")//affiliation with code unit or acronym found
+							$quoi = $papers[$key][$key2]['Authors with affiliations'];
+							$quoi = trimUltime($quoi);
+							$validHAL = "";//to privilegy the search by the unit code number rather than acronym
+							//echo "<br>".$j." - ".$quoi."<br>";
+							$diffQuoi = explode(";", $quoi);
+							//var_dump($diffQuoi);
+							for ($d = 0; $d < count($diffQuoi); $d++)
 							{
-								//echo $diffQuoi[$d].'<br>';
-								idaureHal($urlHAL, $cuHAL, $docid, $label, $code, $type);
-							}
-							//echo $docid.' - '.$urlHAL.'<br>';
-							if($docid != 0)
-							{
-								affilId($diffQuoi[$d], $docid, $label, $code, $type, $pays, $validHAL);//Assigning idAffil to authors
-								while ($retTest != "") {
-									$aTester = $retTest;
-									$autInd = 0;
-									$urlHAL = "";
-									$docid = 0;
-									$label = "";
-									$code = "";
-									$cuHAL = "";
-									$type = "";
-									$pays = "";
-									//Search for distinctive acronyms
-									//echo 'toto : '.$aTester.'<br>';
-									searchAcro($aTester, $cuHAL, $urlHAL, $validHAL, $retTest);
-									//echo 'titi : '.$urlHAL.'<br>';
-									if ($urlHAL != "")//affiliation with code unit or acronym found
-									{
-										idaureHal($urlHAL, $cuHAL, $docid, $label, $code, $type);
-									}
-									//echo $urlHAL.' - '.$docid.'<br>';
-									if($docid != 0)
-									{
-										affilId($aTester, $docid, $label, $code, $type, $pays, $validHAL);
-									}
-								}
-							}else{//no specific affiliation found > we store whole results
-								//echo $diffQuoi[$d].'<br>';
-								$validHAL = "--";
-								$eltTab = explode("] ",$diffQuoi[$d]);
-								include './OverHAL_affiliation_termes.php';
-								if (isset($eltTab[1])) {$label = supprAmp(trim($eltTab[1]));}
-								//$label = str_ireplace($search, $replace, $label);
-								//echo $label.'<br>';
-								$queTab = explode(",", $label);
-								$quePay = count($queTab) - 1;
-								$labFin = "";
-								$iq = 0;
-								foreach($queTab as $elt)
+								$urlHAL = "";
+								$docid = 0;
+								$label = "";
+								$code = "";
+								$cuHAL = "";
+								$type = "";
+								$pays = "";
+								$eltTab = explode(",", $diffQuoi[$d]);
+								$aTester = "";
+								if (isset($eltTab[0]) && isset($eltTab[1])) {$aTester = "[".$eltTab[0].",".$eltTab[1]."]";}//to retrieve the WoS structure for affilId function
+								for ($t = 2; $t < count($eltTab); $t++)
 								{
-									$elt = trim($elt);
-									if ($iq > 0) {$labFin .= ", ";}
-									$labFin .= $elt;
-									$iq++;
+									if ($t != 2) {$aTester .= ", ".trim($eltTab[$t]);}else{$aTester .= $eltTab[$t];}
 								}
-								//$docid = 999999;
-								$docid = $labFin;
-								$code = $labFin;
-								$type = 'institution';
-								affilId($diffQuoi[$d], $docid, $label, $code, $type, $pays, $validHAL);
-							}
-						}
-						//var_dump($autTab);
-						//var_dump($labTab);
-						$strTab = array();
-						$pmid = supprAmp($papers[$key][$key2]['PMID']);//PMID
-						mb_internal_encoding('UTF-8');
-						$zip = new ZipArchive();
-						$FnmZ = "./HAL/OverHAL_".$key.".zip";
-						if ($zip->open($FnmZ, ZipArchive::CREATE)!==TRUE) {
-							exit("Impossible d'ouvrir le fichier <$FnmZ>\n");
-						}
-						$Fnm = "./HAL/OverHAL_".$key."_".$pmid.".xml";
-						$inF = fopen($Fnm,"a+");
-						fseek($inF, 0);
-						//$chaine = "\xEF\xBB\xBF";//UTF-8
-						$chaine = "";//ANSI
-						$chaine .= '<?xml version="1.0" encoding="UTF-8"?>'."\r\n";
-						$chaine .= '<TEI xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.tei-c.org/ns/1.0" xmlns:hal="http://hal.archives-ouvertes.fr/" xsi:schemaLocation="http://www.tei-c.org/ns/1.0 http://api.archives-ouvertes.fr/documents/aofr-sword.xsd">'."\r\n";
-						$chaine .= '  <text>'."\r\n".
-											 '    <body>'."\r\n".
-											 '      <listBibl>'."\r\n".
-											 '        <biblFull>'."\r\n".
-											 '          <titleStmt>'."\r\n";
-						//funder
-						if ($papers[$key][$key2]['Finance'] != "") {
-							$eltFun = explode("~|~", $papers[$key][$key2]['Finance']);
-							foreach($eltFun as $elt) {
-								$chaine .= '            <funder>'.supprAmp($elt).'</funder>'."\r\n";
-							}
-						}
-						$chaine .= '          </titleStmt>'."\r\n";
-						//if DOI exists searching an OA PDF file
-						if (isset($papers[$key][$key2]['DOI']) && $papers[$key][$key2]['DOI'] != "")
-						{
-							$urlT = "https://api.oadoi.org/v2/".$papers[$key][$key2]['DOI'];
-							$volT = $papers[$key][$key2]['Volume'];
-							$issT = $papers[$key][$key2]['Numero'];
-							$pagT = $papers[$key][$key2]['Pagination'];
-							$datT = $papers[$key][$key2]['DatePub'];
-							$pdfCR = "";//Eventual URL PDF file found with crossRef via CrosHAL.php > null here
-
-							testOALic($urlT, $volT, $issT, $pagT, $datT, $pdfCR, $evd, $titLic, $typLic, $compNC, $compND, $compSA, $urlPDF);
-
-							if ($urlPDF != "")//an OA PDF file has benn found
-							{
-								$urlPDF = htmlspecialchars($urlPDF);
-								$chaine .= '          <editionStmt>'."\r\n".
-													 '            <edition>'."\r\n".
-													 '              <ref type="file" subtype="'.$evd.'" n="1" target="'.$urlPDF.'"></ref>'."\r\n".
-													 '            </edition>'."\r\n".
-													 '          </editionStmt>'."\r\n";
-								$avail = 'http://creativecommons.org/licenses/by';
-								if ($compNC != "") {$avail .= '-nc';}
-								if ($compND != "") {$avail .= '-nd';}
-								if ($compSA != "") {$avail .= '-sa';}
-								$avail .= '/';
-								$chaine .= '          <publicationStmt>'."\r\n".
-													 '            <availability>'."\r\n".
-													 '              <licence target="'.$avail.'"/>'."\r\n".
-													 '            </availability>'."\r\n".
-													 '          </publicationStmt>'."\r\n";
-							}
-						}
-						$chaine .= '          <seriesStmt>'."\r\n".
-											 '          </seriesStmt>'."\r\n".
-											 '          <notesStmt>'."\r\n".
-						//Audience
-						$aud = "";
-						if (isset($papers[$key][$key2]['Langue']))
-						{
-							if ($papers[$key][$key2]['Langue'] == "eng") {
-								$chaine .= '          	<note type="audience" n="2"/>'."\r\n";
-							}else{
-								$chaine .= '          	<note type="audience" n="3"/>'."\r\n";
-							}
-						}
-						$chaine .= '						<note type="popular" n="0">No</note>'."\r\n";
-						$chaine .= '						<note type="peer" n="1">Yes</note>'."\r\n";
-						$chaine .= '          </notesStmt>'."\r\n".
-											 '          <sourceDesc>'."\r\n".
-											 '            <biblStruct>'."\r\n".
-											 '              <analytic>'."\r\n";
-						$lng = "";
-						//langue + titre
-						if (isset($papers[$key][$key2]['Langue']))
-						{
-							if ($papers[$key][$key2]['Langue'] == "fre") {$lng = "fr";}
-							if ($papers[$key][$key2]['Langue'] == "eng") {$lng = "en";}
-						}
-						$chaine .= '                <title xml:lang="'.$lng.'">'.supprAmp($papers[$key][$key2]['Titre']).'</title>'."\r\n";
-						//auteurs
-						$aut = explode("; ", $papers[$key][$key2]['Auteurs']);
-						$iTp = 0;
-						foreach ($aut as $qui) {
-							$quiTab = explode(", ", $qui);
-							if (isset($quiTab[1]))//in case of no comma for one author
-							{
-								$prenom = supprAmp(trim($quiTab[1]));
-							}else{
-								$prenom = " ";
-							}
-							$nom = supprAmp(trim($quiTab[0]));
-							$nompre = $nom .", ".$prenom;
-							if ($prenom != "") {
-								$chaine .= '                <author role="aut">'."\r\n";
-								$chaine .= '                  <persName>'."\r\n";
-								$chaine .= '                    <forename type="first">'.$prenom.'</forename>'."\r\n";
-								$chaine .= '                    <surname>'.$nom.'</surname>'."\r\n";
-								$chaine .= '                  </persName>'."\r\n";
-								$kT = array_search($nompre, $autTab);
-								//echo $kT." - ".$nom."<br>";
-								
-								if (isset($papers[$key][$key2]['idORCID']))
-								{//ORCID
-									$tabOrcid = explode(";", $papers[$key][$key2]['idORCID']);
-									foreach ($tabOrcid as $elt) {
-										if (stripos(trim(normalize($elt)), normalize($nom.', '.$prenom)) !== false)
+								//echo $aTester.'<br>';
+								//Search for distinctive acronyms
+								searchAcro($aTester, $cuHAL, $urlHAL, $validHAL, $retTest);
+								//echo 'toto : '.$aTester.' - '.$urlHAL.'<br>';
+								if ($urlHAL != "")//affiliation with code unit or acronym found
+								{
+									//echo $aTester.'<br>';
+									idaureHal($urlHAL, $cuHAL, $docid, $label, $code, $type);
+								}
+								//echo $docid.'<br>';
+								if($docid != 0)
+								{
+									affilId($aTester, $docid, $label, $code, $type, $pays, $validHAL);//Assigning idAffil to authors
+									while ($retTest != "") {
+										$aTester = $retTest;
+										$autInd = 0;
+										$urlHAL = "";
+										$docid = 0;
+										$label = "";
+										$code = "";
+										$cuHAL = "";
+										$type = "";
+										$pays = "";
+										//Search for distinctive acronyms
+										//echo 'toto : '.$aTester.'<br>';
+										searchAcro($aTester, $cuHAL, $urlHAL, $validHAL, $retTest);
+										//echo 'titi : '.$urlHAL.'<br>';
+										if ($urlHAL != "")//affiliation with code unit or acronym found
 										{
-											$chaine .= '                  <idno type="https://orcid.org/">'.str_ireplace($nom.", ".$prenom."/", "", trim($elt)).'</idno>'."\r\n";
-											break;//Orcid ajouté > on sort de la boucle
+											idaureHal($urlHAL, $cuHAL, $docid, $label, $code, $type);
+										}
+										//echo $urlHAL.' - '.$docid.'<br>';
+										if($docid != 0)
+										{
+											affilId($aTester, $docid, $label, $code, $type, $pays, $validHAL);
 										}
 									}
+								}else{//no specific affiliation found > we store whole results
+									//echo $aTester.'<br>';
+									$validHAL = "--";
+									$eltTab = explode("] ",$aTester);
+									include './OverHAL_unites_termes.php';
+									if (isset($eltTab[1])) {$label = supprAmp(trim($eltTab[1]));}
+									$label = str_ireplace($search, $replace, $label);
+									//echo 'titi : '.$label.'<br>';
+									//$docid = 999999;
+									$docid = $label;
+									$code = $label;
+									$type = 'institution';
+									//echo $aTester.'<br>';
+									affilId($aTester, $docid, $label, $code, $type, $pays, $validHAL);
 								}
-								
-								//var_dump($autTab);
-								if ($kT !== FALSE) {
-									foreach ($labTab[$nompre] as $lab) {
-										//$str = array_search($labTab[$nompre][$kT], $strTab);
-										$str = array_search($lab, $strTab);
-										if ($str === FALSE) {
-											$iTp += 1;
-											$kTp = $iTp;
-											array_push($strTab, $lab);
-										}else{
-											$kTp = $str + 1;
-										}
-										$chaine .= '                  <affiliation ref="#localStruct-Aff'.$kTp.'"/>'."\r\n";
-										//echo $kTp." - ".$nom." - ".$labTab[$kT]."<br>";
-									}
-								}
-								$chaine .= '                </author>'."\r\n";
 							}
-						}
-						//var_dump($strTab);
-						$chaine .= '              </analytic>'."\r\n";
-						//journal
-						$chaine .= '              <monogr>'."\r\n";
-						//ISSN
-						$chaine .= '                <idno type="issn">'.supprAmp($papers[$key][$key2]['ISSN']).'</idno>'."\r\n";
-						//EISSN
-						$chaine .= '                <idno type="eissn">'.supprAmp($papers[$key][$key2]['EISSN']).'</idno>'."\r\n";
+							//var_dump($autTab);
+							//var_dump($labTab);
+							$strTab = array();
+							$eid = supprAmp($papers[$key][$key2]['EID']);//unique academic work identifier assigned in Scopus bibliographic database
+							mb_internal_encoding('UTF-8');
+							$zip = new ZipArchive();
+							$FnmZ = "./HAL/OverHAL_scopus.zip";
+							if ($zip->open($FnmZ, ZipArchive::CREATE)!==TRUE) {
+								exit("Impossible d'ouvrir le fichier <$FnmZ>\n");
+							}
+							$Fnm = "./HAL/OverHAL_scopus_".$eid.".xml";
+							$inF = fopen($Fnm,"a+");
+							fseek($inF, 0);
+							//$chaine = "\xEF\xBB\xBF";//UTF-8
+							$chaine = "";//ANSI
+							$chaine .= '<?xml version="1.0" encoding="UTF-8"?>'."\r\n";
+							$chaine .= '<TEI xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.tei-c.org/ns/1.0" xmlns:hal="http://hal.archives-ouvertes.fr/" xsi:schemaLocation="http://www.tei-c.org/ns/1.0 http://api.archives-ouvertes.fr/documents/aofr-sword.xsd">'."\r\n";
+							$chaine .= '  <text>'."\r\n".
+												 '    <body>'."\r\n".
+												 '      <listBibl>'."\r\n".
+												 '        <biblFull>'."\r\n".
+												 '          <titleStmt>'."\r\n";
+							//funder
+							if (isset($papers[$key][$key2]['Funding Details'])) {
+								$chaine .= '            <funder>'.supprAmp($papers[$key][$key2]['Funding Details']).'</funder>'."\r\n";
+							}
+							$chaine .= '          </titleStmt>'."\r\n";
 
-						if (isset($papers[$key][$key2]['Type']))
-						{
-							$typDef = "";
-							$typDoc = "";
-							$typDocp = "";
-							$type = $papers[$key][$key2]['Type'];
-							//if (strpos($type, "Journal Article") !== false) {$typeDef = "Journal Article";}
-							$typeDef = "Journal Article";
-							switch($typeDef)
+							//if DOI exists searching an OA PDF file
+							if (isset($papers[$key][$key2]['DOI']) && $papers[$key][$key2]['DOI'] != "")
 							{
-								case "Journal Article"://article
-									$chaine .= '                <title level="j">'.supprAmp(minRev($papers[$key][$key2]['Revue'])).'</title>'."\r\n";
-									$chaine .= '                <imprint>'."\r\n";
-									$chaine .= '                  <biblScope unit="volume">'.supprAmp($papers[$key][$key2]['Volume']).'</biblScope>'."\r\n";
-									$chaine .= '                  <biblScope unit="issue">'.supprAmp($papers[$key][$key2]['Numero']).'</biblScope>'."\r\n";
-									$chaine .= '                  <biblScope unit="pp">'.supprAmp($papers[$key][$key2]['Pagination']).'</biblScope>'."\r\n";
-									$chaine .= '                  <date type="datePub">'.supprAmp($papers[$key][$key2]['DatePub']).'</date>'."\r\n";
-									$chaine .= '                  <date type="dateEpub">'.supprAmp($papers[$key][$key2]['DateMel']).'</date>'."\r\n";
-									$chaine .= '                </imprint>'."\r\n";
-									$typeDoc = "ART";
-									$typeDocp = "Journal articles";
-									break;
-								/*
-								case "S":
-									//inproceedings
-									if ($papers[$key][$key2]['DT'] == "Proceedings Paper") {
-										$chaine .= '                <title level="j">'.supprAmp($papers[$key][$key2]['SO']).'</title>'."\r\n";
+								$urlT = "https://api.oadoi.org/v2/".$papers[$key][$key2]['DOI'];
+								$volT = $papers[$key][$key2]['Volume'];
+								$issT = $papers[$key][$key2]['Issue'];
+								$pagT = $papers[$key][$key2]['Page start'];
+								$datT = $papers[$key][$key2]['Year'];
+								$pdfCR = "";//Eventual URL PDF file found with crossRef via CrosHAL.php > null here
+
+								testOALic($urlT, $volT, $issT, $pagT, $datT, $pdfCR, $evd, $titLic, $typLic, $compNC, $compND, $compSA, $urlPDF);
+
+								if ($urlPDF != "")//an OA PDF file has benn found
+								{
+									$urlPDF = htmlspecialchars($urlPDF);
+									$chaine .= '          <editionStmt>'."\r\n".
+														 '            <edition>'."\r\n".
+														 '              <ref type="file" subtype="'.$evd.'" n="1" target="'.$urlPDF.'"></ref>'."\r\n".
+														 '            </edition>'."\r\n".
+														 '          </editionStmt>'."\r\n";
+									$avail = 'http://creativecommons.org/licenses/by';
+									if ($compNC != "") {$avail .= '-nc';}
+									if ($compND != "") {$avail .= '-nd';}
+									if ($compSA != "") {$avail .= '-sa';}
+									$avail .= '/';
+									$chaine .= '          <publicationStmt>'."\r\n".
+														 '            <availability>'."\r\n".
+														 '              <licence target="'.$avail.'"/>'."\r\n".
+														 '            </availability>'."\r\n".
+														 '          </publicationStmt>'."\r\n";
+								}
+							}
+							$chaine .= '          <seriesStmt>'."\r\n".
+												 '          </seriesStmt>'."\r\n".
+												 '          <notesStmt>'."\r\n".
+							//Audience
+							$aud = "";
+							if (isset($papers[$key][$key2]['Language of Original Document']))
+							{
+								if ($papers[$key][$key2]['Language of Original Document'] == "English") {
+									$chaine .= '          	<note type="audience" n="2"/>'."\r\n";
+								}else{
+									$chaine .= '          	<note type="audience" n="3"/>'."\r\n";
+								}
+							}
+							$chaine .= '						<note type="popular" n="0">No</note>'."\r\n";
+							$chaine .= '						<note type="peer" n="1">Yes</note>'."\r\n";
+							$chaine .= '          </notesStmt>'."\r\n".
+												 '          <sourceDesc>'."\r\n".
+												 '            <biblStruct>'."\r\n".
+												 '              <analytic>'."\r\n";
+							$lng = "";
+							//langue + titre
+							if (isset($papers[$key][$key2]['Language of Original Document']))
+							{
+								if ($papers[$key][$key2]['Language of Original Document'] == "French") {$lng = "fr";}
+								if ($papers[$key][$key2]['Language of Original Document'] == "English") {$lng = "en";}
+							}
+							$chaine .= '                <title xml:lang="'.$lng.'">'.supprAmp($papers[$key][$key2]['Title']).'</title>'."\r\n";
+							//auteurs
+							$aut = explode(",", $papers[$key][$key2]['Authors']);
+							//var_dump($aut);
+							$iTp = 0;
+							foreach ($aut as $qui) {
+								$nom = "";
+								$prenom = "";
+								$quiTab = explode(" ", trim($qui));
+								if (!isset($quiTab[1])) {$prenom = "";}//in case of no comma for one author
+								//var_dump($quiTab);
+								foreach($quiTab as $elt) {
+									if (strpos($elt, ".") === false)//no point > part of the name
+									{
+										$nom .= " ".supprAmp(trim($elt));
+									}else{
+										$prenom .= supprAmp(trim($elt));
+									}
+								}
+								$nom = trim($nom);
+								$nompre = $nom .", ".$prenom;
+								$rolAut = "aut";
+								if (stripos($papers[$key][$key2]['Correspondence Address'], $nom .", ".substr($prenom, 0, 1)) !== false) {$rolAut = "crp";}
+								//echo $nompre.'<br>';
+								if ($prenom != "") {
+									$chaine .= '                <author role="'.$rolAut.'">'."\r\n";
+									$chaine .= '                  <persName>'."\r\n";
+									$chaine .= '                    <forename type="first">'.$prenom.'</forename>'."\r\n";
+									$chaine .= '                    <surname>'.$nom.'</surname>'."\r\n";
+									$chaine .= '                  </persName>'."\r\n";
+									//Si auteur correspondant, recherche du mail
+									if ($rolAut == "crp") {
+										if (stripos($papers[$key][$key2]['Correspondence Address'], "email") !== false) {
+											$tabCrp = explode("email:", $papers[$key][$key2]['Correspondence Address']);
+											$chaine .= '                  <email>'.trim($tabCrp[1]).'</email>'."\r\n";
+										}
+									}
+									$kT = array_search($nompre, $autTab);
+									//echo $kT." - ".$nom." - ".$labTab[$nompre][$kT]."<br>";
+									if ($kT !== FALSE) {
+										foreach ($labTab[$nompre] as $lab) {
+											//$str = array_search($labTab[$nompre][$kT], $strTab);
+											$str = array_search($lab, $strTab);
+											if ($str === FALSE) {
+												$iTp += 1;
+												$kTp = $iTp;
+												array_push($strTab, $lab);
+											}else{
+												$kTp = $str + 1;
+											}
+											$chaine .= '                  <affiliation ref="#localStruct-Aff'.$kTp.'"/>'."\r\n";
+											//echo $kTp." - ".$nom." - ".$labTab[$kT]."<br>";
+										}
+									}
+									$chaine .= '                </author>'."\r\n";
+								}
+							}
+							//var_dump($strTab);
+							$chaine .= '              </analytic>'."\r\n";
+							//journal
+							$chaine .= '              <monogr>'."\r\n";
+							//ISSN
+							$chaine .= '                <idno type="issn">'.supprAmp($papers[$key][$key2]['ISSN']).'</idno>'."\r\n";
+							//ISBN
+							$chaine .= '                <idno type="isbn">'.supprAmp($papers[$key][$key2]['ISBN']).'</idno>'."\r\n";
+							if (isset($papers[$key][$key2]['Document Type']))
+							{
+								$typDoc = "";
+								$typDocp = "";
+								$type = $papers[$key][$key2]['Document Type'];
+								switch($type)
+								{
+									case "Article"://article
+									case "Article in Press":
+									case "Review":
+									case "Erratum":
+									case "Editorial":
+									case "Short Survey":
+									case "Letter":
+									case "Note":
+										$chaine .= '                <title level="j">'.supprAmp($papers[$key][$key2]['Source title']).'</title>'."\r\n";
+										$chaine .= '                <imprint>'."\r\n";
+										$chaine .= '                  <publisher>'.supprAmp($papers[$key][$key2]['Publisher']).'</publisher>'."\r\n";
+										$chaine .= '                  <biblScope unit="volume">'.supprAmp($papers[$key][$key2]['Volume']).'</biblScope>'."\r\n";
+										$chaine .= '                  <biblScope unit="issue">'.supprAmp($papers[$key][$key2]['Issue']).'</biblScope>'."\r\n";
+										if ($papers[$key][$key2]['Page start'] != "" && $papers[$key][$key2]['Page end'] != "") {
+											$chaine .= '                  <biblScope unit="pp">'.supprAmp($papers[$key][$key2]['Page start']).'-'.$papers[$key][$key2]['Page end'].'</biblScope>'."\r\n";
+										}else{
+											if ($papers[$key][$key2]['Art. No.'] != "") {
+												$chaine .= '                  <biblScope unit="pp">'.supprAmp($papers[$key][$key2]['Art. No.']).'</biblScope>'."\r\n";
+											}
+										}                  $chaine .= '                  <date type="datePub">'.supprAmp($papers[$key][$key2]['Year']).'</date>'."\r\n";
+										$chaine .= '                </imprint>'."\r\n";
+										$typeDoc = "ART";
+										$typeDocp = "Journal articles";
+										break;
+									case "Conference Paper"://inproceedings
+									case "Conference Review":
+										//Source Title
+										$chaine .= '                <title level="j">'.supprAmp($papers[$key][$key2]['Source title']).'</title>'."\r\n";
+										$chaine .= '                <meeting>'."\r\n";
+										$chaine .= '                  <title>'.supprAmp($papers[$key][$key2]['Conference name']).'</title>'."\r\n";
+										$confStartDate = "";
+										$confEndDate = "";
+										if (isset($papers[$key][$key2]['Conference date']))
+										{
+											//Is it a valid date?
+											if (strpos($papers[$key][$key2]['Conference date'], "through") === false)
+											{
+												$chaine = "";
+												fclose($inF);
+												break 2;
+											}else{
+												//6 September 2015 through 9 September 2015 to 2015-09-06
+												$confdate = $papers[$key][$key2]['Conference date'];
+												if ($confdate != "") {
+													$res = explode(" ", $confdate);
+													if (count($res) > 2) {
+														//year
+														$confStartDate = trim($res[2])."-";
+														$confEndDate = trim($res[6])."-";
+														//start month
+														switch($res[1])
+														{
+															case "January":
+																$confStartDate .= "01-";
+																break;
+															case "February":
+																$confStartDate .= "02-";
+																break;
+															case "March":
+																$confStartDate .= "03-";
+																break;
+															case "April":
+																$confStartDate .= "04-";
+																break;
+															case "May":
+																$confStartDate .= "05-";
+																break;
+															case "June":
+																$confStartDate .= "06-";
+																break;
+															case "July":
+																$confStartDate .= "07-";
+																$confEndDate .= "07-";
+																break;
+															case "August":
+																$confStartDate .= "08-";
+																break;
+															case "September":
+																$confStartDate .= "09-";
+																break;
+															case "October":
+																$confStartDate .= "10-";
+																break;
+															case "November":
+																$confStartDate .= "11-";
+																break;
+															case "December":
+																$confStartDate .= "12-";
+																break;
+														}
+														//start month
+														switch($res[5])
+														{
+															case "January":
+																$confEndDate .= "01-";
+																break;
+															case "February":
+																$confEndDate .= "02-";
+																break;
+															case "March":
+																$confEndDate .= "03-";
+																break;
+															case "April":
+																$confEndDate .= "04-";
+																break;
+															case "May":
+																$confEndDate .= "05-";
+																break;
+															case "June":
+																$confEndDate .= "06-";
+																break;
+															case "July":
+																$confEndDate .= "07-";
+																break;
+															case "August":
+																$confEndDate .= "08-";
+																break;
+															case "September":
+																$confEndDate .= "09-";
+																break;
+															case "October":
+																$confEndDate .= "10-";
+																break;
+															case "November":
+																$confEndDate .= "11-";
+																break;
+															case "December":
+																$confEndDate .= "12-";
+																break;
+														}
+														//start day
+														if (strlen($res[0]) == 1)
+														{
+															$confStartDate .= "0".$res[0];
+														}else{
+															$confStartDate .= $res[0];
+														}
+														//end day
+														if (strlen($res[4]) == 1)
+														{
+															$confEndDate .= "0".$res[4];
+														}else{
+															$confEndDate .= $res[4];
+														}
+													}
+												}
+											}
+										}else{
+											$confStartDate = $papers[$key][$key2]['Year'];
+											$confEndDate = $papers[$key][$key2]['Year'];
+										}
+										$chaine .= '                  <date type="start">'.$confStartDate.'</date>'."\r\n";//comment différencier date début et fin ?
+										$chaine .= '                  <date type="end">'.$confEndDate.'</date>'."\r\n";//comment différencier date début et fin ?
+										$chaine .= '                  <settlement>'.supprAmp($papers[$key][$key2]['Conference location']).'</settlement>'."\r\n";
+										$chaine .= '                </meeting>'."\r\n";
+										$chaine .= '                <editor>'.supprAmp($papers[$key][$key2]['Editors']).'</editor>'."\r\n";
+										$chaine .= '                <imprint>'."\r\n";
+										$chaine .= '                  <publisher>'.supprAmp($papers[$key][$key2]['Publisher']).'</publisher>'."\r\n";
+										$chaine .= '                  <biblScope unit="volume">'.supprAmp($papers[$key][$key2]['Volume']).'</biblScope>'."\r\n";
+										$chaine .= '                  <biblScope unit="issue">'.supprAmp($papers[$key][$key2]['Issue']).'</biblScope>'."\r\n";
+										if ($papers[$key][$key2]['Page start'] != "" && $papers[$key][$key2]['Page end'] != "") {
+											$chaine .= '                  <biblScope unit="pp">'.supprAmp($papers[$key][$key2]['Page start']).'-'.$papers[$key][$key2]['Page end'].'</biblScope>'."\r\n";
+										}else{
+											if ($papers[$key][$key2]['Art. No.'] != "") {
+												$chaine .= '                  <biblScope unit="pp">'.supprAmp($papers[$key][$key2]['Art. No.']).'</biblScope>'."\r\n";
+											}
+										}
+										$chaine .= '                  <date type="datePub">'.supprAmp($papers[$key][$key2]['Year']).'</date>'."\r\n";
+										$chaine .= '                </imprint>'."\r\n";
+										$typeDoc = "COMM";
+										$typeDocp = "Conference papers";
+										break;
+									case "Book"://book
+									case "Book Chapter":
+										$chaine .= '                <idno type="isbn">'.supprAmp($papers[$key][$key2]['ISBN']).'</idno>'."\r\n";
+										$chaine .= '                <title level="m">'.supprAmp($papers[$key][$key2]['Source title']).'</title>'."\r\n";
+										$chaine .= '                <editor>'.supprAmp($papers[$key][$key2]['Editors']).'</editor>'."\r\n";
+										$chaine .= '                <imprint>'."\r\n";
+										$chaine .= '                  <publisher>'.supprAmp($papers[$key][$key2]['Publisher']).'</publisher>'."\r\n";
+										$chaine .= '                  <biblScope unit="volume">'.supprAmp($papers[$key][$key2]['Volume']).'</biblScope>'."\r\n";
+										$chaine .= '                  <biblScope unit="issue">'.supprAmp($papers[$key][$key2]['Issue']).'</biblScope>'."\r\n";
+										$chaine .= '                  <biblScope unit="pp">'.supprAmp($papers[$key][$key2]['Page start']).'-'.$papers[$key][$key2]['Page end'].'</biblScope>'."\r\n";
+										$chaine .= '                  <date type="datePub">'.supprAmp($papers[$key][$key2]['Year']).'</date>'."\r\n";
+										$chaine .= '                </imprint>'."\r\n";
+										if ($type == "Book") {
+											$typeDoc = "OUV";
+											$typeDocp = "Ouv";
+										}else{
+											$typeDoc = "COUV";
+											$typeDocp = "Couv";
+										}
+										break;
+									case "P"://patent > il n'y en a pas dans WoS
+										$typeDoc = "PATENT";
+										$typeDocp = "Patent";//???
+										break;
+								}
+							}
+							$chaine .= '              </monogr>'."\r\n";
+							if (isset($papers[$key][$key2]['DOI']) && $papers[$key][$key2]['DOI'] != "")
+							{
+								$chaine .= '              <idno type="doi">'.supprAmp($papers[$key][$key2]['DOI']).'</idno>'."\r\n";
+							}
+							if (isset($papers[$key][$key2]['PubMed ID']) && $papers[$key][$key2]['PubMed ID'] != "")
+							{
+								$chaine .= '              <idno type="pubmed">'.supprAmp($papers[$key][$key2]['PubMed ID']).'</idno>'."\r\n";
+							}
+							$chaine .= '            </biblStruct>'."\r\n";
+							$chaine .= '          </sourceDesc>'."\r\n";
+							$chaine .= '          <profileDesc>'."\r\n";
+							//langue
+							$chaine .= '            <langUsage>'."\r\n";
+							$chaine .= '              <language ident="'.$lng.'">'.supprAmp($papers[$key][$key2]['Language of Original Document']).'</language>'."\r\n";
+							$chaine .= '            </langUsage>'."\r\n";
+							$chaine .= '            <textClass>'."\r\n";
+							//mots-clés
+							if (isset($papers[$key][$key2]['Author Keywords']) && $papers[$key][$key2]['Author Keywords'] != "")
+							{
+								$chaine .= '             <keywords scheme="author">'."\r\n";
+								$aut = explode(";", $papers[$key][$key2]['Author Keywords']);
+								foreach ($aut as $qui) {
+									$chaine .= '              <term xml:lang="'.$lng.'">'.supprAmp(trim($qui)).'</term>'."\r\n";
+								}
+								$chaine .= '             </keywords>'."\r\n";
+							}else{
+								if (isset($papers[$key][$key2]['Index Keywords']) && $papers[$key][$key2]['Index Keywords'] != "")
+								{
+									$chaine .= '             <keywords scheme="author">'."\r\n";
+									$aut = explode(";", $papers[$key][$key2]['Index Keywords']);
+									foreach ($aut as $qui) {
+										$chaine .= '              <term xml:lang="'.$lng.'">'.supprAmp(trim($qui)).'</term>'."\r\n";
+									}
+									$chaine .= '             </keywords>'."\r\n";
+								}
+							}
+							//domaine HAL
+							//$chaine .= '             <classCode scheme="halDomain" n="">'.supprAmp($papers[$key][$key2]['WC']).'</classCode>'."\r\n";
+							//Typologie
+							$chaine .= '             <classCode scheme="halTypology" n="'.$typeDoc.'">'.$typeDocp.'</classCode>'."\r\n";
+							$chaine .= '            </textClass>'."\r\n";
+							$chaine .= '            <abstract xml:lang="'.$lng.'">'.supprAmp($papers[$key][$key2]['Abstract']).'</abstract>'."\r\n";
+							$chaine .= '          </profileDesc>'."\r\n";
+							$chaine .= '        </biblFull>'."\r\n";
+							$chaine .= '      </listBibl>'."\r\n";
+							$chaine .= '    </body>'."\r\n";
+							if (count($strTab) > 0) {//Existence of one or more affiliation(s)
+								$chaine .= '      <back>'."\r\n";
+								$chaine .= '        <listOrg type="structures">'."\r\n";
+								$indT = 1;
+								foreach ($strTab as $labElt) {
+									$pays = "";
+									$codePays = "";
+									$eltTab = explode("~|~", $labElt);
+									$pays = $eltTab[count($eltTab)-1];
+									$codePays = array_search(strtoupper($pays), $countries);
+									$chaine .= '          <org type="'.$eltTab[3].'" xml:id="localStruct-Aff'.$indT.'">'."\r\n";
+									$orgName = $eltTab[2];
+									if ($eltTab[3] == "institution") {//abbreviation between crochet
+										if (strpos($orgName, "CHU") !== false) {
+											$nameTab = explode(",", $orgName);
+											$ville = trim(netNum($nameTab[count($nameTab)-2]));
+											$ville = str_ireplace(" cedex", "", $ville);
+											$villeTab = explode(" ", $ville);
+											//$orgName = "CHU ".$villeTab[count($villeTab)-1];
+											$orgName = "CHU ".$villeTab[0];
+										}
+										$nameTab = explode(",", $orgName);
+										$orgName = "";
+										$oN = 0;
+										if (count($nameTab) > 2) {//penultimate term > only if there is more than 2 elements
+											$iName = 0;
+										}else{
+											$iName = count($nameTab);
+										}
+										foreach ($nameTab as $name) {
+											if ($iName != count($nameTab)-2) {//do not insert the penultimate term = address
+												if ($name == "Universite CHU") {
+													$ville = $nameTab[count($nameTab)-2];
+													$ville = str_ireplace(" cedex", "", $ville);
+													$villeTab = explode(" ", $ville);
+													$name = $name.' '.$villeTab[count($villeTab)-1];
+												}
+												if ($oN == 0) {
+													$oN = 1;
+												}else{
+													$orgName .= ", ";
+												}
+												$eltNameTab = explode(" ", trim($name));
+												$oNE = 0;
+												foreach ($eltNameTab as $elt) {
+													if ($oNE == 0) {
+														$oNE = 1;
+													}else{
+														$orgName .= " ";
+													}
+													if (ctype_upper(trim($elt)) && !is_numeric(trim($elt)) &&  strlen(trim($elt)) > 3 && trim($elt) != "CNRS" && trim($elt) != "INSERM" && trim($elt) != "INRA" && trim($elt) != "INRIA" && trim($elt) != "IRSTEA") {
+													//if (ctype_upper(trim($elt)) && strlen(trim($elt)) > 3 && trim($elt) != "CNRS" && trim($elt) != "INSERM" && trim($elt) != "INRA" && trim($elt) != "INRIA" && trim($elt) != "IRSTEA") {
+														$orgName .= "[".trim($elt)."]";
+													}else{
+														$orgName .= "".trim($elt);
+													}
+												}
+											}
+											$iName += 1;
+										}
+									}
+									//suppression/remplacement divers
+									$orgName = str_replace(array("(", ")"), "", $orgName);
+									$orgName = str_replace("/", " ", $orgName);
+									//test présence 'Department' ou 'Service d' pour suppression
+									$orgTab = explode(", ", $orgName);
+									if (stripos($orgTab[0], "Department") !== false || stripos($orgTab[0], "Service d") !== false) {
+										$orgTab[0] = "";
+										$orgName = "";
+										for($dpt = 0; $dpt < count($orgTab); $dpt++) {
+											if ($orgTab[$dpt] != "") {$orgName .= $orgTab[$dpt]. ", ";}
+										}
+										$orgName = substr($orgName, 0, (strlen($orgName) - 2));
+									}
+									$chaine .= '            <orgName>'.$orgName.'</orgName>'."\r\n";
+									$pays = str_replace(".", "", strtoupper($eltTab[4]));
+									if ($codePays != "") {
+										$chaine .= '            <desc>'."\r\n";
+										$chaine .= '              <address>'."\r\n";
+										$chaine .= '                <country key="'.$codePays.'"/>'."\r\n";
+										$chaine .= '              </address>'."\r\n";
+										$chaine .= '            </desc>'."\r\n";
+									}
+									$chaine .= '          </org>'."\r\n";
+									$indT++;
+								}
+								$chaine .= '        </listOrg>'."\r\n";
+								$chaine .= '      </back>'."\r\n";
+							}
+							$chaine .= '  </text>'."\r\n";
+							$chaine .= '</TEI>';
+							fwrite($inF,$chaine);
+							fclose($inF);
+							$zip->addFile($Fnm);
+							$zip->close();
+							unlink($Fnm);
+						}
+						break;
+						
+					case "pubmed_xml":
+					case "pubmed_txt":
+						$aut = $papers[$key][$key2]['Auteurs'];
+						$autTab = explode("; ",$aut);
+						if (count($autTab) < $limNbAut)
+						{
+							//affiliation
+							$autTab = array();
+							$labTab = array();
+							$autInd = 0;
+							$docid = 0;
+							$label = "";
+							$code = "";
+							$cuHAL = "";
+							$type = "";
+							$pays = "";
+							$quoi = $papers[$key][$key2]['Affiliation'];
+							$quoi = trimUltime($quoi);
+							$validHAL = "";//to privilegy the search by the unit code number rather than acronym
+							//echo "<br>".$j." - ".$quoi."<br>";
+							$diffQuoi = explode("; [", $quoi);
+							//var_dump($diffQuoi);
+							for ($d = 0; $d < count($diffQuoi); $d++)
+							{
+								$urlHAL = "";
+								$docid = 0;
+								$label = "";
+								$code = "";
+								$cuHAL = "";
+								$type = "";
+								$pays = "";
+								//Search for distinctive acronyms
+								//echo $diffQuoi[$d].'<br>';
+								searchAcro($diffQuoi[$d], $cuHAL, $urlHAL, $validHAL, $retTest);
+								//echo $urlHAL.'<br>';
+								if ($urlHAL != "")//affiliation with code unit or acronym found
+								{
+									//echo $diffQuoi[$d].'<br>';
+									idaureHal($urlHAL, $cuHAL, $docid, $label, $code, $type);
+								}
+								//echo $docid.' - '.$urlHAL.'<br>';
+								if($docid != 0)
+								{
+									affilId($diffQuoi[$d], $docid, $label, $code, $type, $pays, $validHAL);//Assigning idAffil to authors
+									while ($retTest != "") {
+										$aTester = $retTest;
+										$autInd = 0;
+										$urlHAL = "";
+										$docid = 0;
+										$label = "";
+										$code = "";
+										$cuHAL = "";
+										$type = "";
+										$pays = "";
+										//Search for distinctive acronyms
+										//echo 'toto : '.$aTester.'<br>';
+										searchAcro($aTester, $cuHAL, $urlHAL, $validHAL, $retTest);
+										//echo 'titi : '.$urlHAL.'<br>';
+										if ($urlHAL != "")//affiliation with code unit or acronym found
+										{
+											idaureHal($urlHAL, $cuHAL, $docid, $label, $code, $type);
+										}
+										//echo $urlHAL.' - '.$docid.'<br>';
+										if($docid != 0)
+										{
+											affilId($aTester, $docid, $label, $code, $type, $pays, $validHAL);
+										}
+									}
+								}else{//no specific affiliation found > we store whole results
+									//echo $diffQuoi[$d].'<br>';
+									$validHAL = "--";
+									$eltTab = explode("] ",$diffQuoi[$d]);
+									include './OverHAL_affiliation_termes.php';
+									if (isset($eltTab[1])) {$label = supprAmp(trim($eltTab[1]));}
+									//$label = str_ireplace($search, $replace, $label);
+									//echo $label.'<br>';
+									$queTab = explode(",", $label);
+									$quePay = count($queTab) - 1;
+									$labFin = "";
+									$iq = 0;
+									foreach($queTab as $elt)
+									{
+										$elt = trim($elt);
+										if ($iq > 0) {$labFin .= ", ";}
+										$labFin .= $elt;
+										$iq++;
+									}
+									//$docid = 999999;
+									$docid = $labFin;
+									$code = $labFin;
+									$type = 'institution';
+									affilId($diffQuoi[$d], $docid, $label, $code, $type, $pays, $validHAL);
+								}
+							}
+							//var_dump($autTab);
+							//var_dump($labTab);
+							$strTab = array();
+							$pmid = supprAmp($papers[$key][$key2]['PMID']);//PMID
+							mb_internal_encoding('UTF-8');
+							$zip = new ZipArchive();
+							$FnmZ = "./HAL/OverHAL_".$key.".zip";
+							if ($zip->open($FnmZ, ZipArchive::CREATE)!==TRUE) {
+								exit("Impossible d'ouvrir le fichier <$FnmZ>\n");
+							}
+							$Fnm = "./HAL/OverHAL_".$key."_".$pmid.".xml";
+							$inF = fopen($Fnm,"a+");
+							fseek($inF, 0);
+							//$chaine = "\xEF\xBB\xBF";//UTF-8
+							$chaine = "";//ANSI
+							$chaine .= '<?xml version="1.0" encoding="UTF-8"?>'."\r\n";
+							$chaine .= '<TEI xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.tei-c.org/ns/1.0" xmlns:hal="http://hal.archives-ouvertes.fr/" xsi:schemaLocation="http://www.tei-c.org/ns/1.0 http://api.archives-ouvertes.fr/documents/aofr-sword.xsd">'."\r\n";
+							$chaine .= '  <text>'."\r\n".
+												 '    <body>'."\r\n".
+												 '      <listBibl>'."\r\n".
+												 '        <biblFull>'."\r\n".
+												 '          <titleStmt>'."\r\n";
+							//funder
+							if ($papers[$key][$key2]['Finance'] != "") {
+								$eltFun = explode("~|~", $papers[$key][$key2]['Finance']);
+								foreach($eltFun as $elt) {
+									$chaine .= '            <funder>'.supprAmp($elt).'</funder>'."\r\n";
+								}
+							}
+							$chaine .= '          </titleStmt>'."\r\n";
+							//if DOI exists searching an OA PDF file
+							if (isset($papers[$key][$key2]['DOI']) && $papers[$key][$key2]['DOI'] != "")
+							{
+								$urlT = "https://api.oadoi.org/v2/".$papers[$key][$key2]['DOI'];
+								$volT = $papers[$key][$key2]['Volume'];
+								$issT = $papers[$key][$key2]['Numero'];
+								$pagT = $papers[$key][$key2]['Pagination'];
+								$datT = $papers[$key][$key2]['DatePub'];
+								$pdfCR = "";//Eventual URL PDF file found with crossRef via CrosHAL.php > null here
+
+								testOALic($urlT, $volT, $issT, $pagT, $datT, $pdfCR, $evd, $titLic, $typLic, $compNC, $compND, $compSA, $urlPDF);
+
+								if ($urlPDF != "")//an OA PDF file has benn found
+								{
+									$urlPDF = htmlspecialchars($urlPDF);
+									$chaine .= '          <editionStmt>'."\r\n".
+														 '            <edition>'."\r\n".
+														 '              <ref type="file" subtype="'.$evd.'" n="1" target="'.$urlPDF.'"></ref>'."\r\n".
+														 '            </edition>'."\r\n".
+														 '          </editionStmt>'."\r\n";
+									$avail = 'http://creativecommons.org/licenses/by';
+									if ($compNC != "") {$avail .= '-nc';}
+									if ($compND != "") {$avail .= '-nd';}
+									if ($compSA != "") {$avail .= '-sa';}
+									$avail .= '/';
+									$chaine .= '          <publicationStmt>'."\r\n".
+														 '            <availability>'."\r\n".
+														 '              <licence target="'.$avail.'"/>'."\r\n".
+														 '            </availability>'."\r\n".
+														 '          </publicationStmt>'."\r\n";
+								}
+							}
+							$chaine .= '          <seriesStmt>'."\r\n".
+												 '          </seriesStmt>'."\r\n".
+												 '          <notesStmt>'."\r\n".
+							//Audience
+							$aud = "";
+							if (isset($papers[$key][$key2]['Langue']))
+							{
+								if ($papers[$key][$key2]['Langue'] == "eng") {
+									$chaine .= '          	<note type="audience" n="2"/>'."\r\n";
+								}else{
+									$chaine .= '          	<note type="audience" n="3"/>'."\r\n";
+								}
+							}
+							$chaine .= '						<note type="popular" n="0">No</note>'."\r\n";
+							$chaine .= '						<note type="peer" n="1">Yes</note>'."\r\n";
+							$chaine .= '          </notesStmt>'."\r\n".
+												 '          <sourceDesc>'."\r\n".
+												 '            <biblStruct>'."\r\n".
+												 '              <analytic>'."\r\n";
+							$lng = "";
+							//langue + titre
+							if (isset($papers[$key][$key2]['Langue']))
+							{
+								if ($papers[$key][$key2]['Langue'] == "fre") {$lng = "fr";}
+								if ($papers[$key][$key2]['Langue'] == "eng") {$lng = "en";}
+							}
+							$chaine .= '                <title xml:lang="'.$lng.'">'.supprAmp($papers[$key][$key2]['Titre']).'</title>'."\r\n";
+							//auteurs
+							$aut = explode("; ", $papers[$key][$key2]['Auteurs']);
+							$iTp = 0;
+							foreach ($aut as $qui) {
+								$quiTab = explode(", ", $qui);
+								if (isset($quiTab[1]))//in case of no comma for one author
+								{
+									$prenom = supprAmp(trim($quiTab[1]));
+								}else{
+									$prenom = " ";
+								}
+								$nom = supprAmp(trim($quiTab[0]));
+								$nompre = $nom .", ".$prenom;
+								if ($prenom != "") {
+									$chaine .= '                <author role="aut">'."\r\n";
+									$chaine .= '                  <persName>'."\r\n";
+									$chaine .= '                    <forename type="first">'.$prenom.'</forename>'."\r\n";
+									$chaine .= '                    <surname>'.$nom.'</surname>'."\r\n";
+									$chaine .= '                  </persName>'."\r\n";
+									$kT = array_search($nompre, $autTab);
+									//echo $kT." - ".$nom."<br>";
+									
+									if (isset($papers[$key][$key2]['idORCID']))
+									{//ORCID
+										$tabOrcid = explode(";", $papers[$key][$key2]['idORCID']);
+										foreach ($tabOrcid as $elt) {
+											if (stripos(trim(normalize($elt)), normalize($nom.', '.$prenom)) !== false)
+											{
+												$chaine .= '                  <idno type="https://orcid.org/">'.str_ireplace($nom.", ".$prenom."/", "", trim($elt)).'</idno>'."\r\n";
+												break;//Orcid ajouté > on sort de la boucle
+											}
+										}
+									}
+									
+									//var_dump($autTab);
+									if ($kT !== FALSE) {
+										foreach ($labTab[$nompre] as $lab) {
+											//$str = array_search($labTab[$nompre][$kT], $strTab);
+											$str = array_search($lab, $strTab);
+											if ($str === FALSE) {
+												$iTp += 1;
+												$kTp = $iTp;
+												array_push($strTab, $lab);
+											}else{
+												$kTp = $str + 1;
+											}
+											$chaine .= '                  <affiliation ref="#localStruct-Aff'.$kTp.'"/>'."\r\n";
+											//echo $kTp." - ".$nom." - ".$labTab[$kT]."<br>";
+										}
+									}
+									$chaine .= '                </author>'."\r\n";
+								}
+							}
+							//var_dump($strTab);
+							$chaine .= '              </analytic>'."\r\n";
+							//journal
+							$chaine .= '              <monogr>'."\r\n";
+							//ISSN
+							$chaine .= '                <idno type="issn">'.supprAmp($papers[$key][$key2]['ISSN']).'</idno>'."\r\n";
+							//EISSN
+							$chaine .= '                <idno type="eissn">'.supprAmp($papers[$key][$key2]['EISSN']).'</idno>'."\r\n";
+
+							if (isset($papers[$key][$key2]['Type']))
+							{
+								$typDef = "";
+								$typDoc = "";
+								$typDocp = "";
+								$type = $papers[$key][$key2]['Type'];
+								//if (strpos($type, "Journal Article") !== false) {$typeDef = "Journal Article";}
+								$typeDef = "Journal Article";
+								switch($typeDef)
+								{
+									case "Journal Article"://article
+										$chaine .= '                <title level="j">'.supprAmp(minRev($papers[$key][$key2]['Revue'])).'</title>'."\r\n";
+										$chaine .= '                <imprint>'."\r\n";
+										$chaine .= '                  <biblScope unit="volume">'.supprAmp($papers[$key][$key2]['Volume']).'</biblScope>'."\r\n";
+										$chaine .= '                  <biblScope unit="issue">'.supprAmp($papers[$key][$key2]['Numero']).'</biblScope>'."\r\n";
+										$chaine .= '                  <biblScope unit="pp">'.supprAmp($papers[$key][$key2]['Pagination']).'</biblScope>'."\r\n";
+										$chaine .= '                  <date type="datePub">'.supprAmp($papers[$key][$key2]['DatePub']).'</date>'."\r\n";
+										$chaine .= '                  <date type="dateEpub">'.supprAmp($papers[$key][$key2]['DateMel']).'</date>'."\r\n";
+										$chaine .= '                </imprint>'."\r\n";
+										$typeDoc = "ART";
+										$typeDocp = "Journal articles";
+										break;
+									/*
+									case "S":
+										//inproceedings
+										if ($papers[$key][$key2]['DT'] == "Proceedings Paper") {
+											$chaine .= '                <title level="j">'.supprAmp($papers[$key][$key2]['SO']).'</title>'."\r\n";
+											$chaine .= '                <title level="m">'.supprAmp($papers[$key][$key2]['CT']).'</title>'."\r\n";
+											$chaine .= '                <meeting>'."\r\n";
+											$chaine .= '                  <title>'.supprAmp($papers[$key][$key2]['CT']).'</title>'."\r\n";
+											$confStartDate = "";
+											$confEndDate = "";
+											if (isset($papers[$key][$key2]['CY']))
+											{
+												//OCT 19-23, 2014 to 2014-10-19
+												$confdate = $papers[$key][$key2]['CY'];
+												if ($confdate != "") {
+													$res = explode(" ", $confdate);
+													if (count($res) > 2) {
+														//year
+														$confStartDate = trim($res[2])."-";
+														$confEndDate = trim($res[2])."-";
+														//month
+														switch($res[0])
+														{
+															case "JAN":
+																$confStartDate .= "01-";
+																$confEndDate .= "01-";
+																break;
+															case "FEB":
+																$confStartDate .= "02-";
+																$confEndDate .= "02-";
+																break;
+															case "MAR":
+																$confStartDate .= "03-";
+																$confEndDate .= "03-";
+																break;
+															case "APR":
+																$confStartDate .= "04-";
+																$confEndDate .= "04-";
+																break;
+															case "MAY":
+																$confStartDate .= "05-";
+																$confEndDate .= "05-";
+																break;
+															case "JUN":
+																$confStartDate .= "06-";
+																$confEndDate .= "06-";
+																break;
+															case "JUL":
+																$confStartDate .= "07-";
+																$confEndDate .= "07-";
+																break;
+															case "AUG":
+																$confStartDate .= "08-";
+																$confEndDate .= "08-";
+																break;
+															case "SEP":
+																$confStartDate .= "09-";
+																$confEndDate .= "09-";
+																break;
+															case "OCT":
+																$confStartDate .= "10-";
+																$confEndDate .= "10-";
+																break;
+															case "NOV":
+																$confStartDate .= "11-";
+																$confEndDate .= "11-";
+																break;
+															case "DEC":
+																$confStartDate .= "12-";
+																$confEndDate .= "12-";
+																break;
+														}
+														//day
+														$confStartDate .= substr($res[1], 0, 2);
+														$confEndDate .= substr($res[1], 3, 2);
+													}
+												}
+											}
+											$chaine .= '                  <date type="start">'.$confStartDate.'</date>'."\r\n";//comment différencier date début et fin ?
+											$chaine .= '                  <date type="end">'.$confEndDate.'</date>'."\r\n";//comment différencier date début et fin ?
+											$chaine .= '                  <settlement>'.supprAmp($papers[$key][$key2]['CL']).'</settlement>'."\r\n";
+											$chaine .= '                </meeting>'."\r\n";
+											$chaine .= '                <editor>'.supprAmp($papers[$key][$key2]['BE']).'</editor>'."\r\n";
+											$chaine .= '                <imprint>'."\r\n";
+											$chaine .= '                  <publisher>'.supprAmp($papers[$key][$key2]['PU']).'</publisher>'."\r\n";
+											if (isset($papers[$key][$key2]['PY']) && $papers[$key][$key2]['PY'] != "") {
+												$chaine .= '                  <date type="datePub">'.supprAmp($papers[$key][$key2]['PY']).'</date>'."\r\n";
+											}else{
+												if (isset($papers[$key][$key2]['EY']) && $papers[$key][$key2]['EY'] != "") {
+													$chaine .= '                  <date type="datePub">'.supprAmp($papers[$key][$key2]['EY']).'</date>'."\r\n";
+												}else{
+													if (isset($papers[$key][$key2]['EA']) && $papers[$key][$key2]['EA'] != "") {
+														$chaine .= '                  <date type="datePub">'.supprAmp(substr($papers[$key][$key2]['EA'], -4)).'</date>'."\r\n";
+													}
+												}
+											}
+											$chaine .= '                </imprint>'."\r\n";
+											$typeDoc = "COMM";
+											$typeDocp = "Conference papers";
+										}
+										//review, book chapter
+										if ($papers[$key][$key2]['DT'] == "Book" || $papers[$key][$key2]['DT'] == "Review; Book Chapter") {
+											$chaine .= '                <idno type="isbn">'.supprAmp($papers[$key][$key2]['BN']).'</idno>'."\r\n";
+											$chaine .= '                <title level="m">'.supprAmp($papers[$key][$key2]['TI']).'</title>'."\r\n";
+											$chaine .= '                <editor>'.supprAmp($papers[$key][$key2]['BE']).'</editor>'."\r\n";
+											$chaine .= '                <imprint>'."\r\n";
+											$chaine .= '                  <publisher>'.supprAmp($papers[$key][$key2]['PU']).'</publisher>'."\r\n";
+											$chaine .= '                  <pubPlace>'.supprAmp($papers[$key][$key2]['PI']).'</pubPlace>'."\r\n";
+											$chaine .= '                  <biblScope unit="serie">'.supprAmp($papers[$key][$key2]['SE']).'</biblScope>'."\r\n";
+											$chaine .= '                  <biblScope unit="volume">'.supprAmp($papers[$key][$key2]['VL']).'</biblScope>'."\r\n";
+											$chaine .= '                  <biblScope unit="issue">'.supprAmp($papers[$key][$key2]['IS']).'</biblScope>'."\r\n";
+											$chaine .= '                  <biblScope unit="pp">'.supprAmp($papers[$key][$key2]['BP']).'-'.$papers[$key][$key2]['EP'].'</biblScope>'."\r\n";
+											if (isset($papers[$key][$key2]['PY']) && $papers[$key][$key2]['PY'] != "") {
+												$chaine .= '                  <date type="datePub">'.supprAmp($papers[$key][$key2]['PY']).'</date>'."\r\n";
+											}else{
+												if (isset($papers[$key][$key2]['EY']) && $papers[$key][$key2]['EY'] != "") {
+													$chaine .= '                  <date type="datePub">'.supprAmp($papers[$key][$key2]['EY']).'</date>'."\r\n";
+												}else{
+													if (isset($papers[$key][$key2]['EA']) && $papers[$key][$key2]['EA'] != "") {
+														$chaine .= '                  <date type="datePub">'.supprAmp(substr($papers[$key][$key2]['EA'], -4)).'</date>'."\r\n";
+													}
+												}
+											}
+											$chaine .= '                </imprint>'."\r\n";
+											$typeDoc = "BOOK";
+											$typeDocp = "Book";//???
+										}
+										break;
+									case "B"://book
+									case "P"://patent > il n'y en a pas dans WoS
+										$typeDoc = "PATENT";
+										$typeDocp = "Patent";//???
+										break;
+									*/
+								}
+							}
+							$chaine .= '              </monogr>'."\r\n";
+							if (isset($papers[$key][$key2]['DOI']) && $papers[$key][$key2]['DOI'] != "")
+							{
+								$chaine .= '              <idno type="doi">'.supprAmp($papers[$key][$key2]['DOI']).'</idno>'."\r\n";
+							}
+							if (isset($papers[$key][$key2]['PMID']) && $papers[$key][$key2]['PMID'] != "")
+							{
+								$chaine .= '              <idno type="pubmed">'.supprAmp($papers[$key][$key2]['PMID']).'</idno>'."\r\n";
+							}
+							if (isset($papers[$key][$key2]['PMCID']) && $papers[$key][$key2]['PMCID'] != "")
+							{
+								$chaine .= '              <idno type="pmc">'.supprAmp($papers[$key][$key2]['PMCID']).'</idno>'."\r\n";
+							}
+							$chaine .= '            </biblStruct>'."\r\n";
+							$chaine .= '          </sourceDesc>'."\r\n";
+							$chaine .= '          <profileDesc>'."\r\n";
+							//langue
+							$chaine .= '            <langUsage>'."\r\n";
+							$codeP = strtoupper(substr(supprAmp($papers[$key][$key2]['Langue']), 0, 2));
+							if ($codeP != "EN")
+							{
+								$keyP = array_search(strtolower($codeP), $languages);
+							}else{
+								$keyP = "English";
+							}
+							$chaine .= '              <language ident="'.$lng.'">'.$keyP.'</language>'."\r\n";
+							$chaine .= '            </langUsage>'."\r\n";
+							$chaine .= '            <textClass>'."\r\n";
+							//mots-clés
+							if (isset($papers[$key][$key2]['MC']) && $papers[$key][$key2]['MC'] != "")
+							{
+								$chaine .= '             <keywords scheme="author">'."\r\n";
+								$aut = explode(";", $papers[$key][$key2]['MC']);
+								foreach ($aut as $qui) {
+									$chaine .= '              <term xml:lang="'.$lng.'">'.supprAmp(trim($qui)).'</term>'."\r\n";
+								}
+								$chaine .= '             </keywords>'."\r\n";
+							}
+							//domaine HAL
+							//$chaine .= '             <classCode scheme="halDomain" n="">'.supprAmp($papers[$key][$key2]['WC']).'</classCode>'."\r\n";
+							//Typologie
+							$chaine .= '             <classCode scheme="halTypology" n="'.$typeDoc.'">'.$typeDocp.'</classCode>'."\r\n";
+							$chaine .= '            </textClass>'."\r\n";
+							$chaine .= '            <abstract xml:lang="'.$lng.'">'.supprAmp($papers[$key][$key2]['Resume']).'</abstract>'."\r\n";
+							$chaine .= '          </profileDesc>'."\r\n";
+							$chaine .= '        </biblFull>'."\r\n";
+							$chaine .= '      </listBibl>'."\r\n";
+							$chaine .= '    </body>'."\r\n";
+							if (count($strTab) > 0) {//Existence of one or more affiliation(s)
+								$chaine .= '      <back>'."\r\n";
+								$chaine .= '        <listOrg type="structures">'."\r\n";
+								$indT = 1;
+								foreach ($strTab as $labElt) {
+									$eltTab = explode("~|~", $labElt);
+									$chaine .= '          <org type="'.$eltTab[3].'" xml:id="localStruct-Aff'.$indT.'">'."\r\n";
+									$orgName = $eltTab[2];
+									$orgName = str_replace(array("UR1", " UR1"), "", $orgName);
+									if ($eltTab[3] == "institution") {//abbreviation between crochet
+										if (strpos($orgName, "CHU") !== false) {
+											$nameTab = explode(",", $orgName);
+											$ville = $nameTab[count($nameTab)-2];
+											$ville = str_ireplace(" cedex", "", $ville);
+											$villeTab = explode(" ", $ville);
+											$orgName = "CHU ".$villeTab[count($villeTab)-1];
+										}
+										$nameTab = explode(",", $orgName);
+										$orgName = "";
+										$oN = 0;
+										$iName = 0;
+										foreach ($nameTab as $name) {
+											if ($iName != count($nameTab)-2) {//do not insert the penultimate term = address
+												if ($name == "Universite CHU") {
+													$ville = $nameTab[count($nameTab)-2];
+													$ville = str_ireplace(" cedex", "", $ville);
+													$villeTab = explode(" ", $ville);
+													$name = $name.' '.$villeTab[count($villeTab)-1];
+												}
+												if ($oN == 0) {
+													$oN = 1;
+												}else{
+													$orgName .= ", ";
+												}
+												$eltNameTab = explode(" ", trim($name));
+												$oNE = 0;
+												foreach ($eltNameTab as $elt) {
+													if ($oNE == 0) {
+														$oNE = 1;
+													}else{
+														$orgName .= " ";
+													}
+													if (ctype_upper(trim($elt)) && !is_numeric(trim($elt)) && strlen(trim($elt)) > 3 && trim($elt) != "CNRS" && trim($elt) != "INSERM" && trim($elt) != "INRA" && trim($elt) != "INRIA" && trim($elt) != "IRSTEA") {
+													//if (ctype_upper(trim($elt)) && strlen(trim($elt)) > 3 && trim($elt) != "CNRS" && trim($elt) != "INSERM" && trim($elt) != "INRA" && trim($elt) != "INRIA" && trim($elt) != "IRSTEA") {
+													//if (ctype_upper(trim($elt)) && strlen(trim($elt)) > 3) {
+														$orgName .= "[".trim($elt)."]";
+													}else{
+														$orgName .= "".trim($elt);
+													}
+												}
+											}
+											$iName += 1;
+										}
+									}
+									//suppression/remplacement divers
+									$orgName = str_replace(array("(", ")"), "", $orgName);
+									$orgName = str_replace("/", " ", $orgName);
+									//test présence 'Department' ou 'Service d' pour suppression
+									$orgTab = explode(", ", $orgName);
+									if (stripos($orgTab[0], "Department") !== false || stripos($orgTab[0], "Service d") !== false) {
+										$orgTab[0] = "";
+										$orgName = "";
+										for($dpt = 0; $dpt < count($orgTab); $dpt++) {
+											if ($orgTab[$dpt] != "") {$orgName .= $orgTab[$dpt]. ", ";}
+										}
+										$orgName = substr($orgName, 0, (strlen($orgName) - 2));
+									}
+									$chaine .= '            <orgName>'.$orgName.'</orgName>'."\r\n";
+									$pays = str_replace(".", "", strtoupper($eltTab[4]));
+									if ($pays != "")
+									{
+										$keyP = array_search($pays, $countries, true); 
+										$chaine .= '            <desc>'."\r\n";
+										$chaine .= '              <address>'."\r\n";
+										$chaine .= '                <country key="'.$keyP.'"></country>'."\r\n";
+										$chaine .= '              </address>'."\r\n";
+										$chaine .= '            </desc>'."\r\n";
+									}
+									$chaine .= '          </org>'."\r\n";
+									$indT++;
+								}
+								$chaine .= '        </listOrg>'."\r\n";
+								$chaine .= '      </back>'."\r\n";
+							}
+							$chaine .= '  </text>'."\r\n";
+							$chaine .= '</TEI>';
+							fwrite($inF,$chaine);
+							fclose($inF);
+							$zip->addFile($Fnm);
+							$zip->close();
+							unlink($Fnm);
+						}
+						break;
+						
+					case "pubmed_fcgi":
+						$aut = $papers[$key][$key2]['tabAut'];
+						$autTab = explode("~",$aut);
+						if (count($autTab) < $limNbAut)
+						{
+							//affiliation
+							$autTab = array();
+							$labTab = array();
+							$autInd = 0;
+							$docid = 0;
+							$label = "";
+							$code = "";
+							$cuHAL = "";
+							$type = "";
+							$pays = "";
+							$quoi = $papers[$key][$key2]['tabAff'];
+							$quoi = trimUltime($quoi);
+							$validHAL = "";//to privilegy the search by the unit code number rather than acronym
+							//echo "<br>".$j." - ".$quoi."<br>";
+							$diffQuoi = explode("; [", $quoi);
+							//var_dump($diffQuoi);
+							for ($d = 0; $d < count($diffQuoi); $d++)
+							{
+								$urlHAL = "";
+								$docid = 0;
+								$label = "";
+								$code = "";
+								$cuHAL = "";
+								$type = "";
+								$pays = "";
+								//Search for distinctive acronyms
+								//echo $diffQuoi[$d].'<br>';
+								searchAcro($diffQuoi[$d], $cuHAL, $urlHAL, $validHAL, $retTest);
+								//echo $urlHAL.'<br>';
+								if ($urlHAL != "")//affiliation with code unit or acronym found
+								{
+									//echo $diffQuoi[$d].'<br>';
+									idaureHal($urlHAL, $cuHAL, $docid, $label, $code, $type);
+								}
+								//echo $docid.' - '.$urlHAL.'<br>';
+								if($docid != 0)
+								{
+									affilId($diffQuoi[$d], $docid, $label, $code, $type, $pays, $validHAL);//Assigning idAffil to authors
+									while ($retTest != "") {
+										$aTester = $retTest;
+										$autInd = 0;
+										$urlHAL = "";
+										$docid = 0;
+										$label = "";
+										$code = "";
+										$cuHAL = "";
+										$type = "";
+										$pays = "";
+										//Search for distinctive acronyms
+										//echo 'toto : '.$aTester.'<br>';
+										searchAcro($aTester, $cuHAL, $urlHAL, $validHAL, $retTest);
+										//echo 'titi : '.$urlHAL.'<br>';
+										if ($urlHAL != "")//affiliation with code unit or acronym found
+										{
+											idaureHal($urlHAL, $cuHAL, $docid, $label, $code, $type);
+										}
+										//echo $urlHAL.' - '.$docid.'<br>';
+										if($docid != 0)
+										{
+											affilId($aTester, $docid, $label, $code, $type, $pays, $validHAL);
+										}
+									}
+								}else{//no specific affiliation found > we store whole results
+									//echo $diffQuoi[$d].'<br>';
+									$validHAL = "--";
+									$eltTab = explode("] ",$diffQuoi[$d]);
+									include './OverHAL_affiliation_termes.php';
+									if (isset($eltTab[1])) {$label = supprAmp(trim($eltTab[1]));}
+									//$label = str_ireplace($search, $replace, $label);
+									//echo $label.'<br>';
+									$queTab = explode(",", $label);
+									$quePay = count($queTab) - 1;
+									$labFin = "";
+									$iq = 0;
+									foreach($queTab as $elt)
+									{
+										$elt = trim($elt);
+										if ($iq > 0) {$labFin .= ", ";}
+										$labFin .= $elt;
+										$iq++;
+									}
+									//$docid = 999999;
+									$docid = $labFin;
+									$code = $labFin;
+									$type = 'institution';
+									affilId($diffQuoi[$d], $docid, $label, $code, $type, $pays, $validHAL);
+								}
+							}
+							//var_dump($autTab);
+							//var_dump($labTab);
+							$strTab = array();
+							$pmid = supprAmp($papers[$key][$key2]['Pubmed']);//PMID
+							mb_internal_encoding('UTF-8');
+							$zip = new ZipArchive();
+							$FnmZ = "./HAL/OverHAL_pubmed_fcgi.zip";
+							if ($zip->open($FnmZ, ZipArchive::CREATE)!==TRUE) {
+								exit("Impossible d'ouvrir le fichier <$FnmZ>\n");
+							}
+							$Fnm = "./HAL/OverHAL_pubmed_fcgi_".$pmid.".xml";
+							$inF = fopen($Fnm,"a+");
+							fseek($inF, 0);
+							//$chaine = "\xEF\xBB\xBF";//UTF-8
+							$chaine = "";//ANSI
+							$chaine .= '<?xml version="1.0" encoding="UTF-8"?>'."\r\n";
+							$chaine .= '<TEI xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.tei-c.org/ns/1.0" xmlns:hal="http://hal.archives-ouvertes.fr/" xsi:schemaLocation="http://www.tei-c.org/ns/1.0 http://api.archives-ouvertes.fr/documents/aofr-sword.xsd">'."\r\n";
+							$chaine .= '  <text>'."\r\n".
+												 '    <body>'."\r\n".
+												 '      <listBibl>'."\r\n".
+												 '        <biblFull>'."\r\n";
+							//if DOI exists searching an OA PDF file
+							if (isset($papers[$key][$key2]['DOI']) && $papers[$key][$key2]['DOI'] != "")
+							{
+								$urlT = "https://api.oadoi.org/v2/".$papers[$key][$key2]['DOI'];
+								$volT = $papers[$key][$key2]['Volume'];
+								$issT = $papers[$key][$key2]['Numero'];
+								$pagT = $papers[$key][$key2]['Pagination'];
+								$datT = $papers[$key][$key2]['aPub'];
+								$pdfCR = "";//Eventual URL PDF file found with crossRef via CrosHAL.php > null here
+
+								testOALic($urlT, $volT, $issT, $pagT, $datT, $pdfCR, $evd, $titLic, $typLic, $compNC, $compND, $compSA, $urlPDF);
+
+								if ($urlPDF != "")//an OA PDF file has benn found
+								{
+									$urlPDF = htmlspecialchars($urlPDF);
+									$chaine .= '          <editionStmt>'."\r\n".
+														 '            <edition>'."\r\n".
+														 '              <ref type="file" subtype="'.$evd.'" n="1" target="'.$urlPDF.'"></ref>'."\r\n".
+														 '            </edition>'."\r\n".
+														 '          </editionStmt>'."\r\n";
+									$avail = 'http://creativecommons.org/licenses/by';
+									if ($compNC != "") {$avail .= '-nc';}
+									if ($compND != "") {$avail .= '-nd';}
+									if ($compSA != "") {$avail .= '-sa';}
+									$avail .= '/';
+									$chaine .= '          <publicationStmt>'."\r\n".
+														 '            <availability>'."\r\n".
+														 '              <licence target="'.$avail.'"/>'."\r\n".
+														 '            </availability>'."\r\n".
+														 '          </publicationStmt>'."\r\n";
+								}
+							}
+							$chaine .= '          <seriesStmt>'."\r\n".
+												 '          </seriesStmt>'."\r\n".
+												 '          <notesStmt>'."\r\n".
+							//Audience
+							$aud = "";
+							if (isset($papers[$key][$key2]['langue']))
+							{
+								if ($papers[$key][$key2]['langue'] == "eng") {
+									$chaine .= '          	<note type="audience" n="2"/>'."\r\n";
+								}else{
+									$chaine .= '          	<note type="audience" n="3"/>'."\r\n";
+								}
+							}
+							$chaine .= '						<note type="popular" n="0">No</note>'."\r\n";
+							$chaine .= '						<note type="peer" n="1">Yes</note>'."\r\n";
+							$chaine .= '          </notesStmt>'."\r\n".
+												 '          <sourceDesc>'."\r\n".
+												 '            <biblStruct>'."\r\n".
+												 '              <analytic>'."\r\n";
+							$lng = "";
+							//langue + titre
+							if (isset($papers[$key][$key2]['langue']))
+							{
+								if ($papers[$key][$key2]['langue'] == "fre") {$lng = "fr";}
+								if ($papers[$key][$key2]['langue'] == "eng") {$lng = "en";}
+							}
+							$chaine .= '                <title xml:lang="'.$lng.'">'.supprAmp($papers[$key][$key2]['titPub']).'</title>'."\r\n";
+							//auteurs
+							$aut = explode("; ", $papers[$key][$key2]['tabAut']);
+							$iTp = 0;
+							foreach ($aut as $qui) {
+								$quiTab = explode(" ", $qui);
+								if (isset($quiTab[1]))//in case of no comma for one author
+								{
+									$prenom = supprAmp(trim($quiTab[1]));
+								}else{
+									$prenom = " ";
+								}
+								$nom = supprAmp(trim($quiTab[0]));
+								$nompre = $nom ." ".$prenom;
+								if ($prenom != "") {
+									$chaine .= '                <author role="aut">'."\r\n";
+									$chaine .= '                  <persName>'."\r\n";
+									$chaine .= '                    <forename type="first">'.$prenom.'</forename>'."\r\n";
+									$chaine .= '                    <surname>'.$nom.'</surname>'."\r\n";
+									$chaine .= '                  </persName>'."\r\n";
+									$kT = array_search($nompre, $autTab);
+									//echo $kT." - ".$nom."<br>";
+									
+									
+									//var_dump($autTab);
+									if ($kT !== FALSE) {
+										foreach ($labTab[$nompre] as $lab) {
+											//$str = array_search($labTab[$nompre][$kT], $strTab);
+											$str = array_search($lab, $strTab);
+											if ($str === FALSE) {
+												$iTp += 1;
+												$kTp = $iTp;
+												array_push($strTab, $lab);
+											}else{
+												$kTp = $str + 1;
+											}
+											$chaine .= '                  <affiliation ref="#localStruct-Aff'.$kTp.'"/>'."\r\n";
+											//echo $kTp." - ".$nom." - ".$labTab[$kT]."<br>";
+										}
+									}
+									$chaine .= '                </author>'."\r\n";
+								}
+							}
+							//var_dump($strTab);
+							$chaine .= '              </analytic>'."\r\n";
+							//journal
+							$chaine .= '              <monogr>'."\r\n";
+							//ISSN
+							$chaine .= '                <idno type="issn">'.supprAmp($papers[$key][$key2]['ISSN']).'</idno>'."\r\n";
+
+							if (isset($papers[$key][$key2]['Type']))
+							{
+								$typDef = "";
+								$typDoc = "";
+								$typDocp = "";
+								$type = $papers[$key][$key2]['Type'];
+								//if (strpos($type, "Journal Article") !== false) {$typeDef = "Journal Article";}
+								$typeDef = "Journal Article";
+								switch($typeDef)
+								{
+									case "Journal Article"://article
+									case "Editorial"://???
+									case "Case Reports"://???
+										$chaine .= '                <title level="j">'.supprAmp(minRev($papers[$key][$key2]['titRev'])).'</title>'."\r\n";
+										$chaine .= '                <imprint>'."\r\n";
+										$chaine .= '                  <biblScope unit="volume">'.supprAmp($papers[$key][$key2]['Volume']).'</biblScope>'."\r\n";
+										$chaine .= '                  <biblScope unit="issue">'.supprAmp($papers[$key][$key2]['Numero']).'</biblScope>'."\r\n";
+										$chaine .= '                  <biblScope unit="pp">'.supprAmp($papers[$key][$key2]['Pagination']).'</biblScope>'."\r\n";
+										$chaine .= '                  <date type="datePub">'.supprAmp($papers[$key][$key2]['aPub']).'</date>'."\r\n";
+										//$chaine .= '                  <date type="dateEpub">'.supprAmp($papers[$key][$key2]['aMel']).'</date>'."\r\n";
+										$chaine .= '                </imprint>'."\r\n";
+										$typeDoc = "ART";
+										$typeDocp = "Journal articles";
+										break;
+								}
+							}
+							$chaine .= '              </monogr>'."\r\n";
+							if (isset($papers[$key][$key2]['DOI']) && $papers[$key][$key2]['DOI'] != "")
+							{
+								$chaine .= '              <idno type="doi">'.supprAmp($papers[$key][$key2]['DOI']).'</idno>'."\r\n";
+							}
+							if (isset($papers[$key][$key2]['Pubmed']) && $papers[$key][$key2]['Pubmed'] != "")
+							{
+								$chaine .= '              <idno type="pubmed">'.supprAmp($papers[$key][$key2]['Pubmed']).'</idno>'."\r\n";
+							}
+							$chaine .= '            </biblStruct>'."\r\n";
+							$chaine .= '          </sourceDesc>'."\r\n";
+							$chaine .= '          <profileDesc>'."\r\n";
+							//langue
+							$chaine .= '            <langUsage>'."\r\n";
+							$codeP = strtoupper(substr(supprAmp($papers[$key][$key2]['langue']), 0, 2));
+							if ($codeP != "EN")
+							{
+								array_search(strtolower($codeP), $languages);
+							}else{
+								$keyP = "English";
+							}
+							$chaine .= '              <language ident="'.$lng.'">'.$keyP.'</language>'."\r\n";
+							$chaine .= '            </langUsage>'."\r\n";
+							$chaine .= '            <textClass>'."\r\n";
+							/*
+							//mots-clés
+							if (isset($papers[$key][$key2]['MC']) && $papers[$key][$key2]['MC'] != "")
+							{
+								$chaine .= '             <keywords scheme="author">'."\r\n";
+								$aut = explode(";", $papers[$key][$key2]['MC']);
+								foreach ($aut as $qui) {
+									$chaine .= '              <term xml:lang="'.$lng.'">'.supprAmp(trim($qui)).'</term>'."\r\n";
+								}
+								$chaine .= '             </keywords>'."\r\n";
+							}
+							*/
+							//domaine HAL
+							//$chaine .= '             <classCode scheme="halDomain" n="">'.supprAmp($papers[$key][$key2]['WC']).'</classCode>'."\r\n";
+							//Typologie
+							$chaine .= '             <classCode scheme="halTypology" n="'.$typeDoc.'">'.$typeDocp.'</classCode>'."\r\n";
+							$chaine .= '            </textClass>'."\r\n";
+							$chaine .= '            <abstract xml:lang="'.$lng.'">'.supprAmp($papers[$key][$key2]['resume']).'</abstract>'."\r\n";
+							$chaine .= '          </profileDesc>'."\r\n";
+							$chaine .= '        </biblFull>'."\r\n";
+							$chaine .= '      </listBibl>'."\r\n";
+							$chaine .= '    </body>'."\r\n";
+							if (count($strTab) > 0) {//Existence of one or more affiliation(s)
+								$chaine .= '      <back>'."\r\n";
+								$chaine .= '        <listOrg type="structures">'."\r\n";
+								$indT = 1;
+								foreach ($strTab as $labElt) {
+									$eltTab = explode("~|~", $labElt);
+									$chaine .= '          <org type="'.$eltTab[3].'" xml:id="localStruct-Aff'.$indT.'">'."\r\n";
+									$orgName = $eltTab[2];
+									$orgName = str_replace(array("UR1", " UR1"), "", $orgName);
+									if ($eltTab[3] == "institution") {//abbreviation between crochet
+										if (strpos($orgName, "CHU") !== false) {
+											$nameTab = explode(",", $orgName);
+											$ville = $nameTab[count($nameTab)-2];
+											$ville = str_ireplace(" cedex", "", $ville);
+											$villeTab = explode(" ", $ville);
+											$orgName = "CHU ".$villeTab[count($villeTab)-1];
+										}
+										$nameTab = explode(",", $orgName);
+										$orgName = "";
+										$oN = 0;
+										$iName = 0;
+										foreach ($nameTab as $name) {
+											if ($iName != count($nameTab)-2) {//do not insert the penultimate term = address
+												if ($name == "Universite CHU") {
+													$ville = $nameTab[count($nameTab)-2];
+													$ville = str_ireplace(" cedex", "", $ville);
+													$villeTab = explode(" ", $ville);
+													$name = $name.' '.$villeTab[count($villeTab)-1];
+												}
+												if ($oN == 0) {
+													$oN = 1;
+												}else{
+													$orgName .= ", ";
+												}
+												$eltNameTab = explode(" ", trim($name));
+												$oNE = 0;
+												foreach ($eltNameTab as $elt) {
+													if ($oNE == 0) {
+														$oNE = 1;
+													}else{
+														$orgName .= " ";
+													}
+													if (ctype_upper(trim($elt)) && !is_numeric(trim($elt)) && strlen(trim($elt)) > 3 && trim($elt) != "CNRS" && trim($elt) != "INSERM" && trim($elt) != "INRA" && trim($elt) != "INRIA" && trim($elt) != "IRSTEA") {
+													//if (ctype_upper(trim($elt)) && strlen(trim($elt)) > 3 && trim($elt) != "CNRS" && trim($elt) != "INSERM" && trim($elt) != "INRA" && trim($elt) != "INRIA" && trim($elt) != "IRSTEA") {
+													//if (ctype_upper(trim($elt)) && strlen(trim($elt)) > 3) {
+														$orgName .= "[".trim($elt)."]";
+													}else{
+														$orgName .= "".trim($elt);
+													}
+												}
+											}
+											$iName += 1;
+										}
+									}
+									//suppression/remplacement divers
+									$orgName = str_replace(array("(", ")"), "", $orgName);
+									$orgName = str_replace("/", " ", $orgName);
+									//test présence 'Department' ou 'Service d' pour suppression
+									$orgTab = explode(", ", $orgName);
+									if (stripos($orgTab[0], "Department") !== false || stripos($orgTab[0], "Service d") !== false) {
+										$orgTab[0] = "";
+										$orgName = "";
+										for($dpt = 0; $dpt < count($orgTab); $dpt++) {
+											if ($orgTab[$dpt] != "") {$orgName .= $orgTab[$dpt]. ", ";}
+										}
+										$orgName = substr($orgName, 0, (strlen($orgName) - 2));
+									}
+									$chaine .= '            <orgName>'.$orgName.'</orgName>'."\r\n";
+									$pays = str_replace(".", "", strtoupper($eltTab[4]));
+									if ($pays != "")
+									{
+										$keyP = array_search($pays, $countries, true); 
+										$chaine .= '            <desc>'."\r\n";
+										$chaine .= '              <address>'."\r\n";
+										$chaine .= '                <country key="'.$keyP.'"></country>'."\r\n";
+										$chaine .= '              </address>'."\r\n";
+										$chaine .= '            </desc>'."\r\n";
+									}
+									$chaine .= '          </org>'."\r\n";
+									$indT++;
+								}
+								$chaine .= '        </listOrg>'."\r\n";
+								$chaine .= '      </back>'."\r\n";
+							}
+							$chaine .= '  </text>'."\r\n";
+							$chaine .= '</TEI>';
+							fwrite($inF,$chaine);
+							fclose($inF);
+							$zip->addFile($Fnm);
+							$zip->close();
+							unlink($Fnm);
+						}
+						break;		
+						
+					case "dimensions":
+						$aut = $papers[$key][$key2]['Authors'];
+						$autTab = explode("; ",$aut);
+						if (count($autTab) < $limNbAut)
+						{
+							//affiliation
+							$autTab = array();
+							$labTab = array();
+							$autInd = 0;
+							$docid = 0;
+							$label = "";
+							$code = "";
+							$cuHAL = "";
+							$type = "";
+							$pays = "";
+							$quoi = $papers[$key][$key2]['Authors Affiliations'];
+							$quoi = trimUltime($quoi);
+							$validHAL = "";//to privilegy the search by the unit code number rather than acronym
+							//echo "<br>".$j." - ".$quoi."<br>";
+							$diffQuoi = explode("); ", $quoi);
+							//Mise en forme > Nom, prenom ] + affiliations séparées par des ','
+							$indQ = 0;
+							foreach ($diffQuoi as $dQ) {
+								$dQTab = explode(" (", $dQ);
+								$pnQTab = explode(" ", $dQTab[0]);
+								$diffQuoi[$indQ] = $pnQTab[1].", ".$pnQTab[0]."] ".str_replace(array("; "," ; "), ", ",$dQTab[1]);
+								$indQ++;
+							}
+							//var_dump($diffQuoi);            
+							for ($d = 0; $d < count($diffQuoi); $d++)
+							{
+								$urlHAL = "";
+								$docid = 0;
+								$label = "";
+								$code = "";
+								$cuHAL = "";
+								$type = "";
+								$pays = "";
+								//Search for distinctive acronyms
+								//echo $diffQuoi[$d].'<br>';
+								searchAcro($diffQuoi[$d], $cuHAL, $urlHAL, $validHAL, $retTest);
+								//echo $urlHAL.'<br>';
+								if ($urlHAL != "")//affiliation with code unit or acronym found
+								{
+									//echo $diffQuoi[$d].'<br>';
+									idaureHal($urlHAL, $cuHAL, $docid, $label, $code, $type);
+								}
+								//echo $docid.' - '.$urlHAL.'<br>';
+								if($docid != 0)
+								{
+									affilId($diffQuoi[$d], $docid, $label, $code, $type, $pays, $validHAL);//Assigning idAffil to authors
+									while ($retTest != "") {
+										$aTester = $retTest;
+										$autInd = 0;
+										$urlHAL = "";
+										$docid = 0;
+										$label = "";
+										$code = "";
+										$cuHAL = "";
+										$type = "";
+										$pays = "";
+										//Search for distinctive acronyms
+										//echo 'toto : '.$aTester.'<br>';
+										searchAcro($aTester, $cuHAL, $urlHAL, $validHAL, $retTest);
+										//echo 'titi : '.$urlHAL.'<br>';
+										if ($urlHAL != "")//affiliation with code unit or acronym found
+										{
+											idaureHal($urlHAL, $cuHAL, $docid, $label, $code, $type);
+										}
+										//echo $urlHAL.' - '.$docid.'<br>';
+										if($docid != 0)
+										{
+											affilId($aTester, $docid, $label, $code, $type, $pays, $validHAL);
+										}
+									}
+								}else{//no specific affiliation found > we store whole results
+									//echo $diffQuoi[$d].'<br>';
+									$validHAL = "--";
+									$eltTab = explode("] ",$diffQuoi[$d]);
+									include './OverHAL_affiliation_termes.php';
+									if (isset($eltTab[1])) {$label = supprAmp(trim($eltTab[1]));}
+									//$label = str_ireplace($search, $replace, $label);
+									//echo $label.'<br>';
+									$queTab = explode(", ", $label);
+									$quePay = count($queTab) - 1;
+									$labFin = "";
+									$iq = 0;
+									foreach($queTab as $elt)
+									{
+										$elt = trim($elt);
+										if ($iq > 0) {$labFin .= ", ";}
+										$labFin .= $elt;
+										$iq++;
+									}
+									//$docid = 999999;
+									$docid = $labFin;
+									$code = $labFin;
+									$type = 'institution';
+									affilId($diffQuoi[$d], $docid, $label, $code, $type, $pays, $validHAL);
+								}
+							}
+							//var_dump($autTab);
+							//var_dump($labTab);
+							$strTab = array();
+							$ddn = supprAmp($papers[$key][$key2]['Publication ID']);//Publication ID
+							mb_internal_encoding('UTF-8');
+							$zip = new ZipArchive();
+							$FnmZ = "./HAL/OverHAL_dimensions.zip";
+							if ($zip->open($FnmZ, ZipArchive::CREATE)!==TRUE) {
+								exit("Impossible d'ouvrir le fichier <$FnmZ>\n");
+							}
+							$Fnm = "./HAL/OverHAL_dimensions_".$ddn.".xml";
+							$inF = fopen($Fnm,"a+");
+							fseek($inF, 0);
+							//$chaine = "\xEF\xBB\xBF";//UTF-8
+							$chaine = "";//ANSI
+							$chaine .= '<?xml version="1.0" encoding="UTF-8"?>'."\r\n";
+							$chaine .= '<TEI xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.tei-c.org/ns/1.0" xmlns:hal="http://hal.archives-ouvertes.fr/" xsi:schemaLocation="http://www.tei-c.org/ns/1.0 http://api.archives-ouvertes.fr/documents/aofr-sword.xsd">'."\r\n";
+							$chaine .= '  <text>'."\r\n".
+												 '    <body>'."\r\n".
+												 '      <listBibl>'."\r\n".
+												 '        <biblFull>'."\r\n";
+							//if DOI exists searching an OA PDF file
+							if (isset($papers[$key][$key2]['DOI']) && $papers[$key][$key2]['DOI'] != "")
+							{
+								$urlT = "https://api.oadoi.org/v2/".$papers[$key][$key2]['DOI'];
+								$volT = $papers[$key][$key2]['Volume'];
+								$issT = $papers[$key][$key2]['Issue'];
+								$pagT = $papers[$key][$key2]['Pagination'];
+								$datT = $papers[$key][$key2]['PubYear'];
+								$pdfCR = "";//Eventual URL PDF file found with crossRef via CrosHAL.php > null here
+
+								testOALic($urlT, $volT, $issT, $pagT, $datT, $pdfCR, $evd, $titLic, $typLic, $compNC, $compND, $compSA, $urlPDF);
+
+								if ($urlPDF != "")//an OA PDF file has benn found
+								{
+									$urlPDF = htmlspecialchars($urlPDF);
+									$chaine .= '          <editionStmt>'."\r\n".
+														 '            <edition>'."\r\n".
+														 '              <ref type="file" subtype="'.$evd.'" n="1" target="'.$urlPDF.'"></ref>'."\r\n".
+														 '            </edition>'."\r\n".
+														 '          </editionStmt>'."\r\n";
+									$avail = 'http://creativecommons.org/licenses/by';
+									if ($compNC != "") {$avail .= '-nc';}
+									if ($compND != "") {$avail .= '-nd';}
+									if ($compSA != "") {$avail .= '-sa';}
+									$avail .= '/';
+									$chaine .= '          <publicationStmt>'."\r\n".
+														 '            <availability>'."\r\n".
+														 '              <licence target="'.$avail.'"/>'."\r\n".
+														 '            </availability>'."\r\n".
+														 '          </publicationStmt>'."\r\n";
+								}
+							}
+							$chaine .= '          <seriesStmt>'."\r\n".
+												 '          </seriesStmt>'."\r\n".
+												 '          <notesStmt>'."\r\n".
+												 '						<note type="popular" n="0">No</note>'."\r\n".
+													'						<note type="peer" n="1">Yes</note>'."\r\n".
+												 '          </notesStmt>'."\r\n".
+												 '          <sourceDesc>'."\r\n".
+												 '            <biblStruct>'."\r\n".
+												 '              <analytic>'."\r\n";
+							$lng = "";
+							//langue + titre
+							$lng = "en";
+							$chaine .= '                <title xml:lang="'.$lng.'">'.supprAmp($papers[$key][$key2]['Title']).'</title>'."\r\n";
+							//auteurs
+							$aut = explode("; ", $papers[$key][$key2]['Authors']);
+							$iTp = 0;
+							foreach ($aut as $qui) {
+								$quiTab = explode(" ", $qui);
+								if (isset($quiTab[0]))//in case of no comma for one author
+								{
+									$prenom = supprAmp(trim($quiTab[0]));
+								}else{
+									$prenom = " ";
+								}
+								$nom = supprAmp(trim($quiTab[1]));
+								$nompre = $nom .", ".$prenom;
+								if ($prenom != "") {
+									$chaine .= '                <author role="aut">'."\r\n";
+									$chaine .= '                  <persName>'."\r\n";
+									$chaine .= '                    <forename type="first">'.$prenom.'</forename>'."\r\n";
+									$chaine .= '                    <surname>'.$nom.'</surname>'."\r\n";
+									$chaine .= '                  </persName>'."\r\n";
+									$kT = array_search($nompre, $autTab);
+									//echo $kT." - ".$nom."<br>";
+									//var_dump($labTab);
+									if ($kT !== FALSE) {
+										foreach ($labTab[$nompre] as $lab) {
+											//$str = array_search($labTab[$nompre][$kT], $strTab);
+											$str = array_search($lab, $strTab);
+											if ($str === FALSE) {
+												$iTp += 1;
+												$kTp = $iTp;
+												array_push($strTab, $lab);
+											}else{
+												$kTp = $str + 1;
+											}
+											$chaine .= '                  <affiliation ref="#localStruct-Aff'.$kTp.'"/>'."\r\n";
+											//echo $kTp." - ".$nom." - ".$labTab[$kT]."<br>";
+										}
+									}
+									$chaine .= '                </author>'."\r\n";
+								}
+							}
+							//var_dump($strTab);
+							$chaine .= '              </analytic>'."\r\n";
+							//journal
+							$chaine .= '              <monogr>'."\r\n";
+							if (isset($papers[$key][$key2]['Publication Type']))
+							{
+								$typDoc = "";
+								$typDocp = "";
+								$type = $papers[$key][$key2]['Publication Type'];
+								switch($type)
+								{
+									case "article"://article
+										$chaine .= '                <title level="j">'.supprAmp(minRev($papers[$key][$key2]['Source title'])).'</title>'."\r\n";
+										$chaine .= '                <imprint>'."\r\n";
+										$chaine .= '                  <biblScope unit="volume">'.supprAmp($papers[$key][$key2]['Volume']).'</biblScope>'."\r\n";
+										$chaine .= '                  <biblScope unit="issue">'.supprAmp($papers[$key][$key2]['Issue']).'</biblScope>'."\r\n";
+										$chaine .= '                  <biblScope unit="pp">'.supprAmp($papers[$key][$key2]['Pagination']).'</biblScope>'."\r\n";
+										$chaine .= '                  <date type="datePub">'.supprAmp($papers[$key][$key2]['PubYear']).'</date>'."\r\n";
+										$chaine .= '                </imprint>'."\r\n";
+										$typeDoc = "ART";
+										$typeDocp = "Journal articles";
+										break;
+									/*  
+									case "proceeding":
+										//inproceedings
+										$chaine .= '                <title level="j">'.supprAmp($papers[$key][$key2]['Source title']).'</title>'."\r\n";
 										$chaine .= '                <title level="m">'.supprAmp($papers[$key][$key2]['CT']).'</title>'."\r\n";
 										$chaine .= '                <meeting>'."\r\n";
 										$chaine .= '                  <title>'.supprAmp($papers[$key][$key2]['CT']).'</title>'."\r\n";
@@ -4641,1085 +5590,192 @@ foreach ($souBib as $key => $subTab)
 										$chaine .= '                <imprint>'."\r\n";
 										$chaine .= '                  <publisher>'.supprAmp($papers[$key][$key2]['PU']).'</publisher>'."\r\n";
 										if (isset($papers[$key][$key2]['PY']) && $papers[$key][$key2]['PY'] != "") {
-											$chaine .= '                  <date type="datePub">'.supprAmp($papers[$key][$key2]['PY']).'</date>'."\r\n";
-										}else{
-											if (isset($papers[$key][$key2]['EY']) && $papers[$key][$key2]['EY'] != "") {
-												$chaine .= '                  <date type="datePub">'.supprAmp($papers[$key][$key2]['EY']).'</date>'."\r\n";
+												$chaine .= '                  <date type="datePub">'.supprAmp($papers[$key][$key2]['PY']).'</date>'."\r\n";
 											}else{
-												if (isset($papers[$key][$key2]['EA']) && $papers[$key][$key2]['EA'] != "") {
-													$chaine .= '                  <date type="datePub">'.supprAmp(substr($papers[$key][$key2]['EA'], -4)).'</date>'."\r\n";
+												if (isset($papers[$key][$key2]['EY']) && $papers[$key][$key2]['EY'] != "") {
+													$chaine .= '                  <date type="datePub">'.supprAmp($papers[$key][$key2]['EY']).'</date>'."\r\n";
+												}else{
+													if (isset($papers[$key][$key2]['EA']) && $papers[$key][$key2]['EA'] != "") {
+														$chaine .= '                  <date type="datePub">'.supprAmp(substr($papers[$key][$key2]['EA'], -4)).'</date>'."\r\n";
+													}
 												}
 											}
-										}
 										$chaine .= '                </imprint>'."\r\n";
 										$typeDoc = "COMM";
 										$typeDocp = "Conference papers";
-									}
-									//review, book chapter
-									if ($papers[$key][$key2]['DT'] == "Book" || $papers[$key][$key2]['DT'] == "Review; Book Chapter") {
-										$chaine .= '                <idno type="isbn">'.supprAmp($papers[$key][$key2]['BN']).'</idno>'."\r\n";
-										$chaine .= '                <title level="m">'.supprAmp($papers[$key][$key2]['TI']).'</title>'."\r\n";
-										$chaine .= '                <editor>'.supprAmp($papers[$key][$key2]['BE']).'</editor>'."\r\n";
-										$chaine .= '                <imprint>'."\r\n";
-										$chaine .= '                  <publisher>'.supprAmp($papers[$key][$key2]['PU']).'</publisher>'."\r\n";
-										$chaine .= '                  <pubPlace>'.supprAmp($papers[$key][$key2]['PI']).'</pubPlace>'."\r\n";
-										$chaine .= '                  <biblScope unit="serie">'.supprAmp($papers[$key][$key2]['SE']).'</biblScope>'."\r\n";
-										$chaine .= '                  <biblScope unit="volume">'.supprAmp($papers[$key][$key2]['VL']).'</biblScope>'."\r\n";
-										$chaine .= '                  <biblScope unit="issue">'.supprAmp($papers[$key][$key2]['IS']).'</biblScope>'."\r\n";
-										$chaine .= '                  <biblScope unit="pp">'.supprAmp($papers[$key][$key2]['BP']).'-'.$papers[$key][$key2]['EP'].'</biblScope>'."\r\n";
-										if (isset($papers[$key][$key2]['PY']) && $papers[$key][$key2]['PY'] != "") {
-											$chaine .= '                  <date type="datePub">'.supprAmp($papers[$key][$key2]['PY']).'</date>'."\r\n";
-										}else{
-											if (isset($papers[$key][$key2]['EY']) && $papers[$key][$key2]['EY'] != "") {
-												$chaine .= '                  <date type="datePub">'.supprAmp($papers[$key][$key2]['EY']).'</date>'."\r\n";
+									case "chapter":
+										//review, book chapter
+										if ($papers[$key][$key2]['DT'] == "Book" || $papers[$key][$key2]['DT'] == "Review; Book Chapter") {
+											$chaine .= '                <idno type="isbn">'.supprAmp($papers[$key][$key2]['BN']).'</idno>'."\r\n";
+											$chaine .= '                <title level="m">'.supprAmp($papers[$key][$key2]['TI']).'</title>'."\r\n";
+											$chaine .= '                <editor>'.supprAmp($papers[$key][$key2]['BE']).'</editor>'."\r\n";
+											$chaine .= '                <imprint>'."\r\n";
+											$chaine .= '                  <publisher>'.supprAmp($papers[$key][$key2]['PU']).'</publisher>'."\r\n";
+											$chaine .= '                  <pubPlace>'.supprAmp($papers[$key][$key2]['PI']).'</pubPlace>'."\r\n";
+											$chaine .= '                  <biblScope unit="serie">'.supprAmp($papers[$key][$key2]['SE']).'</biblScope>'."\r\n";
+											$chaine .= '                  <biblScope unit="volume">'.supprAmp($papers[$key][$key2]['VL']).'</biblScope>'."\r\n";
+											$chaine .= '                  <biblScope unit="issue">'.supprAmp($papers[$key][$key2]['IS']).'</biblScope>'."\r\n";
+											$chaine .= '                  <biblScope unit="pp">'.supprAmp($papers[$key][$key2]['BP']).'-'.$papers[$key][$key2]['EP'].'</biblScope>'."\r\n";
+											if (isset($papers[$key][$key2]['PY']) && $papers[$key][$key2]['PY'] != "") {
+												$chaine .= '                  <date type="datePub">'.supprAmp($papers[$key][$key2]['PY']).'</date>'."\r\n";
 											}else{
-												if (isset($papers[$key][$key2]['EA']) && $papers[$key][$key2]['EA'] != "") {
-													$chaine .= '                  <date type="datePub">'.supprAmp(substr($papers[$key][$key2]['EA'], -4)).'</date>'."\r\n";
+												if (isset($papers[$key][$key2]['EY']) && $papers[$key][$key2]['EY'] != "") {
+													$chaine .= '                  <date type="datePub">'.supprAmp($papers[$key][$key2]['EY']).'</date>'."\r\n";
+												}else{
+													if (isset($papers[$key][$key2]['EA']) && $papers[$key][$key2]['EA'] != "") {
+														$chaine .= '                  <date type="datePub">'.supprAmp(substr($papers[$key][$key2]['EA'], -4)).'</date>'."\r\n";
+													}
 												}
 											}
+											$chaine .= '                </imprint>'."\r\n";
+											$typeDoc = "BOOK";
+											$typeDocp = "Book";//???
 										}
-										$chaine .= '                </imprint>'."\r\n";
-										$typeDoc = "BOOK";
-										$typeDocp = "Book";//???
-									}
-									break;
-								case "B"://book
-								case "P"://patent > il n'y en a pas dans WoS
-									$typeDoc = "PATENT";
-									$typeDocp = "Patent";//???
-									break;
-								*/
+										break;
+										*/
+								}
 							}
-						}
-						$chaine .= '              </monogr>'."\r\n";
-						if (isset($papers[$key][$key2]['DOI']) && $papers[$key][$key2]['DOI'] != "")
-						{
-							$chaine .= '              <idno type="doi">'.supprAmp($papers[$key][$key2]['DOI']).'</idno>'."\r\n";
-						}
-						if (isset($papers[$key][$key2]['PMID']) && $papers[$key][$key2]['PMID'] != "")
-						{
-							$chaine .= '              <idno type="pubmed">'.supprAmp($papers[$key][$key2]['PMID']).'</idno>'."\r\n";
-						}
-						if (isset($papers[$key][$key2]['PMCID']) && $papers[$key][$key2]['PMCID'] != "")
-						{
-							$chaine .= '              <idno type="pmc">'.supprAmp($papers[$key][$key2]['PMCID']).'</idno>'."\r\n";
-						}
-						$chaine .= '            </biblStruct>'."\r\n";
-						$chaine .= '          </sourceDesc>'."\r\n";
-						$chaine .= '          <profileDesc>'."\r\n";
-						//langue
-						$chaine .= '            <langUsage>'."\r\n";
-						$codeP = strtoupper(substr(supprAmp($papers[$key][$key2]['Langue']), 0, 2));
-						if ($codeP != "EN")
-						{
-							$keyP = array_search(strtolower($codeP), $languages);
-						}else{
-							$keyP = "English";
-						}
-						$chaine .= '              <language ident="'.$lng.'">'.$keyP.'</language>'."\r\n";
-						$chaine .= '            </langUsage>'."\r\n";
-						$chaine .= '            <textClass>'."\r\n";
-						//mots-clés
-						if (isset($papers[$key][$key2]['MC']) && $papers[$key][$key2]['MC'] != "")
-						{
-							$chaine .= '             <keywords scheme="author">'."\r\n";
-							$aut = explode(";", $papers[$key][$key2]['MC']);
-							foreach ($aut as $qui) {
-								$chaine .= '              <term xml:lang="'.$lng.'">'.supprAmp(trim($qui)).'</term>'."\r\n";
+							$chaine .= '              </monogr>'."\r\n";
+							if (isset($papers[$key][$key2]['DOI']) && $papers[$key][$key2]['DOI'] != "")
+							{
+								$chaine .= '              <idno type="doi">'.supprAmp($papers[$key][$key2]['DOI']).'</idno>'."\r\n";
 							}
-							$chaine .= '             </keywords>'."\r\n";
-						}
-						//domaine HAL
-						//$chaine .= '             <classCode scheme="halDomain" n="">'.supprAmp($papers[$key][$key2]['WC']).'</classCode>'."\r\n";
-						//Typologie
-						$chaine .= '             <classCode scheme="halTypology" n="'.$typeDoc.'">'.$typeDocp.'</classCode>'."\r\n";
-						$chaine .= '            </textClass>'."\r\n";
-						$chaine .= '            <abstract xml:lang="'.$lng.'">'.supprAmp($papers[$key][$key2]['Resume']).'</abstract>'."\r\n";
-						$chaine .= '          </profileDesc>'."\r\n";
-						$chaine .= '        </biblFull>'."\r\n";
-						$chaine .= '      </listBibl>'."\r\n";
-						$chaine .= '    </body>'."\r\n";
-						if (count($strTab) > 0) {//Existence of one or more affiliation(s)
-							$chaine .= '      <back>'."\r\n";
-							$chaine .= '        <listOrg type="structures">'."\r\n";
-							$indT = 1;
-							foreach ($strTab as $labElt) {
-								$eltTab = explode("~|~", $labElt);
-								$chaine .= '          <org type="'.$eltTab[3].'" xml:id="localStruct-Aff'.$indT.'">'."\r\n";
-								$orgName = $eltTab[2];
-								$orgName = str_replace(array("UR1", " UR1"), "", $orgName);
-								if ($eltTab[3] == "institution") {//abbreviation between crochet
-									if (strpos($orgName, "CHU") !== false) {
+							if (isset($papers[$key][$key2]['PMID']) && $papers[$key][$key2]['PMID'] != "")
+							{
+								$chaine .= '              <idno type="pubmed">'.supprAmp($papers[$key][$key2]['PMID']).'</idno>'."\r\n";
+							}
+							if (isset($papers[$key][$key2]['PMCID']) && $papers[$key][$key2]['PMCID'] != "")
+							{
+								$chaine .= '              <idno type="pmc">'.supprAmp($papers[$key][$key2]['PMCID']).'</idno>'."\r\n";
+							}
+							$chaine .= '            </biblStruct>'."\r\n";
+							$chaine .= '          </sourceDesc>'."\r\n";
+							$chaine .= '          <profileDesc>'."\r\n";
+							//langue
+							$chaine .= '            <langUsage>'."\r\n";
+							$chaine .= '              <language ident="en">English</language>'."\r\n";
+							$chaine .= '            </langUsage>'."\r\n";
+							$chaine .= '            <textClass>'."\r\n";
+							/*
+							//mots-clés
+							if (isset($papers[$key][$key2]['DE']) && $papers[$key][$key2]['DE'] != "")
+							{
+								$chaine .= '             <keywords scheme="author">'."\r\n";
+								$aut = explode(";", $papers[$key][$key2]['DE']);
+								foreach ($aut as $qui) {
+									$chaine .= '              <term xml:lang="'.$lng.'">'.supprAmp(trim($qui)).'</term>'."\r\n";
+								}
+								$chaine .= '             </keywords>'."\r\n";
+							}
+							*/
+							$chaine .= '             <classCode scheme="halTypology" n="'.$typeDoc.'">'.$typeDocp.'</classCode>'."\r\n";
+							$chaine .= '            </textClass>'."\r\n";
+							$chaine .= '            <abstract xml:lang="'.$lng.'">'.supprAmp($papers[$key][$key2]['Abstract']).'</abstract>'."\r\n";
+							$chaine .= '          </profileDesc>'."\r\n";
+							$chaine .= '        </biblFull>'."\r\n";
+							$chaine .= '      </listBibl>'."\r\n";
+							$chaine .= '    </body>'."\r\n";
+							if (count($strTab) > 0) {//Existence of one or more affiliation(s)
+								$chaine .= '      <back>'."\r\n";
+								$chaine .= '        <listOrg type="structures">'."\r\n";
+								$indT = 1;
+								foreach ($strTab as $labElt) {
+									$eltTab = explode("~|~", $labElt);
+									$chaine .= '          <org type="'.$eltTab[3].'" xml:id="localStruct-Aff'.$indT.'">'."\r\n";
+									$orgName = $eltTab[2];
+									$orgName = str_replace(array("UR1", " UR1"), "", $orgName);
+									if ($eltTab[3] == "institution") {//abbreviation between crochet
+										if (strpos($orgName, "CHU") !== false) {
+											$nameTab = explode(",", $orgName);
+											$ville = $nameTab[count($nameTab)-2];
+											$ville = str_ireplace(" cedex", "", $ville);
+											$villeTab = explode(" ", $ville);
+											$orgName = "CHU ".$villeTab[count($villeTab)-1];
+										}
 										$nameTab = explode(",", $orgName);
-										$ville = $nameTab[count($nameTab)-2];
-										$ville = str_ireplace(" cedex", "", $ville);
-										$villeTab = explode(" ", $ville);
-										$orgName = "CHU ".$villeTab[count($villeTab)-1];
-									}
-									$nameTab = explode(",", $orgName);
-									$orgName = "";
-									$oN = 0;
-									$iName = 0;
-									foreach ($nameTab as $name) {
-										if ($iName != count($nameTab)-2) {//do not insert the penultimate term = address
-											if ($name == "Universite CHU") {
-												$ville = $nameTab[count($nameTab)-2];
-												$ville = str_ireplace(" cedex", "", $ville);
-												$villeTab = explode(" ", $ville);
-												$name = $name.' '.$villeTab[count($villeTab)-1];
-											}
-											if ($oN == 0) {
-												$oN = 1;
-											}else{
-												$orgName .= ", ";
-											}
-											$eltNameTab = explode(" ", trim($name));
-											$oNE = 0;
-											foreach ($eltNameTab as $elt) {
-												if ($oNE == 0) {
-													$oNE = 1;
-												}else{
-													$orgName .= " ";
+										$orgName = "";
+										$oN = 0;
+										$iName = 0;
+										foreach ($nameTab as $name) {
+											if ($iName != count($nameTab)-2) {//do not insert the penultimate term = address
+												if ($name == "Universite CHU") {
+													$ville = $nameTab[count($nameTab)-2];
+													$ville = str_ireplace(" cedex", "", $ville);
+													$villeTab = explode(" ", $ville);
+													$name = $name.' '.$villeTab[count($villeTab)-1];
 												}
-												if (ctype_upper(trim($elt)) && !is_numeric(trim($elt)) && strlen(trim($elt)) > 3 && trim($elt) != "CNRS" && trim($elt) != "INSERM" && trim($elt) != "INRA" && trim($elt) != "INRIA" && trim($elt) != "IRSTEA") {
-												//if (ctype_upper(trim($elt)) && strlen(trim($elt)) > 3 && trim($elt) != "CNRS" && trim($elt) != "INSERM" && trim($elt) != "INRA" && trim($elt) != "INRIA" && trim($elt) != "IRSTEA") {
-												//if (ctype_upper(trim($elt)) && strlen(trim($elt)) > 3) {
-													$orgName .= "[".trim($elt)."]";
+												if ($oN == 0) {
+													$oN = 1;
 												}else{
-													$orgName .= "".trim($elt);
+													$orgName .= ", ";
+												}
+												$eltNameTab = explode(" ", trim($name));
+												$oNE = 0;
+												foreach ($eltNameTab as $elt) {
+													if ($oNE == 0) {
+														$oNE = 1;
+													}else{
+														$orgName .= " ";
+													}
+													if (ctype_upper(trim($elt)) && !is_numeric(trim($elt)) && strlen(trim($elt)) > 3 && trim($elt) != "CNRS" && trim($elt) != "INSERM" && trim($elt) != "INRA" && trim($elt) != "INRIA" && trim($elt) != "IRSTEA") {
+													//if (ctype_upper(trim($elt)) && strlen(trim($elt)) > 3 && trim($elt) != "CNRS" && trim($elt) != "INSERM" && trim($elt) != "INRA" && trim($elt) != "INRIA" && trim($elt) != "IRSTEA") {
+													//if (ctype_upper(trim($elt)) && strlen(trim($elt)) > 3) {
+														$orgName .= "[".trim($elt)."]";
+													}else{
+														$orgName .= "".trim($elt);
+													}
 												}
 											}
+											$iName += 1;
 										}
-										$iName += 1;
 									}
-								}
-								//suppression/remplacement divers
-								$orgName = str_replace(array("(", ")"), "", $orgName);
-								$orgName = str_replace("/", " ", $orgName);
-								//test présence 'Department' ou 'Service d' pour suppression
-								$orgTab = explode(", ", $orgName);
-								if (stripos($orgTab[0], "Department") !== false || stripos($orgTab[0], "Service d") !== false) {
-									$orgTab[0] = "";
-									$orgName = "";
-									for($dpt = 0; $dpt < count($orgTab); $dpt++) {
-										if ($orgTab[$dpt] != "") {$orgName .= $orgTab[$dpt]. ", ";}
+									//suppression/remplacement divers
+									$orgName = str_replace(array("(", ")"), "", $orgName);
+									$orgName = str_replace("/", " ", $orgName);
+									//test présence 'Department' ou 'Service d' pour suppression
+									$orgTab = explode(", ", $orgName);
+									if (stripos($orgTab[0], "Department") !== false || stripos($orgTab[0], "Service d") !== false) {
+										$orgTab[0] = "";
+										$orgName = "";
+										for($dpt = 0; $dpt < count($orgTab); $dpt++) {
+											if ($orgTab[$dpt] != "") {$orgName .= $orgTab[$dpt]. ", ";}
+										}
+										$orgName = substr($orgName, 0, (strlen($orgName) - 2));
 									}
-									$orgName = substr($orgName, 0, (strlen($orgName) - 2));
-								}
-								$chaine .= '            <orgName>'.$orgName.'</orgName>'."\r\n";
-								$pays = str_replace(".", "", strtoupper($eltTab[4]));
-								if ($pays != "")
-								{
-									$keyP = array_search($pays, $countries, true); 
-									$chaine .= '            <desc>'."\r\n";
-									$chaine .= '              <address>'."\r\n";
-									$chaine .= '                <country key="'.$keyP.'"></country>'."\r\n";
-									$chaine .= '              </address>'."\r\n";
-									$chaine .= '            </desc>'."\r\n";
-								}
-								$chaine .= '          </org>'."\r\n";
-								$indT++;
-							}
-							$chaine .= '        </listOrg>'."\r\n";
-							$chaine .= '      </back>'."\r\n";
-						}
-						$chaine .= '  </text>'."\r\n";
-						$chaine .= '</TEI>';
-						fwrite($inF,$chaine);
-						fclose($inF);
-						$zip->addFile($Fnm);
-						$zip->close();
-						unlink($Fnm);
-					}
-					break;
-					
-				case "pubmed_fcgi":
-					$aut = $papers[$key][$key2]['tabAut'];
-					$autTab = explode("~",$aut);
-					if (count($autTab) < $limNbAut)
-					{
-						//affiliation
-						$autTab = array();
-						$labTab = array();
-						$autInd = 0;
-						$docid = 0;
-						$label = "";
-						$code = "";
-						$cuHAL = "";
-						$type = "";
-						$pays = "";
-						$quoi = $papers[$key][$key2]['tabAff'];
-						$quoi = trimUltime($quoi);
-						$validHAL = "";//to privilegy the search by the unit code number rather than acronym
-						//echo "<br>".$j." - ".$quoi."<br>";
-						$diffQuoi = explode("; [", $quoi);
-						//var_dump($diffQuoi);
-						for ($d = 0; $d < count($diffQuoi); $d++)
-						{
-							$urlHAL = "";
-							$docid = 0;
-							$label = "";
-							$code = "";
-							$cuHAL = "";
-							$type = "";
-							$pays = "";
-							//Search for distinctive acronyms
-							//echo $diffQuoi[$d].'<br>';
-							searchAcro($diffQuoi[$d], $cuHAL, $urlHAL, $validHAL, $retTest);
-							//echo $urlHAL.'<br>';
-							if ($urlHAL != "")//affiliation with code unit or acronym found
-							{
-								//echo $diffQuoi[$d].'<br>';
-								idaureHal($urlHAL, $cuHAL, $docid, $label, $code, $type);
-							}
-							//echo $docid.' - '.$urlHAL.'<br>';
-							if($docid != 0)
-							{
-								affilId($diffQuoi[$d], $docid, $label, $code, $type, $pays, $validHAL);//Assigning idAffil to authors
-								while ($retTest != "") {
-									$aTester = $retTest;
-									$autInd = 0;
-									$urlHAL = "";
-									$docid = 0;
-									$label = "";
-									$code = "";
-									$cuHAL = "";
-									$type = "";
-									$pays = "";
-									//Search for distinctive acronyms
-									//echo 'toto : '.$aTester.'<br>';
-									searchAcro($aTester, $cuHAL, $urlHAL, $validHAL, $retTest);
-									//echo 'titi : '.$urlHAL.'<br>';
-									if ($urlHAL != "")//affiliation with code unit or acronym found
+									$chaine .= '            <orgName>'.$orgName.'</orgName>'."\r\n";
+									$pays = str_replace(".", "", strtoupper($eltTab[4]));
+									if ($pays != "")
 									{
-										idaureHal($urlHAL, $cuHAL, $docid, $label, $code, $type);
+										$keyP = array_search($pays, $countries, true); 
+										$chaine .= '            <desc>'."\r\n";
+										$chaine .= '              <address>'."\r\n";
+										$chaine .= '                <country key="'.$keyP.'"></country>'."\r\n";
+										$chaine .= '              </address>'."\r\n";
+										$chaine .= '            </desc>'."\r\n";
 									}
-									//echo $urlHAL.' - '.$docid.'<br>';
-									if($docid != 0)
-									{
-										affilId($aTester, $docid, $label, $code, $type, $pays, $validHAL);
-									}
+									$chaine .= '          </org>'."\r\n";
+									$indT++;
 								}
-							}else{//no specific affiliation found > we store whole results
-								//echo $diffQuoi[$d].'<br>';
-								$validHAL = "--";
-								$eltTab = explode("] ",$diffQuoi[$d]);
-								include './OverHAL_affiliation_termes.php';
-								if (isset($eltTab[1])) {$label = supprAmp(trim($eltTab[1]));}
-								//$label = str_ireplace($search, $replace, $label);
-								//echo $label.'<br>';
-								$queTab = explode(",", $label);
-								$quePay = count($queTab) - 1;
-								$labFin = "";
-								$iq = 0;
-								foreach($queTab as $elt)
-								{
-									$elt = trim($elt);
-									if ($iq > 0) {$labFin .= ", ";}
-									$labFin .= $elt;
-									$iq++;
-								}
-								//$docid = 999999;
-								$docid = $labFin;
-								$code = $labFin;
-								$type = 'institution';
-								affilId($diffQuoi[$d], $docid, $label, $code, $type, $pays, $validHAL);
+								$chaine .= '        </listOrg>'."\r\n";
+								$chaine .= '      </back>'."\r\n";
 							}
+							$chaine .= '  </text>'."\r\n";
+							$chaine .= '</TEI>';
+							fwrite($inF,$chaine);
+							fclose($inF);
+							$zip->addFile($Fnm);
+							$zip->close();
+							unlink($Fnm);
 						}
-						//var_dump($autTab);
-						//var_dump($labTab);
-						$strTab = array();
-						$pmid = supprAmp($papers[$key][$key2]['Pubmed']);//PMID
-						mb_internal_encoding('UTF-8');
-						$zip = new ZipArchive();
-						$FnmZ = "./HAL/OverHAL_pubmed_fcgi.zip";
-						if ($zip->open($FnmZ, ZipArchive::CREATE)!==TRUE) {
-							exit("Impossible d'ouvrir le fichier <$FnmZ>\n");
-						}
-						$Fnm = "./HAL/OverHAL_pubmed_fcgi_".$pmid.".xml";
-						$inF = fopen($Fnm,"a+");
-						fseek($inF, 0);
-						//$chaine = "\xEF\xBB\xBF";//UTF-8
-						$chaine = "";//ANSI
-						$chaine .= '<?xml version="1.0" encoding="UTF-8"?>'."\r\n";
-						$chaine .= '<TEI xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.tei-c.org/ns/1.0" xmlns:hal="http://hal.archives-ouvertes.fr/" xsi:schemaLocation="http://www.tei-c.org/ns/1.0 http://api.archives-ouvertes.fr/documents/aofr-sword.xsd">'."\r\n";
-						$chaine .= '  <text>'."\r\n".
-											 '    <body>'."\r\n".
-											 '      <listBibl>'."\r\n".
-											 '        <biblFull>'."\r\n";
-						//if DOI exists searching an OA PDF file
-						if (isset($papers[$key][$key2]['DOI']) && $papers[$key][$key2]['DOI'] != "")
-						{
-							$urlT = "https://api.oadoi.org/v2/".$papers[$key][$key2]['DOI'];
-							$volT = $papers[$key][$key2]['Volume'];
-							$issT = $papers[$key][$key2]['Numero'];
-							$pagT = $papers[$key][$key2]['Pagination'];
-							$datT = $papers[$key][$key2]['aPub'];
-							$pdfCR = "";//Eventual URL PDF file found with crossRef via CrosHAL.php > null here
-
-							testOALic($urlT, $volT, $issT, $pagT, $datT, $pdfCR, $evd, $titLic, $typLic, $compNC, $compND, $compSA, $urlPDF);
-
-							if ($urlPDF != "")//an OA PDF file has benn found
-							{
-								$urlPDF = htmlspecialchars($urlPDF);
-								$chaine .= '          <editionStmt>'."\r\n".
-													 '            <edition>'."\r\n".
-													 '              <ref type="file" subtype="'.$evd.'" n="1" target="'.$urlPDF.'"></ref>'."\r\n".
-													 '            </edition>'."\r\n".
-													 '          </editionStmt>'."\r\n";
-								$avail = 'http://creativecommons.org/licenses/by';
-								if ($compNC != "") {$avail .= '-nc';}
-								if ($compND != "") {$avail .= '-nd';}
-								if ($compSA != "") {$avail .= '-sa';}
-								$avail .= '/';
-								$chaine .= '          <publicationStmt>'."\r\n".
-													 '            <availability>'."\r\n".
-													 '              <licence target="'.$avail.'"/>'."\r\n".
-													 '            </availability>'."\r\n".
-													 '          </publicationStmt>'."\r\n";
-							}
-						}
-						$chaine .= '          <seriesStmt>'."\r\n".
-											 '          </seriesStmt>'."\r\n".
-											 '          <notesStmt>'."\r\n".
-						//Audience
-						$aud = "";
-						if (isset($papers[$key][$key2]['langue']))
-						{
-							if ($papers[$key][$key2]['langue'] == "eng") {
-								$chaine .= '          	<note type="audience" n="2"/>'."\r\n";
-							}else{
-								$chaine .= '          	<note type="audience" n="3"/>'."\r\n";
-							}
-						}
-						$chaine .= '						<note type="popular" n="0">No</note>'."\r\n";
-						$chaine .= '						<note type="peer" n="1">Yes</note>'."\r\n";
-						$chaine .= '          </notesStmt>'."\r\n".
-											 '          <sourceDesc>'."\r\n".
-											 '            <biblStruct>'."\r\n".
-											 '              <analytic>'."\r\n";
-						$lng = "";
-						//langue + titre
-						if (isset($papers[$key][$key2]['langue']))
-						{
-							if ($papers[$key][$key2]['langue'] == "fre") {$lng = "fr";}
-							if ($papers[$key][$key2]['langue'] == "eng") {$lng = "en";}
-						}
-						$chaine .= '                <title xml:lang="'.$lng.'">'.supprAmp($papers[$key][$key2]['titPub']).'</title>'."\r\n";
-						//auteurs
-						$aut = explode("; ", $papers[$key][$key2]['tabAut']);
-						$iTp = 0;
-						foreach ($aut as $qui) {
-							$quiTab = explode(" ", $qui);
-							if (isset($quiTab[1]))//in case of no comma for one author
-							{
-								$prenom = supprAmp(trim($quiTab[1]));
-							}else{
-								$prenom = " ";
-							}
-							$nom = supprAmp(trim($quiTab[0]));
-							$nompre = $nom ." ".$prenom;
-							if ($prenom != "") {
-								$chaine .= '                <author role="aut">'."\r\n";
-								$chaine .= '                  <persName>'."\r\n";
-								$chaine .= '                    <forename type="first">'.$prenom.'</forename>'."\r\n";
-								$chaine .= '                    <surname>'.$nom.'</surname>'."\r\n";
-								$chaine .= '                  </persName>'."\r\n";
-								$kT = array_search($nompre, $autTab);
-								//echo $kT." - ".$nom."<br>";
-								
-								
-								//var_dump($autTab);
-								if ($kT !== FALSE) {
-									foreach ($labTab[$nompre] as $lab) {
-										//$str = array_search($labTab[$nompre][$kT], $strTab);
-										$str = array_search($lab, $strTab);
-										if ($str === FALSE) {
-											$iTp += 1;
-											$kTp = $iTp;
-											array_push($strTab, $lab);
-										}else{
-											$kTp = $str + 1;
-										}
-										$chaine .= '                  <affiliation ref="#localStruct-Aff'.$kTp.'"/>'."\r\n";
-										//echo $kTp." - ".$nom." - ".$labTab[$kT]."<br>";
-									}
-								}
-								$chaine .= '                </author>'."\r\n";
-							}
-						}
-						//var_dump($strTab);
-						$chaine .= '              </analytic>'."\r\n";
-						//journal
-						$chaine .= '              <monogr>'."\r\n";
-						//ISSN
-						$chaine .= '                <idno type="issn">'.supprAmp($papers[$key][$key2]['ISSN']).'</idno>'."\r\n";
-
-						if (isset($papers[$key][$key2]['Type']))
-						{
-							$typDef = "";
-							$typDoc = "";
-							$typDocp = "";
-							$type = $papers[$key][$key2]['Type'];
-							//if (strpos($type, "Journal Article") !== false) {$typeDef = "Journal Article";}
-							$typeDef = "Journal Article";
-							switch($typeDef)
-							{
-								case "Journal Article"://article
-								case "Editorial"://???
-								case "Case Reports"://???
-									$chaine .= '                <title level="j">'.supprAmp(minRev($papers[$key][$key2]['titRev'])).'</title>'."\r\n";
-									$chaine .= '                <imprint>'."\r\n";
-									$chaine .= '                  <biblScope unit="volume">'.supprAmp($papers[$key][$key2]['Volume']).'</biblScope>'."\r\n";
-									$chaine .= '                  <biblScope unit="issue">'.supprAmp($papers[$key][$key2]['Numero']).'</biblScope>'."\r\n";
-									$chaine .= '                  <biblScope unit="pp">'.supprAmp($papers[$key][$key2]['Pagination']).'</biblScope>'."\r\n";
-									$chaine .= '                  <date type="datePub">'.supprAmp($papers[$key][$key2]['aPub']).'</date>'."\r\n";
-									//$chaine .= '                  <date type="dateEpub">'.supprAmp($papers[$key][$key2]['aMel']).'</date>'."\r\n";
-									$chaine .= '                </imprint>'."\r\n";
-									$typeDoc = "ART";
-									$typeDocp = "Journal articles";
-									break;
-							}
-						}
-						$chaine .= '              </monogr>'."\r\n";
-						if (isset($papers[$key][$key2]['DOI']) && $papers[$key][$key2]['DOI'] != "")
-						{
-							$chaine .= '              <idno type="doi">'.supprAmp($papers[$key][$key2]['DOI']).'</idno>'."\r\n";
-						}
-						if (isset($papers[$key][$key2]['Pubmed']) && $papers[$key][$key2]['Pubmed'] != "")
-						{
-							$chaine .= '              <idno type="pubmed">'.supprAmp($papers[$key][$key2]['Pubmed']).'</idno>'."\r\n";
-						}
-						$chaine .= '            </biblStruct>'."\r\n";
-						$chaine .= '          </sourceDesc>'."\r\n";
-						$chaine .= '          <profileDesc>'."\r\n";
-						//langue
-						$chaine .= '            <langUsage>'."\r\n";
-						$codeP = strtoupper(substr(supprAmp($papers[$key][$key2]['langue']), 0, 2));
-						if ($codeP != "EN")
-						{
-							array_search(strtolower($codeP), $languages);
-						}else{
-							$keyP = "English";
-						}
-						$chaine .= '              <language ident="'.$lng.'">'.$keyP.'</language>'."\r\n";
-						$chaine .= '            </langUsage>'."\r\n";
-						$chaine .= '            <textClass>'."\r\n";
-						/*
-						//mots-clés
-						if (isset($papers[$key][$key2]['MC']) && $papers[$key][$key2]['MC'] != "")
-						{
-							$chaine .= '             <keywords scheme="author">'."\r\n";
-							$aut = explode(";", $papers[$key][$key2]['MC']);
-							foreach ($aut as $qui) {
-								$chaine .= '              <term xml:lang="'.$lng.'">'.supprAmp(trim($qui)).'</term>'."\r\n";
-							}
-							$chaine .= '             </keywords>'."\r\n";
-						}
-						*/
-						//domaine HAL
-						//$chaine .= '             <classCode scheme="halDomain" n="">'.supprAmp($papers[$key][$key2]['WC']).'</classCode>'."\r\n";
-						//Typologie
-						$chaine .= '             <classCode scheme="halTypology" n="'.$typeDoc.'">'.$typeDocp.'</classCode>'."\r\n";
-						$chaine .= '            </textClass>'."\r\n";
-						$chaine .= '            <abstract xml:lang="'.$lng.'">'.supprAmp($papers[$key][$key2]['resume']).'</abstract>'."\r\n";
-						$chaine .= '          </profileDesc>'."\r\n";
-						$chaine .= '        </biblFull>'."\r\n";
-						$chaine .= '      </listBibl>'."\r\n";
-						$chaine .= '    </body>'."\r\n";
-						if (count($strTab) > 0) {//Existence of one or more affiliation(s)
-							$chaine .= '      <back>'."\r\n";
-							$chaine .= '        <listOrg type="structures">'."\r\n";
-							$indT = 1;
-							foreach ($strTab as $labElt) {
-								$eltTab = explode("~|~", $labElt);
-								$chaine .= '          <org type="'.$eltTab[3].'" xml:id="localStruct-Aff'.$indT.'">'."\r\n";
-								$orgName = $eltTab[2];
-								$orgName = str_replace(array("UR1", " UR1"), "", $orgName);
-								if ($eltTab[3] == "institution") {//abbreviation between crochet
-									if (strpos($orgName, "CHU") !== false) {
-										$nameTab = explode(",", $orgName);
-										$ville = $nameTab[count($nameTab)-2];
-										$ville = str_ireplace(" cedex", "", $ville);
-										$villeTab = explode(" ", $ville);
-										$orgName = "CHU ".$villeTab[count($villeTab)-1];
-									}
-									$nameTab = explode(",", $orgName);
-									$orgName = "";
-									$oN = 0;
-									$iName = 0;
-									foreach ($nameTab as $name) {
-										if ($iName != count($nameTab)-2) {//do not insert the penultimate term = address
-											if ($name == "Universite CHU") {
-												$ville = $nameTab[count($nameTab)-2];
-												$ville = str_ireplace(" cedex", "", $ville);
-												$villeTab = explode(" ", $ville);
-												$name = $name.' '.$villeTab[count($villeTab)-1];
-											}
-											if ($oN == 0) {
-												$oN = 1;
-											}else{
-												$orgName .= ", ";
-											}
-											$eltNameTab = explode(" ", trim($name));
-											$oNE = 0;
-											foreach ($eltNameTab as $elt) {
-												if ($oNE == 0) {
-													$oNE = 1;
-												}else{
-													$orgName .= " ";
-												}
-												if (ctype_upper(trim($elt)) && !is_numeric(trim($elt)) && strlen(trim($elt)) > 3 && trim($elt) != "CNRS" && trim($elt) != "INSERM" && trim($elt) != "INRA" && trim($elt) != "INRIA" && trim($elt) != "IRSTEA") {
-												//if (ctype_upper(trim($elt)) && strlen(trim($elt)) > 3 && trim($elt) != "CNRS" && trim($elt) != "INSERM" && trim($elt) != "INRA" && trim($elt) != "INRIA" && trim($elt) != "IRSTEA") {
-												//if (ctype_upper(trim($elt)) && strlen(trim($elt)) > 3) {
-													$orgName .= "[".trim($elt)."]";
-												}else{
-													$orgName .= "".trim($elt);
-												}
-											}
-										}
-										$iName += 1;
-									}
-								}
-								//suppression/remplacement divers
-								$orgName = str_replace(array("(", ")"), "", $orgName);
-								$orgName = str_replace("/", " ", $orgName);
-								//test présence 'Department' ou 'Service d' pour suppression
-								$orgTab = explode(", ", $orgName);
-								if (stripos($orgTab[0], "Department") !== false || stripos($orgTab[0], "Service d") !== false) {
-									$orgTab[0] = "";
-									$orgName = "";
-									for($dpt = 0; $dpt < count($orgTab); $dpt++) {
-										if ($orgTab[$dpt] != "") {$orgName .= $orgTab[$dpt]. ", ";}
-									}
-									$orgName = substr($orgName, 0, (strlen($orgName) - 2));
-								}
-								$chaine .= '            <orgName>'.$orgName.'</orgName>'."\r\n";
-								$pays = str_replace(".", "", strtoupper($eltTab[4]));
-								if ($pays != "")
-								{
-									$keyP = array_search($pays, $countries, true); 
-									$chaine .= '            <desc>'."\r\n";
-									$chaine .= '              <address>'."\r\n";
-									$chaine .= '                <country key="'.$keyP.'"></country>'."\r\n";
-									$chaine .= '              </address>'."\r\n";
-									$chaine .= '            </desc>'."\r\n";
-								}
-								$chaine .= '          </org>'."\r\n";
-								$indT++;
-							}
-							$chaine .= '        </listOrg>'."\r\n";
-							$chaine .= '      </back>'."\r\n";
-						}
-						$chaine .= '  </text>'."\r\n";
-						$chaine .= '</TEI>';
-						fwrite($inF,$chaine);
-						fclose($inF);
-						$zip->addFile($Fnm);
-						$zip->close();
-						unlink($Fnm);
-					}
-					break;		
-					
-				case "dimensions":
-					$aut = $papers[$key][$key2]['Authors'];
-					$autTab = explode("; ",$aut);
-					if (count($autTab) < $limNbAut)
-					{
-						//affiliation
-						$autTab = array();
-						$labTab = array();
-						$autInd = 0;
-						$docid = 0;
-						$label = "";
-						$code = "";
-						$cuHAL = "";
-						$type = "";
-						$pays = "";
-						$quoi = $papers[$key][$key2]['Authors Affiliations'];
-						$quoi = trimUltime($quoi);
-						$validHAL = "";//to privilegy the search by the unit code number rather than acronym
-						//echo "<br>".$j." - ".$quoi."<br>";
-						$diffQuoi = explode("); ", $quoi);
-						//Mise en forme > Nom, prenom ] + affiliations séparées par des ','
-						$indQ = 0;
-						foreach ($diffQuoi as $dQ) {
-							$dQTab = explode(" (", $dQ);
-							$pnQTab = explode(" ", $dQTab[0]);
-							$diffQuoi[$indQ] = $pnQTab[1].", ".$pnQTab[0]."] ".str_replace(array("; "," ; "), ", ",$dQTab[1]);
-							$indQ++;
-						}
-						//var_dump($diffQuoi);            
-						for ($d = 0; $d < count($diffQuoi); $d++)
-						{
-							$urlHAL = "";
-							$docid = 0;
-							$label = "";
-							$code = "";
-							$cuHAL = "";
-							$type = "";
-							$pays = "";
-							//Search for distinctive acronyms
-							//echo $diffQuoi[$d].'<br>';
-							searchAcro($diffQuoi[$d], $cuHAL, $urlHAL, $validHAL, $retTest);
-							//echo $urlHAL.'<br>';
-							if ($urlHAL != "")//affiliation with code unit or acronym found
-							{
-								//echo $diffQuoi[$d].'<br>';
-								idaureHal($urlHAL, $cuHAL, $docid, $label, $code, $type);
-							}
-							//echo $docid.' - '.$urlHAL.'<br>';
-							if($docid != 0)
-							{
-								affilId($diffQuoi[$d], $docid, $label, $code, $type, $pays, $validHAL);//Assigning idAffil to authors
-								while ($retTest != "") {
-									$aTester = $retTest;
-									$autInd = 0;
-									$urlHAL = "";
-									$docid = 0;
-									$label = "";
-									$code = "";
-									$cuHAL = "";
-									$type = "";
-									$pays = "";
-									//Search for distinctive acronyms
-									//echo 'toto : '.$aTester.'<br>';
-									searchAcro($aTester, $cuHAL, $urlHAL, $validHAL, $retTest);
-									//echo 'titi : '.$urlHAL.'<br>';
-									if ($urlHAL != "")//affiliation with code unit or acronym found
-									{
-										idaureHal($urlHAL, $cuHAL, $docid, $label, $code, $type);
-									}
-									//echo $urlHAL.' - '.$docid.'<br>';
-									if($docid != 0)
-									{
-										affilId($aTester, $docid, $label, $code, $type, $pays, $validHAL);
-									}
-								}
-							}else{//no specific affiliation found > we store whole results
-								//echo $diffQuoi[$d].'<br>';
-								$validHAL = "--";
-								$eltTab = explode("] ",$diffQuoi[$d]);
-								include './OverHAL_affiliation_termes.php';
-								if (isset($eltTab[1])) {$label = supprAmp(trim($eltTab[1]));}
-								//$label = str_ireplace($search, $replace, $label);
-								//echo $label.'<br>';
-								$queTab = explode(", ", $label);
-								$quePay = count($queTab) - 1;
-								$labFin = "";
-								$iq = 0;
-								foreach($queTab as $elt)
-								{
-									$elt = trim($elt);
-									if ($iq > 0) {$labFin .= ", ";}
-									$labFin .= $elt;
-									$iq++;
-								}
-								//$docid = 999999;
-								$docid = $labFin;
-								$code = $labFin;
-								$type = 'institution';
-								affilId($diffQuoi[$d], $docid, $label, $code, $type, $pays, $validHAL);
-							}
-						}
-						//var_dump($autTab);
-						//var_dump($labTab);
-						$strTab = array();
-						$ddn = supprAmp($papers[$key][$key2]['Publication ID']);//Publication ID
-						mb_internal_encoding('UTF-8');
-						$zip = new ZipArchive();
-						$FnmZ = "./HAL/OverHAL_dimensions.zip";
-						if ($zip->open($FnmZ, ZipArchive::CREATE)!==TRUE) {
-							exit("Impossible d'ouvrir le fichier <$FnmZ>\n");
-						}
-						$Fnm = "./HAL/OverHAL_dimensions_".$ddn.".xml";
-						$inF = fopen($Fnm,"a+");
-						fseek($inF, 0);
-						//$chaine = "\xEF\xBB\xBF";//UTF-8
-						$chaine = "";//ANSI
-						$chaine .= '<?xml version="1.0" encoding="UTF-8"?>'."\r\n";
-						$chaine .= '<TEI xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.tei-c.org/ns/1.0" xmlns:hal="http://hal.archives-ouvertes.fr/" xsi:schemaLocation="http://www.tei-c.org/ns/1.0 http://api.archives-ouvertes.fr/documents/aofr-sword.xsd">'."\r\n";
-						$chaine .= '  <text>'."\r\n".
-											 '    <body>'."\r\n".
-											 '      <listBibl>'."\r\n".
-											 '        <biblFull>'."\r\n";
-						//if DOI exists searching an OA PDF file
-						if (isset($papers[$key][$key2]['DOI']) && $papers[$key][$key2]['DOI'] != "")
-						{
-							$urlT = "https://api.oadoi.org/v2/".$papers[$key][$key2]['DOI'];
-							$volT = $papers[$key][$key2]['Volume'];
-							$issT = $papers[$key][$key2]['Issue'];
-							$pagT = $papers[$key][$key2]['Pagination'];
-							$datT = $papers[$key][$key2]['PubYear'];
-							$pdfCR = "";//Eventual URL PDF file found with crossRef via CrosHAL.php > null here
-
-							testOALic($urlT, $volT, $issT, $pagT, $datT, $pdfCR, $evd, $titLic, $typLic, $compNC, $compND, $compSA, $urlPDF);
-
-							if ($urlPDF != "")//an OA PDF file has benn found
-							{
-								$urlPDF = htmlspecialchars($urlPDF);
-								$chaine .= '          <editionStmt>'."\r\n".
-													 '            <edition>'."\r\n".
-													 '              <ref type="file" subtype="'.$evd.'" n="1" target="'.$urlPDF.'"></ref>'."\r\n".
-													 '            </edition>'."\r\n".
-													 '          </editionStmt>'."\r\n";
-								$avail = 'http://creativecommons.org/licenses/by';
-								if ($compNC != "") {$avail .= '-nc';}
-								if ($compND != "") {$avail .= '-nd';}
-								if ($compSA != "") {$avail .= '-sa';}
-								$avail .= '/';
-								$chaine .= '          <publicationStmt>'."\r\n".
-													 '            <availability>'."\r\n".
-													 '              <licence target="'.$avail.'"/>'."\r\n".
-													 '            </availability>'."\r\n".
-													 '          </publicationStmt>'."\r\n";
-							}
-						}
-						$chaine .= '          <seriesStmt>'."\r\n".
-											 '          </seriesStmt>'."\r\n".
-											 '          <notesStmt>'."\r\n".
-											 '						<note type="popular" n="0">No</note>'."\r\n".
-												'						<note type="peer" n="1">Yes</note>'."\r\n".
-											 '          </notesStmt>'."\r\n".
-											 '          <sourceDesc>'."\r\n".
-											 '            <biblStruct>'."\r\n".
-											 '              <analytic>'."\r\n";
-						$lng = "";
-						//langue + titre
-						$lng = "en";
-						$chaine .= '                <title xml:lang="'.$lng.'">'.supprAmp($papers[$key][$key2]['Title']).'</title>'."\r\n";
-						//auteurs
-						$aut = explode("; ", $papers[$key][$key2]['Authors']);
-						$iTp = 0;
-						foreach ($aut as $qui) {
-							$quiTab = explode(" ", $qui);
-							if (isset($quiTab[0]))//in case of no comma for one author
-							{
-								$prenom = supprAmp(trim($quiTab[0]));
-							}else{
-								$prenom = " ";
-							}
-							$nom = supprAmp(trim($quiTab[1]));
-							$nompre = $nom .", ".$prenom;
-							if ($prenom != "") {
-								$chaine .= '                <author role="aut">'."\r\n";
-								$chaine .= '                  <persName>'."\r\n";
-								$chaine .= '                    <forename type="first">'.$prenom.'</forename>'."\r\n";
-								$chaine .= '                    <surname>'.$nom.'</surname>'."\r\n";
-								$chaine .= '                  </persName>'."\r\n";
-								$kT = array_search($nompre, $autTab);
-								//echo $kT." - ".$nom."<br>";
-								//var_dump($labTab);
-								if ($kT !== FALSE) {
-									foreach ($labTab[$nompre] as $lab) {
-										//$str = array_search($labTab[$nompre][$kT], $strTab);
-										$str = array_search($lab, $strTab);
-										if ($str === FALSE) {
-											$iTp += 1;
-											$kTp = $iTp;
-											array_push($strTab, $lab);
-										}else{
-											$kTp = $str + 1;
-										}
-										$chaine .= '                  <affiliation ref="#localStruct-Aff'.$kTp.'"/>'."\r\n";
-										//echo $kTp." - ".$nom." - ".$labTab[$kT]."<br>";
-									}
-								}
-								$chaine .= '                </author>'."\r\n";
-							}
-						}
-						//var_dump($strTab);
-						$chaine .= '              </analytic>'."\r\n";
-						//journal
-						$chaine .= '              <monogr>'."\r\n";
-						if (isset($papers[$key][$key2]['Publication Type']))
-						{
-							$typDoc = "";
-							$typDocp = "";
-							$type = $papers[$key][$key2]['Publication Type'];
-							switch($type)
-							{
-								case "article"://article
-									$chaine .= '                <title level="j">'.supprAmp(minRev($papers[$key][$key2]['Source title'])).'</title>'."\r\n";
-									$chaine .= '                <imprint>'."\r\n";
-									$chaine .= '                  <biblScope unit="volume">'.supprAmp($papers[$key][$key2]['Volume']).'</biblScope>'."\r\n";
-									$chaine .= '                  <biblScope unit="issue">'.supprAmp($papers[$key][$key2]['Issue']).'</biblScope>'."\r\n";
-									$chaine .= '                  <biblScope unit="pp">'.supprAmp($papers[$key][$key2]['Pagination']).'</biblScope>'."\r\n";
-									$chaine .= '                  <date type="datePub">'.supprAmp($papers[$key][$key2]['PubYear']).'</date>'."\r\n";
-									$chaine .= '                </imprint>'."\r\n";
-									$typeDoc = "ART";
-									$typeDocp = "Journal articles";
-									break;
-								/*  
-								case "proceeding":
-									//inproceedings
-									$chaine .= '                <title level="j">'.supprAmp($papers[$key][$key2]['Source title']).'</title>'."\r\n";
-									$chaine .= '                <title level="m">'.supprAmp($papers[$key][$key2]['CT']).'</title>'."\r\n";
-									$chaine .= '                <meeting>'."\r\n";
-									$chaine .= '                  <title>'.supprAmp($papers[$key][$key2]['CT']).'</title>'."\r\n";
-									$confStartDate = "";
-									$confEndDate = "";
-									if (isset($papers[$key][$key2]['CY']))
-									{
-										//OCT 19-23, 2014 to 2014-10-19
-										$confdate = $papers[$key][$key2]['CY'];
-										if ($confdate != "") {
-											$res = explode(" ", $confdate);
-											if (count($res) > 2) {
-												//year
-												$confStartDate = trim($res[2])."-";
-												$confEndDate = trim($res[2])."-";
-												//month
-												switch($res[0])
-												{
-													case "JAN":
-														$confStartDate .= "01-";
-														$confEndDate .= "01-";
-														break;
-													case "FEB":
-														$confStartDate .= "02-";
-														$confEndDate .= "02-";
-														break;
-													case "MAR":
-														$confStartDate .= "03-";
-														$confEndDate .= "03-";
-														break;
-													case "APR":
-														$confStartDate .= "04-";
-														$confEndDate .= "04-";
-														break;
-													case "MAY":
-														$confStartDate .= "05-";
-														$confEndDate .= "05-";
-														break;
-													case "JUN":
-														$confStartDate .= "06-";
-														$confEndDate .= "06-";
-														break;
-													case "JUL":
-														$confStartDate .= "07-";
-														$confEndDate .= "07-";
-														break;
-													case "AUG":
-														$confStartDate .= "08-";
-														$confEndDate .= "08-";
-														break;
-													case "SEP":
-														$confStartDate .= "09-";
-														$confEndDate .= "09-";
-														break;
-													case "OCT":
-														$confStartDate .= "10-";
-														$confEndDate .= "10-";
-														break;
-													case "NOV":
-														$confStartDate .= "11-";
-														$confEndDate .= "11-";
-														break;
-													case "DEC":
-														$confStartDate .= "12-";
-														$confEndDate .= "12-";
-														break;
-												}
-												//day
-												$confStartDate .= substr($res[1], 0, 2);
-												$confEndDate .= substr($res[1], 3, 2);
-											}
-										}
-									}
-									$chaine .= '                  <date type="start">'.$confStartDate.'</date>'."\r\n";//comment différencier date début et fin ?
-									$chaine .= '                  <date type="end">'.$confEndDate.'</date>'."\r\n";//comment différencier date début et fin ?
-									$chaine .= '                  <settlement>'.supprAmp($papers[$key][$key2]['CL']).'</settlement>'."\r\n";
-									$chaine .= '                </meeting>'."\r\n";
-									$chaine .= '                <editor>'.supprAmp($papers[$key][$key2]['BE']).'</editor>'."\r\n";
-									$chaine .= '                <imprint>'."\r\n";
-									$chaine .= '                  <publisher>'.supprAmp($papers[$key][$key2]['PU']).'</publisher>'."\r\n";
-									if (isset($papers[$key][$key2]['PY']) && $papers[$key][$key2]['PY'] != "") {
-											$chaine .= '                  <date type="datePub">'.supprAmp($papers[$key][$key2]['PY']).'</date>'."\r\n";
-										}else{
-											if (isset($papers[$key][$key2]['EY']) && $papers[$key][$key2]['EY'] != "") {
-												$chaine .= '                  <date type="datePub">'.supprAmp($papers[$key][$key2]['EY']).'</date>'."\r\n";
-											}else{
-												if (isset($papers[$key][$key2]['EA']) && $papers[$key][$key2]['EA'] != "") {
-													$chaine .= '                  <date type="datePub">'.supprAmp(substr($papers[$key][$key2]['EA'], -4)).'</date>'."\r\n";
-												}
-											}
-										}
-									$chaine .= '                </imprint>'."\r\n";
-									$typeDoc = "COMM";
-									$typeDocp = "Conference papers";
-								case "chapter":
-									//review, book chapter
-									if ($papers[$key][$key2]['DT'] == "Book" || $papers[$key][$key2]['DT'] == "Review; Book Chapter") {
-										$chaine .= '                <idno type="isbn">'.supprAmp($papers[$key][$key2]['BN']).'</idno>'."\r\n";
-										$chaine .= '                <title level="m">'.supprAmp($papers[$key][$key2]['TI']).'</title>'."\r\n";
-										$chaine .= '                <editor>'.supprAmp($papers[$key][$key2]['BE']).'</editor>'."\r\n";
-										$chaine .= '                <imprint>'."\r\n";
-										$chaine .= '                  <publisher>'.supprAmp($papers[$key][$key2]['PU']).'</publisher>'."\r\n";
-										$chaine .= '                  <pubPlace>'.supprAmp($papers[$key][$key2]['PI']).'</pubPlace>'."\r\n";
-										$chaine .= '                  <biblScope unit="serie">'.supprAmp($papers[$key][$key2]['SE']).'</biblScope>'."\r\n";
-										$chaine .= '                  <biblScope unit="volume">'.supprAmp($papers[$key][$key2]['VL']).'</biblScope>'."\r\n";
-										$chaine .= '                  <biblScope unit="issue">'.supprAmp($papers[$key][$key2]['IS']).'</biblScope>'."\r\n";
-										$chaine .= '                  <biblScope unit="pp">'.supprAmp($papers[$key][$key2]['BP']).'-'.$papers[$key][$key2]['EP'].'</biblScope>'."\r\n";
-										if (isset($papers[$key][$key2]['PY']) && $papers[$key][$key2]['PY'] != "") {
-											$chaine .= '                  <date type="datePub">'.supprAmp($papers[$key][$key2]['PY']).'</date>'."\r\n";
-										}else{
-											if (isset($papers[$key][$key2]['EY']) && $papers[$key][$key2]['EY'] != "") {
-												$chaine .= '                  <date type="datePub">'.supprAmp($papers[$key][$key2]['EY']).'</date>'."\r\n";
-											}else{
-												if (isset($papers[$key][$key2]['EA']) && $papers[$key][$key2]['EA'] != "") {
-													$chaine .= '                  <date type="datePub">'.supprAmp(substr($papers[$key][$key2]['EA'], -4)).'</date>'."\r\n";
-												}
-											}
-										}
-										$chaine .= '                </imprint>'."\r\n";
-										$typeDoc = "BOOK";
-										$typeDocp = "Book";//???
-									}
-									break;
-									*/
-							}
-						}
-						$chaine .= '              </monogr>'."\r\n";
-						if (isset($papers[$key][$key2]['DOI']) && $papers[$key][$key2]['DOI'] != "")
-						{
-							$chaine .= '              <idno type="doi">'.supprAmp($papers[$key][$key2]['DOI']).'</idno>'."\r\n";
-						}
-						if (isset($papers[$key][$key2]['PMID']) && $papers[$key][$key2]['PMID'] != "")
-						{
-							$chaine .= '              <idno type="pubmed">'.supprAmp($papers[$key][$key2]['PMID']).'</idno>'."\r\n";
-						}
-						if (isset($papers[$key][$key2]['PMCID']) && $papers[$key][$key2]['PMCID'] != "")
-						{
-							$chaine .= '              <idno type="pmc">'.supprAmp($papers[$key][$key2]['PMCID']).'</idno>'."\r\n";
-						}
-						$chaine .= '            </biblStruct>'."\r\n";
-						$chaine .= '          </sourceDesc>'."\r\n";
-						$chaine .= '          <profileDesc>'."\r\n";
-						//langue
-						$chaine .= '            <langUsage>'."\r\n";
-						$chaine .= '              <language ident="en">English</language>'."\r\n";
-						$chaine .= '            </langUsage>'."\r\n";
-						$chaine .= '            <textClass>'."\r\n";
-						/*
-						//mots-clés
-						if (isset($papers[$key][$key2]['DE']) && $papers[$key][$key2]['DE'] != "")
-						{
-							$chaine .= '             <keywords scheme="author">'."\r\n";
-							$aut = explode(";", $papers[$key][$key2]['DE']);
-							foreach ($aut as $qui) {
-								$chaine .= '              <term xml:lang="'.$lng.'">'.supprAmp(trim($qui)).'</term>'."\r\n";
-							}
-							$chaine .= '             </keywords>'."\r\n";
-						}
-						*/
-						$chaine .= '             <classCode scheme="halTypology" n="'.$typeDoc.'">'.$typeDocp.'</classCode>'."\r\n";
-						$chaine .= '            </textClass>'."\r\n";
-						$chaine .= '            <abstract xml:lang="'.$lng.'">'.supprAmp($papers[$key][$key2]['Abstract']).'</abstract>'."\r\n";
-						$chaine .= '          </profileDesc>'."\r\n";
-						$chaine .= '        </biblFull>'."\r\n";
-						$chaine .= '      </listBibl>'."\r\n";
-						$chaine .= '    </body>'."\r\n";
-						if (count($strTab) > 0) {//Existence of one or more affiliation(s)
-							$chaine .= '      <back>'."\r\n";
-							$chaine .= '        <listOrg type="structures">'."\r\n";
-							$indT = 1;
-							foreach ($strTab as $labElt) {
-								$eltTab = explode("~|~", $labElt);
-								$chaine .= '          <org type="'.$eltTab[3].'" xml:id="localStruct-Aff'.$indT.'">'."\r\n";
-								$orgName = $eltTab[2];
-								$orgName = str_replace(array("UR1", " UR1"), "", $orgName);
-								if ($eltTab[3] == "institution") {//abbreviation between crochet
-									if (strpos($orgName, "CHU") !== false) {
-										$nameTab = explode(",", $orgName);
-										$ville = $nameTab[count($nameTab)-2];
-										$ville = str_ireplace(" cedex", "", $ville);
-										$villeTab = explode(" ", $ville);
-										$orgName = "CHU ".$villeTab[count($villeTab)-1];
-									}
-									$nameTab = explode(",", $orgName);
-									$orgName = "";
-									$oN = 0;
-									$iName = 0;
-									foreach ($nameTab as $name) {
-										if ($iName != count($nameTab)-2) {//do not insert the penultimate term = address
-											if ($name == "Universite CHU") {
-												$ville = $nameTab[count($nameTab)-2];
-												$ville = str_ireplace(" cedex", "", $ville);
-												$villeTab = explode(" ", $ville);
-												$name = $name.' '.$villeTab[count($villeTab)-1];
-											}
-											if ($oN == 0) {
-												$oN = 1;
-											}else{
-												$orgName .= ", ";
-											}
-											$eltNameTab = explode(" ", trim($name));
-											$oNE = 0;
-											foreach ($eltNameTab as $elt) {
-												if ($oNE == 0) {
-													$oNE = 1;
-												}else{
-													$orgName .= " ";
-												}
-												if (ctype_upper(trim($elt)) && !is_numeric(trim($elt)) && strlen(trim($elt)) > 3 && trim($elt) != "CNRS" && trim($elt) != "INSERM" && trim($elt) != "INRA" && trim($elt) != "INRIA" && trim($elt) != "IRSTEA") {
-												//if (ctype_upper(trim($elt)) && strlen(trim($elt)) > 3 && trim($elt) != "CNRS" && trim($elt) != "INSERM" && trim($elt) != "INRA" && trim($elt) != "INRIA" && trim($elt) != "IRSTEA") {
-												//if (ctype_upper(trim($elt)) && strlen(trim($elt)) > 3) {
-													$orgName .= "[".trim($elt)."]";
-												}else{
-													$orgName .= "".trim($elt);
-												}
-											}
-										}
-										$iName += 1;
-									}
-								}
-								//suppression/remplacement divers
-								$orgName = str_replace(array("(", ")"), "", $orgName);
-								$orgName = str_replace("/", " ", $orgName);
-								//test présence 'Department' ou 'Service d' pour suppression
-								$orgTab = explode(", ", $orgName);
-								if (stripos($orgTab[0], "Department") !== false || stripos($orgTab[0], "Service d") !== false) {
-									$orgTab[0] = "";
-									$orgName = "";
-									for($dpt = 0; $dpt < count($orgTab); $dpt++) {
-										if ($orgTab[$dpt] != "") {$orgName .= $orgTab[$dpt]. ", ";}
-									}
-									$orgName = substr($orgName, 0, (strlen($orgName) - 2));
-								}
-								$chaine .= '            <orgName>'.$orgName.'</orgName>'."\r\n";
-								$pays = str_replace(".", "", strtoupper($eltTab[4]));
-								if ($pays != "")
-								{
-									$keyP = array_search($pays, $countries, true); 
-									$chaine .= '            <desc>'."\r\n";
-									$chaine .= '              <address>'."\r\n";
-									$chaine .= '                <country key="'.$keyP.'"></country>'."\r\n";
-									$chaine .= '              </address>'."\r\n";
-									$chaine .= '            </desc>'."\r\n";
-								}
-								$chaine .= '          </org>'."\r\n";
-								$indT++;
-							}
-							$chaine .= '        </listOrg>'."\r\n";
-							$chaine .= '      </back>'."\r\n";
-						}
-						$chaine .= '  </text>'."\r\n";
-						$chaine .= '</TEI>';
-						fwrite($inF,$chaine);
-						fclose($inF);
-						$zip->addFile($Fnm);
-						$zip->close();
-						unlink($Fnm);
-					}
-					break;
-					
-					
-					
+						break;
+						
+						
+						
+				}
+				$k++;
 			}
-			$k++;
+			echo "</tbody></table>";
 		}
-		echo "</tbody></table>";
 		if ($limzot == "non")
 		{
 			?>
@@ -5810,13 +5866,15 @@ if (file_exists("./HAL/OverHAL_dimensions.zip"))
 	echo '<br /><a class="btn btn-secondary mt-2" target="_blank" rel="noopener noreferrer" href="./HAL/OverHAL_dimensions.zip">Exporter les résultats Dimensions au format TEI</a>';
 }
 
-echo '<br /><br />';
-echo '<div class="row align-items-center ml-1">';
-echo '	Chargez votre fichier TEI dans Zip2HAL';
-echo '	<a class="nav-link dropdown-toggle arrow-none" href="Zip2HAL.php" id="topnav-myhal" role="button">';
-echo '		<h2 class="h2 mt-0"><i class="mdi mdi mdi-folder-zip-outline text-primary mr-1"></i></h2>';
-echo '	</a>';
-echo '</div>';
+if (!empty($papers[$key])) {//Affichage des tableaux uniquement si présence de résultats !
+	echo '<br /><br />';
+	echo '<div class="row align-items-center ml-1">';
+	echo '	Chargez votre fichier TEI dans Zip2HAL';
+	echo '	<a class="nav-link dropdown-toggle arrow-none" href="Zip2HAL.php" id="topnav-myhal" role="button">';
+	echo '		<h2 class="h2 mt-0"><i class="mdi mdi mdi-folder-zip-outline text-primary mr-1"></i></h2>';
+	echo '	</a>';
+	echo '</div>';
+}
 
 echo '<br/ >';
 	?>
