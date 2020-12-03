@@ -35,6 +35,21 @@ if (file_exists('./PubMed.txt')) {//TXT PubMed file has been submitted
 		$i++;
 	}
 	
+	$titTrad = "non";
+	//Y-a-t-il un titre français traduit en anglais ? > Si oui, le titre traduit en anglais devra être prioritaire au titre en français
+	for ($i = 0; $i < count($tabFI); $i++) {
+		$ligne = $tabFI[$i];
+		$extr = substr($ligne, 0, 6);
+		
+		switch ($extr) {
+			case "TI  - ":
+				if (strpos($ligne, "[Not Available]") === false && $ligne != "TI  - ") {
+					$titTrad = "oui";
+				}
+				break;
+		}
+	}
+	
 	for ($i = 0; $i < count($tabFI); $i++) {
 		$ligne = $tabFI[$i];
 		$extr = substr($ligne, 0, 6);
@@ -76,7 +91,7 @@ if (file_exists('./PubMed.txt')) {//TXT PubMed file has been submitted
 			case "LA  - ":
 				$tabPM['langue'][$j] = str_replace(array("LA  - ", "\r\n", "\r", "\n", PHP_EOL, chr(10), chr(13), chr(10).chr(13)), "", $ligne);
 				break;
-				
+			
 			case "TI  - ":
 				if (strpos($ligne, "[Not Available]") === false) {
 					$tabPM['titre'][$j] = str_replace(array("TI  - ", "\r\n", "\r", "\n", PHP_EOL, chr(10), chr(13), chr(10).chr(13)), "", $ligne);
@@ -87,22 +102,25 @@ if (file_exists('./PubMed.txt')) {//TXT PubMed file has been submitted
 						$tabPM['titre'][$j] .= $ligne;
 						$i++;
 					}
+					//if (substr($tabPM['titre'][$j], 0, 1) == "[" && substr($tabPM['titre'][$j], -1) == "]") {$tabPM['titre'][$j] = str_replace(array("[", "]"), "", $tabPM['titre'][$j]);}
 					if (substr($tabPM['titre'][$j], -1) == ".") {$tabPM['titre'][$j] = substr($tabPM['titre'][$j], 0, -1);}
 				}
 				break;
-			
+				
 			case "TT  - ":
-				$tabPM['titre'][$j] = str_replace(array("TT  - ", "\r\n", "\r", "\n", PHP_EOL, chr(10), chr(13), chr(10).chr(13)), "", $ligne);
-				//Champ sur plusieurs lignes ?
-				while (substr($tabFI[$i+1], 0, 6) == "      ") {
-					$ligne = str_replace("      ", "", $tabFI[$i+1]);
-					$ligne = str_replace(array("\r\n", "\r", "\n", PHP_EOL, chr(10), chr(13), chr(10).chr(13)), "", $ligne);
-					$tabPM['titre'][$j] .= $ligne;
-					$i++;
+				if ($titTrad == "non") {//Pas de titre traduit
+					$tabPM['titre'][$j] = str_replace(array("TT  - ", "\r\n", "\r", "\n", PHP_EOL, chr(10), chr(13), chr(10).chr(13)), "", $ligne);
+					//Champ sur plusieurs lignes ?
+					while (substr($tabFI[$i+1], 0, 6) == "      ") {
+						$ligne = str_replace("      ", "", $tabFI[$i+1]);
+						$ligne = str_replace(array("\r\n", "\r", "\n", PHP_EOL, chr(10), chr(13), chr(10).chr(13)), "", $ligne);
+						$tabPM['titre'][$j] .= $ligne;
+						$i++;
+					}
+					if (substr($tabPM['titre'][$j], -1) == ".") {$tabPM['titre'][$j] = substr($tabPM['titre'][$j], 0, -1);}
+					$tabPM['langue'][$j] = "fre";
+					break;
 				}
-				if (substr($tabPM['titre'][$j], -1) == ".") {$tabPM['titre'][$j] = substr($tabPM['titre'][$j], 0, -1);}
-				$tabPM['langue'][$j] = "fre";
-				break;
 				
 			case "PG  - ":
 				$tabPM['pp'][$j] = str_replace(array("PG  - ", "\r\n", "\r", "\n", PHP_EOL, chr(10), chr(13), chr(10).chr(13)), "", $ligne);
