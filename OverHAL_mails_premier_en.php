@@ -10,118 +10,121 @@ I am the manager of the University of Rennes 1 <a href=&quot;https://hal-univ-re
 switch($team)
 {
   case "IETR":
-    $body .= "We work in collaboration with Prof Ronan Sauleau, director of the IETR UMR CNRS 6164 research unit.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Ronan Sauleau</b>, director of the IETR UMR CNRS 6164 research unit.<br>\\";
     break;
   case "FOTON":
-    $body .= "We work in collaboration with Prof Pascal Besnard, director of the FOTON UMR CNRS 6082 research unit.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Pascal Besnard</b>, director of the FOTON UMR CNRS 6082 research unit.<br>\\";
     break;
   case "LTSI":
-    $body .= "We work in collaboration with Prof Lotfi Senhadji, director of the Signal and Image Processing research unit (LTSI) - U Inserm 1099.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Lotfi Senhadji</b>, director of the Signal and Image Processing research unit (LTSI) - U Inserm 1099.<br>\\";
     break;
   case "ISCR":
-    $body .= "We work in collaboration with Prof Marc Fourmigue, director of the Chemical Institute of Rennes - UMR CNRS 6226.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Marc Fourmigue</b>, director of the Chemical Institute of Rennes - UMR CNRS 6226.<br>\\";
     break;
   case "GR":
-    $body .= "We work in collaboration with the Geosciences / OSUR research unit at the University of Rennes 1.<br>\\";
+    $body .= "We work in collaboration with the <b>Geosciences / OSUR research unit</b> at the University of Rennes 1.<br>\\";
     break;
   case "IPR":
-    $body .= "We work in collaboration with Prof Jean-Christophe Sangleboeuf, director of the Institute of Physics - Rennes (IPR) UMR CNRS 6251.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Jean-Christophe Sangleboeuf</b>, director of the Institute of Physics - Rennes (IPR) UMR CNRS 6251.<br>\\";
     break;
   case "LGCGM":
-    $body .= "We work in collaboration with Prof Christophe Lanos, director of the Mechanical and Civil Engineering research unit(LGCGM) EA 3913.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Christophe Lanos</b>, director of the Mechanical and Civil Engineering research unit(LGCGM) EA 3913.<br>\\";
     break;
   case "ECOBIO":
-    $body .= "We work in collaboration with Prof Joan van Baaren, director of the Ecosystems, Biodiversity, Evolution (ECOBIO) research unit UMR CNRS 6553.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Joan van Baaren</b>, director of the Ecosystems, Biodiversity, Evolution (ECOBIO) research unit UMR CNRS 6553.<br>\\";
     break;
   case "IGEPP":
     $body .= "";
     break;
   case "ETHOS":
-    $body .= "We work in collaboration with Prof Alban Lemasson, director of the Animal and Human Ethology (EthoS) research unit UMR CNRS 6552.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Alban Lemasson</b>, director of the Animal and Human Ethology (EthoS) research unit UMR CNRS 6552.<br>\\";
     break;
   case "CNGC":
-    $body .= "We work in collaboration with Rennes University Hospital.";
+    $body .= "We work in collaboration with <b>Rennes University Hospital</b>.";
     break;
   case "IGDR":
-    $body .= "We work in collaboration with Prof Reynald Gillet, director of the Institute of Genetics and Development of Rennes (IGDR) UMR CNRS 6290.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Reynald Gillet</b>, director of the Institute of Genetics and Development of Rennes (IGDR) UMR CNRS 6290.<br>\\";
     break;
   case "IRSET":
-    $body .= "We work in collaboration with Prof Michel Samson, director of the Research Institute in Health, Environment and Occupation (IRSET) U Inserm 1085.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Michel Samson</b>, director of the Research Institute in Health, Environment and Occupation (IRSET) U Inserm 1085.<br>\\";
     break;
   case "U991":
-    $body .= "We work in collaboration with Prof Bruno Clement (Liver, Metabolisms and Cancer - U inserm 991 research unit) at the University of Rennes 1.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Bruno Clement</b> (Liver, Metabolisms and Cancer - U inserm 991 research unit) at the University of Rennes 1.<br>\\";
     break;
   case "U835":
-    $body .= "We work in collaboration with Prof Brice Felden, director of the UMR_S Inserm 1230 research unit - Bacterial regulatory RNAs and Medicine.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Brice Felden</b>, director of the UMR_S Inserm 1230 research unit - Bacterial regulatory RNAs and Medicine.<br>\\";
     break;
   case "U1230":
-    $body .= "We work in collaboration with Prof Brice Felden, director of the UMR_S Inserm 1230 research unit - Bacterial regulatory RNAs and Medicine.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Brice Felden</b>, director of the UMR_S Inserm 1230 research unit - Bacterial regulatory RNAs and Medicine.<br>\\";
     break;
   case "BRM":
-    $body .= "We work in collaboration with Prof Brice Felden, director of the UMR_S Inserm 1230 research unit - Bacterial regulatory RNAs and Medicine.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Brice Felden</b>, director of the UMR_S Inserm 1230 research unit - Bacterial regulatory RNAs and Medicine.<br>\\";
     break;
   case "U917":
-    $body .= "We work in collaboration with Prof Karin Tarte, director of the Microenvironment, Cell Differentiation, Immunology and Cancer (MICMAC) - U Inserm 1236 research unit.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Karin Tarte</b>, director of the Microenvironment, Cell Differentiation, Immunology and Cancer (MICMAC) - U Inserm 1236 research unit.<br>\\";
     break;
   case "U1236":
-    $body .= "We work in collaboration with Prof Karin Tarte, director of the Microenvironment, Cell Differentiation, Immunology and Cancer (MICMAC) - U Inserm 1236 research unit.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Karin Tarte</b>, director of the Microenvironment, Cell Differentiation, Immunology and Cancer (MICMAC) - U Inserm 1236 research unit.<br>\\";
     break;
   case "MICMAC":
-    $body .= "We work in collaboration with Prof Karin Tarte, director of the Microenvironment, Cell Differentiation, Immunology and Cancer (MICMAC) - U Inserm 1236 research unit.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Karin Tarte</b>, director of the Microenvironment, Cell Differentiation, Immunology and Cancer (MICMAC) - U Inserm 1236 research unit.<br>\\";
     break;
   case "CIC":
-    $body .= "We work in collaboration with Prof Bruno Laviolle, director of the Clinical Investigation Center - Rennes (CIC).<br>\\";
+    $body .= "We work in collaboration with <b>Prof Bruno Laviolle</b>, director of the Clinical Investigation Center - Rennes (CIC).<br>\\";
     break;
   case "MRI":
-    $body .= "We work in collaboration with Prof Martine Bonnaure-Mallet, director of the Microbiology research unit.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Martine Bonnaure-Mallet</b>, director of the Microbiology research unit.<br>\\";
     break;
   case "BIOSIT":
-    $body .= "We work in collaboration with Rennes University Hospital.";
+    $body .= "We work in collaboration with <b>Rennes University Hospital</b>.";
     break;
   case "OSS":
-    $body .= "We work in collaboration with Prof Eric Chevet, director of the U Inserm 1242 - Chemistry, Oncogenesis, Stress and Signaling (COSS) research unit.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Eric Chevet</b>, director of the U Inserm 1242 - Chemistry, Oncogenesis, Stress and Signaling (COSS) research unit.<br>\\";
     break;
   case "COSS":
-    $body .= "We work in collaboration with Prof Eric Chevet, director of the U Inserm 1242 - Chemistry, Oncogenesis, Stress and Signaling (COSS) research unit.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Eric Chevet</b>, director of the U Inserm 1242 - Chemistry, Oncogenesis, Stress and Signaling (COSS) research unit.<br>\\";
     break;
   case "U1242":
-    $body .= "We work in collaboration with Prof Eric Chevet, director of the U Inserm 1242 - Chemistry, Oncogenesis, Stress and Signaling (COSS) research unit.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Eric Chevet</b>, director of the U Inserm 1242 - Chemistry, Oncogenesis, Stress and Signaling (COSS) research unit.<br>\\";
     break;
   case "NUMECAN":
-    $body .= "We work in collaboration with Prof Bruno Clement, director of the Nutrition, Metabolisms and Cancer (NUMECAN) research unit U Inserm 1241.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Bruno Clement</b>, director of the Nutrition, Metabolisms and Cancer (NUMECAN) research unit U Inserm 1241.<br>\\";
     break;
   case "U1241":
-    $body .= "We work in collaboration with Prof Bruno Clement, director of the Nutrition, Metabolisms and Cancer (NUMECAN) research unit U Inserm 1241.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Bruno Clement</b>, director of the Nutrition, Metabolisms and Cancer (NUMECAN) research unit U Inserm 1241.<br>\\";
     break;
   case "CREM":
-    $body .= "We work in collaboration with the UMR CNRS 6211 - CREM research unit.<br>\\";
+    $body .= "We work in collaboration with the <b>UMR CNRS 6211 - CREM</b> research unit.<br>\\";
     break;
   case "CREAAH":
-    $body .= "We work in collaboration with Prof Marie-Yvane Daire, director of the Archaeology, Archaeoscience and History (CReAAH) research unit UMR CNRS 6566.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Marie-Yvane Daire</b>, director of the Archaeology, Archaeoscience and History (CReAAH) research unit UMR CNRS 6566.<br>\\";
     break;
   case "CRAPE":
-    $body .= "We work in collaboration with Prof Sylvie Ollitrault, director of the Centre For Research On Political Action in Europe (ARENES) UMR CNRS 6051.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Sylvie Ollitrault</b>, director of the Centre For Research On Political Action in Europe (ARENES) UMR CNRS 6051.<br>\\";
     break;
   case "PN":
-    $body .= "We work in collaboration with the Centre Atlantique de Philosophie EA 7463.<br>\\";
+    $body .= "We work in collaboration with the <b>Centre Atlantique de Philosophie EA 7463</b>.<br>\\";
     break;
   case "CAPHI":
-    $body .= "We work in collaboration with the Centre Atlantique de Philosophie EA 7463.<br>\\";
+    $body .= "We work in collaboration with the <b>Centre Atlantique de Philosophie EA 7463</b>.<br>\\";
     break;
   case "UNIV-RENNES1":
-    $body .= "We work in collaboration with the University research units.<br>\\";
+    $body .= "We work in collaboration with the <b>University research units</b>.<br>\\";
     break;
   case "SCANMAT":
-    $body .= "We work in collaboration with Prof Maryline Guilloux-Viry, director of ScanMAT Research Platforms.<br>\\";
+    $body .= "We work in collaboration with Prof <b>Maryline Guilloux-Viry</b>, director of ScanMAT Research Platforms.<br>\\";
     break;
   case "GERMO":
-    $body .= "We work in collaboration with Prof Samer Kayal, director of the GeRMO research unit.<br>\\";
+    $body .= "We work in collaboration with Prof <b>Samer Kayal</b>, director of the GeRMO research unit.<br>\\";
     break;
   case "REPERES":
-    $body .= "We work in collaboration with Prof Emmanuel Oger, director of the REPERES EA 7449 research unit.<br>\\";
+    $body .= "We work in collaboration with Prof <b>Emmanuel Oger</b>, director of the REPERES EA 7449 research unit.<br>\\";
     break;
   case "CHU":
-    $body .= "We work in collaboration with Rennes University Hospital.<br>\\";
+    $body .= "We work in collaboration with <b>Rennes University Hospital</b>.<br>\\";
+    break;
+  case "ISCR-VC":
+    $body .= "We work in collaboration with <b>Prof Xiang-Hua Zhang</b>, director of the Glass & Ceramics Team / Chemical Institute of Rennes - UMR CNRS 6226.<br>\\";
     break;
 }
 
@@ -167,118 +170,121 @@ I am the manager of the University of Rennes 1 <a href=&quot;https://hal-univ-re
 switch($team)
 {
   case "IETR":
-    $body .= "We work in collaboration with Prof Ronan Sauleau, director of the IETR UMR CNRS 6164 research unit.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Ronan Sauleau</b>, director of the IETR UMR CNRS 6164 research unit.<br>\\";
     break;
   case "FOTON":
-    $body .= "We work in collaboration with Prof Pascal Besnard, director of the FOTON UMR CNRS 6082 research unit.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Pascal Besnard</b>, director of the FOTON UMR CNRS 6082 research unit.<br>\\";
     break;
   case "LTSI":
-    $body .= "We work in collaboration with Prof Lotfi Senhadji, director of the Signal and Image Processing research unit (LTSI) - U Inserm 1099.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Lotfi Senhadji</b>, director of the Signal and Image Processing research unit (LTSI) - U Inserm 1099.<br>\\";
     break;
   case "ISCR":
-    $body .= "We work in collaboration with Prof Marc Fourmigue, director of the Chemical Institute of Rennes - UMR CNRS 6226.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Marc Fourmigue</b>, director of the Chemical Institute of Rennes - UMR CNRS 6226.<br>\\";
     break;
   case "GR":
-    $body .= "We work in collaboration with the Geosciences / OSUR research unit at the University of Rennes 1.<br>\\";
+    $body .= "We work in collaboration with the <b>Geosciences / OSUR</b> research unit at the University of Rennes 1.<br>\\";
     break;
   case "IPR":
-    $body .= "We work in collaboration with Prof Jean-Christophe Sangleboeuf, director of the Institute of Physics - Rennes (IPR) UMR CNRS 6251.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Jean-Christophe Sangleboeuf</b>, director of the Institute of Physics - Rennes (IPR) UMR CNRS 6251.<br>\\";
     break;
   case "LGCGM":
-    $body .= "We work in collaboration with Prof Christophe Lanos, director of the Mechanical and Civil Engineering research unit(LGCGM) EA 3913.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Christophe Lanos</b>, director of the Mechanical and Civil Engineering research unit(LGCGM) EA 3913.<br>\\";
     break;
   case "ECOBIO":
-    $body .= "We work in collaboration with Prof Joan van Baaren, director of the Ecosystems, Biodiversity, Evolution (ECOBIO) research unit UMR CNRS 6553.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Joan van Baaren</b>, director of the Ecosystems, Biodiversity, Evolution (ECOBIO) research unit UMR CNRS 6553.<br>\\";
     break;
   case "IGEPP":
     $body .= "";
     break;
   case "ETHOS":
-    $body .= "We work in collaboration with Prof Alban Lemasson, director of the Animal and Human Ethology (EthoS) research unit UMR CNRS 6552.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Alban Lemasson</b>, director of the Animal and Human Ethology (EthoS) research unit UMR CNRS 6552.<br>\\";
     break;
   case "CNGC":
-    $body .= "We work in collaboration with Rennes University Hospital.";
+    $body .= "We work in collaboration with <b>Rennes University Hospital</b>.";
     break;
   case "IGDR":
-    $body .= "We work in collaboration with Prof Reynald Gillet, director of the Institute of Genetics and Development of Rennes (IGDR) UMR CNRS 6290.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Reynald Gillet</b>, director of the Institute of Genetics and Development of Rennes (IGDR) UMR CNRS 6290.<br>\\";
     break;
   case "IRSET":
-    $body .= "We work in collaboration with Prof Michel Samson, director of the Research Institute in Health, Environment and Occupation (IRSET) U Inserm 1085.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Michel Samson</b>, director of the Research Institute in Health, Environment and Occupation (IRSET) U Inserm 1085.<br>\\";
     break;
   case "U991":
-    $body .= "We work in collaboration with Prof Bruno Clement (Liver, Metabolisms and Cancer - U inserm 991 research unit) at the University of Rennes 1.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Bruno Clement</b> (Liver, Metabolisms and Cancer - U inserm 991 research unit) at the University of Rennes 1.<br>\\";
     break;
   case "U835":
-    $body .= "We work in collaboration with Prof Brice Felden, director of the UMR_S Inserm 1230 research unit - Bacterial regulatory RNAs and Medicine.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Brice Felden</b>, director of the UMR_S Inserm 1230 research unit - Bacterial regulatory RNAs and Medicine.<br>\\";
     break;
   case "U1230":
-    $body .= "We work in collaboration with Prof Brice Felden, director of the UMR_S Inserm 1230 research unit - Bacterial regulatory RNAs and Medicine.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Brice Felden</b>, director of the UMR_S Inserm 1230 research unit - Bacterial regulatory RNAs and Medicine.<br>\\";
     break;
   case "BRM":
-    $body .= "We work in collaboration with Prof Brice Felden, director of the UMR_S Inserm 1230 research unit - Bacterial regulatory RNAs and Medicine.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Brice Felden</b>, director of the UMR_S Inserm 1230 research unit - Bacterial regulatory RNAs and Medicine.<br>\\";
     break;
   case "U917":
-    $body .= "We work in collaboration with Prof Karin Tarte, director of the Microenvironment, Cell Differentiation, Immunology and Cancer (MICMAC) - U Inserm 1236 research unit.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Karin Tarte</b>, director of the Microenvironment, Cell Differentiation, Immunology and Cancer (MICMAC) - U Inserm 1236 research unit.<br>\\";
     break;
   case "U1236":
-    $body .= "We work in collaboration with Prof Karin Tarte, director of the Microenvironment, Cell Differentiation, Immunology and Cancer (MICMAC) - U Inserm 1236 research unit.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Karin Tarte</b>, director of the Microenvironment, Cell Differentiation, Immunology and Cancer (MICMAC) - U Inserm 1236 research unit.<br>\\";
     break;
   case "MICMAC":
-    $body .= "We work in collaboration with Prof Karin Tarte, director of the Microenvironment, Cell Differentiation, Immunology and Cancer (MICMAC) - U Inserm 1236 research unit.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Karin Tarte</b>, director of the Microenvironment, Cell Differentiation, Immunology and Cancer (MICMAC) - U Inserm 1236 research unit.<br>\\";
     break;
   case "CIC":
-    $body .= "We work in collaboration with Prof Bruno Laviolle, director of the Clinical Investigation Center - Rennes (CIC).<br>\\";
+    $body .= "We work in collaboration with <b>Prof Bruno Laviolle</b>, director of the Clinical Investigation Center - Rennes (CIC).<br>\\";
     break;
   case "MRI":
-    $body .= "We work in collaboration with Prof Martine Bonnaure-Mallet, director of the Microbiology research unit.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Martine Bonnaure-Mallet</b>, director of the Microbiology research unit.<br>\\";
     break;
   case "BIOSIT":
-    $body .= "We work in collaboration with Rennes University Hospital.";
+    $body .= "We work in collaboration with <b>Rennes University Hospital</b>.";
     break;
   case "OSS":
-    $body .= "We work in collaboration with Prof Eric Chevet, director of the U Inserm 1242 - Chemistry, Oncogenesis, Stress and Signaling (COSS) research unit.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Eric Chevet</b>, director of the U Inserm 1242 - Chemistry, Oncogenesis, Stress and Signaling (COSS) research unit.<br>\\";
     break;
   case "COSS":
-    $body .= "We work in collaboration with Prof Eric Chevet, director of the U Inserm 1242 - Chemistry, Oncogenesis, Stress and Signaling (COSS) research unit.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Eric Chevet</b>, director of the U Inserm 1242 - Chemistry, Oncogenesis, Stress and Signaling (COSS) research unit.<br>\\";
     break;
   case "U1242":
-    $body .= "We work in collaboration with Prof Eric Chevet, director of the U Inserm 1242 - Chemistry, Oncogenesis, Stress and Signaling (COSS) research unit.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Eric Chevet</b>, director of the U Inserm 1242 - Chemistry, Oncogenesis, Stress and Signaling (COSS) research unit.<br>\\";
     break;
   case "NUMECAN":
-    $body .= "We work in collaboration with Prof Bruno Clement, director of the Nutrition, Metabolisms and Cancer (NUMECAN) research unit U Inserm 1241.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Bruno Clement</b>, director of the Nutrition, Metabolisms and Cancer (NUMECAN) research unit U Inserm 1241.<br>\\";
     break;
   case "U1241":
-    $body .= "We work in collaboration with Prof Bruno Clement, director of the Nutrition, Metabolisms and Cancer (NUMECAN) research unit U Inserm 1241.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Bruno Clement</b>, director of the Nutrition, Metabolisms and Cancer (NUMECAN) research unit U Inserm 1241.<br>\\";
     break;
   case "CREM":
-    $body .= "We work in collaboration with the UMR CNRS 6211 - CREM research unit.<br>\\";
+    $body .= "We work in collaboration with the <b>UMR CNRS 6211 - CREM</b> research unit.<br>\\";
     break;
   case "CREAAH":
-    $body .= "We work in collaboration with Prof Marie-Yvane Daire, director of the Archaeology, Archaeoscience and History (CReAAH) research unit UMR CNRS 6566.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Marie-Yvane Daire</b>, director of the Archaeology, Archaeoscience and History (CReAAH) research unit UMR CNRS 6566.<br>\\";
     break;
   case "CRAPE":
-    $body .= "We work in collaboration with Prof Sylvie Ollitrault, director of the Centre For Research On Political Action in Europe (ARENES) UMR CNRS 6051.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Sylvie Ollitrault</b>, director of the Centre For Research On Political Action in Europe (ARENES) UMR CNRS 6051.<br>\\";
     break;
   case "PN":
-    $body .= "We work in collaboration with the Centre Atlantique de Philosophie EA 7463.<br>\\";
+    $body .= "We work in collaboration with the <b>Centre Atlantique de Philosophie EA 7463</b>.<br>\\";
     break;
   case "CAPHI":
-    $body .= "We work in collaboration with the Centre Atlantique de Philosophie EA 7463.<br>\\";
+    $body .= "We work in collaboration with the <b>Centre Atlantique de Philosophie EA 7463</b>.<br>\\";
     break;
   case "UNIV-RENNES1":
-    $body .= "We work in collaboration with the University research units.<br>\\";
+    $body .= "We work in collaboration with the <b>University research units</b>.<br>\\";
     break;
   case "SCANMAT":
-    $body .= "We work in collaboration with Prof Maryline Guilloux-Viry, director of ScanMAT Research Platforms.<br>\\";
+    $body .= "We work in collaboration with Prof <b>Maryline Guilloux-Viry</b>, director of ScanMAT Research Platforms.<br>\\";
     break;
   case "GERMO":
-    $body .= "We work in collaboration with Prof Samer Kayal, director of the GeRMO research unit.<br>\\";
+    $body .= "We work in collaboration with Prof <b>Samer Kayal</b>, director of the GeRMO research unit.<br>\\";
     break;
   case "REPERES":
-    $body .= "We work in collaboration with Prof Emmanuel Oger, director of the REPERES EA 7449 research unit.<br>\\";
+    $body .= "We work in collaboration with Prof <b>Emmanuel Oger</b>, director of the REPERES EA 7449 research unit.<br>\\";
     break;
   case "CHU":
-    $body .= "We work in collaboration with Rennes University Hospital.<br>\\";
+    $body .= "We work in collaboration with <b>Rennes University Hospital</b>.<br>\\";
+    break;
+  case "ISCR-VC":
+    $body .= "We work in collaboration with <b>Prof Xiang-Hua Zhang</b>, director of the Glass & Ceramics Team / Chemical Institute of Rennes - UMR CNRS 6226.<br>\\";
     break;
 }
 
