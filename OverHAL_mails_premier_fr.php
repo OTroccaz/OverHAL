@@ -52,13 +52,13 @@ switch($team)
     $body .= "Nous travaillons en collaboration avec <b>Bruno Clément</b>, directeur de l'U Inserm 991 « Foie, Métabolismes et Cancer ».<br>\\";
     break;
   case "U835":
-    $body .= "Nous travaillons en collaboration avec <b>Brice Felden</b>, directeur de l'U Inserm 1230- ARN régulateurs bactériens et médecine.<br>\\";
+    $body .= "Nous travaillons en collaboration avec l'<b>U Inserm 1230- ARN régulateurs bactériens et médecine</b>.<br>\\";
     break;
   case "U1230":
-    $body .= "Nous travaillons en collaboration avec <b>Brice Felden</b>, directeur de l'U Inserm 1230- ARN régulateurs bactériens et médecine.<br>\\";
+    $body .= "Nous travaillons en collaboration avec l'<b>U Inserm 1230- ARN régulateurs bactériens et médecine</b>.<br>\\";
     break;
   case "BRM":
-    $body .= "Nous travaillons en collaboration avec <b>Brice Felden</b>, directeur de l'U Inserm 1230- ARN régulateurs bactériens et médecine.<br>\\";
+    $body .= "Nous travaillons en collaboration avec l'<b>U Inserm 1230- ARN régulateurs bactériens et médecine</b>.<br>\\";
     break;
   case "U917":
     $body .= "Nous travaillons en collaboration avec <b>Karin Tarte</b>, directrice de l'U Inserm 1236 - Microenvironment, Cell Differentiation, Immunology and Cancer (MICMAC).<br>\\";
@@ -100,12 +100,12 @@ switch($team)
     $body .= "Nous travaillons en collaboration avec <b>Marie-Yvane Daire</b>, directrice de l'UMR CNRS 6556 - CREAAH / OSUR.<br>\\";
     break;
   case "CRAPE":
-    $body .= "Nous travaillons en collaboration avec <b>Sylvie Ollitrault</b>, directrice de l'UMR CNRS 6051 - Centre de recherches sur l'action politique en Europe (ARENES).<br>\\";
+    $body .= "Nous travaillons en collaboration avec <b>Jean-Pierre Le Bourhis</b>, directrice de l'UMR CNRS 6051 - Centre de recherches sur l'action politique en Europe (ARENES).<br>\\";
     break;
-  case "PN":
+  case "XXXX":
     $body .= "Nous travaillons en collaboration avec le <b>Centre Atlantique de Philosophie EA 7463</b>.<br>\\";
     break;
-  case "CAPHI":
+  case "XXXX":
     $body .= "Nous travaillons en collaboration avec le <b>Centre Atlantique de Philosophie EA 7463</b>.<br>\\";
     break;
   case "UNIV-RENNES1":
@@ -214,13 +214,13 @@ switch($team)
     $body .= "Nous travaillons en collaboration avec <b>Bruno Clément</b>, directeur de l'U Inserm 991 « Foie, Métabolismes et Cancer ».<br>\\";
     break;
   case "U835":
-    $body .= "Nous travaillons en collaboration avec <b>Brice Felden</b>, directeur de l'U Inserm 1230- ARN régulateurs bactériens et médecine.<br>\\";
+    $body .= "Nous travaillons en collaboration avec l'<b>U Inserm 1230- ARN régulateurs bactériens et médecine</b>.<br>\\";
     break;
   case "U1230":
-    $body .= "Nous travaillons en collaboration avec <b>Brice Felden</b>, directeur de l'U Inserm 1230- ARN régulateurs bactériens et médecine.<br>\\";
+    $body .= "Nous travaillons en collaboration avec l'<b>U Inserm 1230- ARN régulateurs bactériens et médecine</b>.<br>\\";
     break;
   case "BRM":
-    $body .= "Nous travaillons en collaboration avec <b>Brice Felden</b>, directeur de l'U Inserm 1230- ARN régulateurs bactériens et médecine.<br>\\";
+    $body .= "Nous travaillons en collaboration avec l'<b>U Inserm 1230- ARN régulateurs bactériens et médecine</b>.<br>\\";
     break;
   case "U917":
     $body .= "Nous travaillons en collaboration avec <b>Karin Tarte</b>, directrice de l'U Inserm 1236 - Microenvironment, Cell Differentiation, Immunology and Cancer (MICMAC).<br>\\";
@@ -262,12 +262,12 @@ switch($team)
     $body .= "Nous travaillons en collaboration avec <b>Marie-Yvane Daire</b>, directrice de l'UMR CNRS 6556 - CREAAH / OSUR.<br>\\";
     break;
   case "CRAPE":
-    $body .= "Nous travaillons en collaboration avec <b>Sylvie Ollitrault</b>, directrice de l'UMR CNRS 6051 - Centre de recherches sur l'action politique en Europe (ARENES).<br>\\";
+    $body .= "Nous travaillons en collaboration avec <b>Jean-Pierre Le Bourhis</b>, directrice de l'UMR CNRS 6051 - Centre de recherches sur l'action politique en Europe (ARENES).<br>\\";
     break;
-  case "PN":
+  case "XXXX":
     $body .= "Nous travaillons en collaboration avec le <b>Centre Atlantique de Philosophie EA 7463</b>.<br>\\";
     break;
-  case "CAPHI":
+  case "XXXX":
     $body .= "Nous travaillons en collaboration avec le <b>Centre Atlantique de Philosophie EA 7463</b>.<br>\\";
     break;
   case "UNIV-RENNES1":

@@ -28,7 +28,7 @@ switch($team)
     $body .= "We work in collaboration with <b>Prof Jean-Christophe Sangleboeuf</b>, director of the Institute of Physics - Rennes (IPR) UMR CNRS 6251.<br>\\";
     break;
   case "LGCGM":
-    $body .= "We work in collaboration with <b>Prof Christophe Lanos</b>, director of the Mechanical and Civil Engineering research unit(LGCGM) EA 3913.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Christophe Lanos</b>, co-director of the Mechanical and Civil Engineering research unit(LGCGM) EA 3913.<br>\\";
     break;
   case "ECOBIO":
     $body .= "We work in collaboration with <b>Prof Joan van Baaren</b>, director of the Ecosystems, Biodiversity, Evolution (ECOBIO) research unit UMR CNRS 6553.<br>\\";
@@ -52,13 +52,13 @@ switch($team)
     $body .= "We work in collaboration with <b>Prof Bruno Clement</b> (Liver, Metabolisms and Cancer - U inserm 991 research unit) at the University of Rennes 1.<br>\\";
     break;
   case "U835":
-    $body .= "We work in collaboration with <b>Prof Brice Felden</b>, director of the UMR_S Inserm 1230 research unit - Bacterial regulatory RNAs and Medicine.<br>\\";
+    $body .= "We work in collaboration with the <b>UMR_S Inserm 1230 research unit - Bacterial regulatory RNAs and Medicine</b>.<br>\\";
     break;
   case "U1230":
-    $body .= "We work in collaboration with <b>Prof Brice Felden</b>, director of the UMR_S Inserm 1230 research unit - Bacterial regulatory RNAs and Medicine.<br>\\";
+    $body .= "We work in collaboration with the <b>UMR_S Inserm 1230 research unit - Bacterial regulatory RNAs and Medicine</b>.<br>\\";
     break;
   case "BRM":
-    $body .= "We work in collaboration with <b>Prof Brice Felden</b>, director of the UMR_S Inserm 1230 research unit - Bacterial regulatory RNAs and Medicine.<br>\\";
+    $body .= "We work in collaboration with the <b>UMR_S Inserm 1230 research unit - Bacterial regulatory RNAs and Medicine</b>.<br>\\";
     break;
   case "U917":
     $body .= "We work in collaboration with <b>Prof Karin Tarte</b>, director of the Microenvironment, Cell Differentiation, Immunology and Cancer (MICMAC) - U Inserm 1236 research unit.<br>\\";
@@ -100,12 +100,12 @@ switch($team)
     $body .= "We work in collaboration with <b>Prof Marie-Yvane Daire</b>, director of the Archaeology, Archaeoscience and History (CReAAH) research unit UMR CNRS 6566.<br>\\";
     break;
   case "CRAPE":
-    $body .= "We work in collaboration with <b>Prof Sylvie Ollitrault</b>, director of the Centre For Research On Political Action in Europe (ARENES) UMR CNRS 6051.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Jean-Pierre Le Bourhis</b>, director of the Centre For Research On Political Action in Europe (ARENES) UMR CNRS 6051.<br>\\";
     break;
-  case "PN":
+  case "XXXX":
     $body .= "We work in collaboration with the <b>Centre Atlantique de Philosophie EA 7463</b>.<br>\\";
     break;
-  case "CAPHI":
+  case "XXXX":
     $body .= "We work in collaboration with the <b>Centre Atlantique de Philosophie EA 7463</b>.<br>\\";
     break;
   case "UNIV-RENNES1":
@@ -188,7 +188,7 @@ switch($team)
     $body .= "We work in collaboration with <b>Prof Jean-Christophe Sangleboeuf</b>, director of the Institute of Physics - Rennes (IPR) UMR CNRS 6251.<br>\\";
     break;
   case "LGCGM":
-    $body .= "We work in collaboration with <b>Prof Christophe Lanos</b>, director of the Mechanical and Civil Engineering research unit(LGCGM) EA 3913.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Christophe Lanos</b>, co-director of the Mechanical and Civil Engineering research unit(LGCGM) EA 3913.<br>\\";
     break;
   case "ECOBIO":
     $body .= "We work in collaboration with <b>Prof Joan van Baaren</b>, director of the Ecosystems, Biodiversity, Evolution (ECOBIO) research unit UMR CNRS 6553.<br>\\";
@@ -212,13 +212,13 @@ switch($team)
     $body .= "We work in collaboration with <b>Prof Bruno Clement</b> (Liver, Metabolisms and Cancer - U inserm 991 research unit) at the University of Rennes 1.<br>\\";
     break;
   case "U835":
-    $body .= "We work in collaboration with <b>Prof Brice Felden</b>, director of the UMR_S Inserm 1230 research unit - Bacterial regulatory RNAs and Medicine.<br>\\";
+    $body .= "We work in collaboration with the <b>UMR_S Inserm 1230 research unit - Bacterial regulatory RNAs and Medicine</b>.<br>\\";
     break;
   case "U1230":
-    $body .= "We work in collaboration with <b>Prof Brice Felden</b>, director of the UMR_S Inserm 1230 research unit - Bacterial regulatory RNAs and Medicine.<br>\\";
+    $body .= "We work in collaboration with the <b>UMR_S Inserm 1230 research unit - Bacterial regulatory RNAs and Medicine</b>.<br>\\";
     break;
   case "BRM":
-    $body .= "We work in collaboration with <b>Prof Brice Felden</b>, director of the UMR_S Inserm 1230 research unit - Bacterial regulatory RNAs and Medicine.<br>\\";
+    $body .= "We work in collaboration with the <b>UMR_S Inserm 1230 research unit - Bacterial regulatory RNAs and Medicine</b>.<br>\\";
     break;
   case "U917":
     $body .= "We work in collaboration with <b>Prof Karin Tarte</b>, director of the Microenvironment, Cell Differentiation, Immunology and Cancer (MICMAC) - U Inserm 1236 research unit.<br>\\";
@@ -260,12 +260,12 @@ switch($team)
     $body .= "We work in collaboration with <b>Prof Marie-Yvane Daire</b>, director of the Archaeology, Archaeoscience and History (CReAAH) research unit UMR CNRS 6566.<br>\\";
     break;
   case "CRAPE":
-    $body .= "We work in collaboration with <b>Prof Sylvie Ollitrault</b>, director of the Centre For Research On Political Action in Europe (ARENES) UMR CNRS 6051.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Jean-Pierre Le Bourhis</b>, director of the Centre For Research On Political Action in Europe (ARENES) UMR CNRS 6051.<br>\\";
     break;
-  case "PN":
+  case "XXXX":
     $body .= "We work in collaboration with the <b>Centre Atlantique de Philosophie EA 7463</b>.<br>\\";
     break;
-  case "CAPHI":
+  case "XXXX":
     $body .= "We work in collaboration with the <b>Centre Atlantique de Philosophie EA 7463</b>.<br>\\";
     break;
   case "UNIV-RENNES1":
