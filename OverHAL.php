@@ -47,7 +47,7 @@ if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
 	<script src="./assets/js/app.min.js"></script>
 
 	<!-- third party js -->
-	<script src="./assets/js/vendor/Chart.bundle.min.js"></script>
+	<!-- <script src="./assets/js/vendor/Chart.bundle.min.js"></script> -->
 	<!-- third party js ends -->
 	<script src="./assets/js/pages/hal-ur1.chartjs.js"></script>
 	
@@ -486,7 +486,7 @@ if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
         <script src="./assets/js/app.min.js"></script>
 
         <!-- third party js -->
-        <script src="./assets/js/vendor/Chart.bundle.min.js"></script>
+        <!-- <script src="./assets/js/vendor/Chart.bundle.min.js"></script> -->
         <!-- third party js ends -->
         <script src="./assets/js/pages/hal-ur1.chartjs.js"></script>
 				
