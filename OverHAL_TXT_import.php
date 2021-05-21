@@ -204,12 +204,13 @@ if (file_exists('./PubMed.txt')) {//TXT PubMed file has been submitted
 				$tabPM['statut'][$j] = str_replace(array("PST - ", "\r\n", "\r", "\n", PHP_EOL, chr(10), chr(13), chr(10).chr(13)), "", $ligne);
 				break;
 				
+			/*
 			case "CRDT- "://2020/09/08 17:12
 				$res = str_replace(array("CRDT- ", "\r\n", "\r", "\n", PHP_EOL, chr(10), chr(13), chr(10).chr(13)), "", $ligne);
 				$tabRes = explode(" ", $res);
 				$tabPM['dateEpub'][$j] = str_replace("/", "-", $tabRes[0]);
 				break;
-			
+			*/
 		}
 
 		if (substr($tabPM['motscles'][$j], -2) == ", ") {$tabPM['motscles'][$j] = substr($tabPM['motscles'][$j], 0, (strlen($tabPM['motscles'][$j]) - 2));}
@@ -227,7 +228,7 @@ if (file_exists('./PubMed.txt')) {//TXT PubMed file has been submitted
 	$inF = fopen($Fnm,"a+"); 
 	fseek($inF, 0);
 	//fwrite($inF, "PMID^PMCID^DOI^Type^Langue^Volume^Numero^Pagination^DatePub^Statut^DateMel^Revue^RevAbr^ISSN^EISSN^Titre^Auteurs^Affiliation^idORCID^MC^Finance^Resume".chr(13).chr(10));
-	fwrite($inF, "PMID^PMCID^DOI^Type^Langue^Volume^Numero^Pagination^DatePub^Statut^DateMel^Revue^RevAbr^ISSN^EISSN^Titre^Auteurs^Affiliation^idORCID^MC^Finance^Resume".chr(13).chr(10));
+	fwrite($inF, "PMID^PMCID^DOI^Type^Langue^Volume^Numero^Pagination^DatePub^Statut^Revue^RevAbr^ISSN^EISSN^Titre^Auteurs^Affiliation^idORCID^MC^Finance^Resume".chr(13).chr(10));
 		
 	for ($i = 0; $i < count($tabPM['pubmed']); $i++) {
 		$chaine = "";
@@ -303,11 +304,13 @@ if (file_exists('./PubMed.txt')) {//TXT PubMed file has been submitted
 		}
 		
 		//DateEpub
+		/*
 		if (isset($tabPM['dateEpub'][$i])) {
 			$chaine .= $tabPM['dateEpub'][$i]."^";
 		}else{
 			$chaine .= "^";
 		}
+		*/
 		
 		//Revue
 		if (isset($tabPM['journal'][$i])) {
