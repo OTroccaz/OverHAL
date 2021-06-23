@@ -18,6 +18,8 @@ $body .= "<br><b>Would you please send us <a href=&quot;https://ecm.univ-rennes1
 <br>\
 It is usually a doc file, which does not bear the look and feel of the journal, nor the publisher's copyright notice on it. (2)<br>\
 <br>\
+If you could also please send us the <b>supplementary data</b> along the manuscript, that would be perfect.<br>\
+<br>\
 Making your manuscripts open access will enhance their visibility on the Internet, through search engines (Google Scholar, PubMed and so forth) and social networks (ResearchGate...).<br>\
 <br>\
 Best Regards,<br>\
@@ -63,7 +65,7 @@ University of Rennes 1<br>\
 Tel : + 33 (0)2 23 23 34 78<br>\
 <a href=&quot;https://openaccess.univ-rennes1.fr/&quot;>https://openaccess.univ-rennes1.fr/</a><br>\
 <br>\
-(*) Publisher and journal archiving policies can be checked in the <a href=&quot;http://www.sherpa.ac.uk/romeo/&quot;>Sherpa Romeo</a> database. We always check publisher policies for any deposit. Moreover, no article will be visible before the end of the embargo period, depending on journal policies.<br>\
+(*) Publisher and journal archiving policies can be checked in the <a href=&quot;http://www.sherpa.ac.uk/romeo/&quot;>Sherpa Romeo</a> database. We always check publisher policies for any deposit. Moreover, no article will be visible before the end of the embargo period, depending on journal policies. We also add the supplementary data whenever possible<br>\
 ";
 
 $bodyP = str_replace("'", "\'", $body);

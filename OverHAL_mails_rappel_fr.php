@@ -21,6 +21,8 @@ Le manuscrit auteur &quot;pre-proof&quot; (<a href=&quot;http://learn.library.ry
 <br>\
 <b>Merci de bien vouloir déposer cette version du manuscrit</b> dans HAL (3), <b>ou si vous préférez, nous la transmettre</b>. Nous la déposerons pour vous, après publication de l'article.<br>\
 <br>\
+Merci également d'ajouter si possible les <b>données de recherche</b> (supplementary data)<br>\
+<br>\
 Pour rappel, je suis chargé de diffuser en open access les publications des laboratoires de l'Université de Rennes 1 dans <a href=&quot;https://hal-univ-rennes1.archives-ouvertes.fr/&quot;>l'archive ouverte HAL-Rennes 1</a> (<a &quot;https://openaccess.univ-rennes1.fr/&quot;>en savoir plus</a>).<br>\
 <br>\
 L'intérêt de cette démarche est principalement de renforcer la visibilité de vos travaux sur le web : les documents ainsi déposés dans HAL sont visibles et accessibles au monde entier, à partir des principaux moteurs de recherche (Google Scholar, PubMed, Base, etc.) et des réseaux de recherche (ResearchGate...).<br>\
@@ -69,7 +71,7 @@ Université de Rennes 1<br>\
 Tél : (0)2 23 23 34 78<br>\
 <a href=&quot;https://openaccess.univ-rennes1.fr/&quot;>https://openaccess.univ-rennes1.fr/</a><br>\
 <br>\
-(*) Les dépôts en texte intégral sont effectués dans le respect des <a href=&quot;https://openaccess.univ-rennes1.fr/connaitre-la-politique-des-editeurs&quot;>politiques d'éditeurs</a> et de la Loi sur le numérique (<a href=&quot;https://openaccess.univ-rennes1.fr/que-dit-la-loi&quot;>article 30</a>) en vigueur depuis septembre 2016. La diffusion du PDF publisher ou des proofs n'est pas autorisée.<br>\
+(*) Les dépôts en texte intégral sont effectués dans le respect des <a href=&quot;https://openaccess.univ-rennes1.fr/connaitre-la-politique-des-editeurs&quot;>politiques d'éditeurs</a> et de la Loi sur le numérique (<a href=&quot;https://openaccess.univ-rennes1.fr/que-dit-la-loi&quot;>article 30</a>) en vigueur depuis septembre 2016. La diffusion du PDF publisher ou des proofs n'est pas autorisée. Nous ajoutons les données de recherche (supplementary data) chaque fois que possible.<br>\
 ";
 
 $bodyP = str_replace("'", "\'", $body);

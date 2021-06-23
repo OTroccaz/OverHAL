@@ -144,6 +144,8 @@ $body .= "<br>Le manuscrit auteur &quot;pre-proof&quot; (<a href=&quot;http://le
 <br>\
 L'intérêt de cette démarche est principalement de renforcer la visibilité de vos travaux sur le web : les documents ainsi déposés dans HAL sont visibles et accessibles au monde entier, à partir des principaux moteurs de recherche (Google Scholar, PubMed, Base, etc.) et des réseaux de recherche (ResearchGate...).<br>\
 <br>\
+Merci également d'ajouter si possible les <b>données de recherche</b> (supplementary data)<br>\
+<br>\
 Merci de votre contribution à la science ouverte.<br>\
 <br>\
 Bien à vous,<br>\
@@ -317,7 +319,7 @@ Université de Rennes 1<br>\
 Tél : (0)2 23 23 34 78<br>\
 <a href=&quot;https://openaccess.univ-rennes1.fr/&quot;>https://openaccess.univ-rennes1.fr/</a><br>\
 <br>\
-(*) Les dépôts en texte intégral sont effectués dans le respect des <a href=&quot;https://openaccess.univ-rennes1.fr/connaitre-la-politique-des-editeurs&quot;>politiques d'éditeurs</a> et de la Loi sur le numérique (<a href=&quot;https://openaccess.univ-rennes1.fr/que-dit-la-loi&quot;>article 30</a>) en vigueur depuis septembre 2016. La diffusion du PDF publisher ou des proofs n'est pas autorisée.<br>\
+(*) Les dépôts en texte intégral sont effectués dans le respect des <a href=&quot;https://openaccess.univ-rennes1.fr/connaitre-la-politique-des-editeurs&quot;>politiques d'éditeurs</a> et de la Loi sur le numérique (<a href=&quot;https://openaccess.univ-rennes1.fr/que-dit-la-loi&quot;>article 30</a>) en vigueur depuis septembre 2016. La diffusion du PDF publisher ou des proofs n'est pas autorisée. Nous ajoutons au manuscrit les données de recherche (supplementary data) chaque fois que possible<br>\
 ";
 
 $bodyP = str_replace("'", "\'", $body);
