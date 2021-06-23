@@ -156,7 +156,7 @@ function testOALic($url, $vol, $iss, $pag, $dat, $pdfCR, &$evd, &$titLic, &$typL
           curl_close($doaj);
           $doajParsed_json = json_decode($doajJson);
           //var_dump($doajParsed_json);
-          if ($doajParsed_json->{'total'} != 0)//oa review
+          if (isset($doajParsed_json->{'total'}) && $doajParsed_json->{'total'} != 0)//oa review
           {
             //var_dump($doajParsed_json->{'results'}[0]->{'bibjson'}->{'license'});
             if($doajParsed_json->{'results'}[0]->{'bibjson'}->{'license'}[0]->{'open_access'})

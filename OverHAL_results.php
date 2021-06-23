@@ -3320,6 +3320,17 @@ foreach ($souBib as $key => $subTab)
 											}
 										}
 									}
+									if (isset($papers[$key][$key2]['RI']))
+									{//ResearcherID
+										$tabResid = explode(";", $papers[$key][$key2]['RI']);
+										foreach ($tabResid as $elt) {
+											if (stripos(trim(normalize($elt)), normalize($nom.', '.$prenom)) !== false)
+											{
+												$chaine .= '                  <idno type="http://www.researcherid.com/rid/">'.str_ireplace($nom.", ".$prenom."/", "", trim($elt)).'</idno>'."\r\n";
+												break;//Orcid ajouté > on sort de la boucle
+											}
+										}
+									}
 									$kT = array_search($nompre, $autTab);
 									//echo $kT." - ".$nom."<br>";
 									//var_dump($labTab);
