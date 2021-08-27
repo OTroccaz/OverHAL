@@ -200,6 +200,9 @@ if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
 																														<label for="pubmed_txt" class="badge badge-secondary-lighten">Pubmed (TXT) :</label>
                                                             <input class="form-control mb-1" id="pubmed_txt" name="pubmed_txt" type="file">
 																														
+																														<label for="wos_txt" class="badge badge-secondary-lighten">Web of Science (TXT) :</label>
+                                                            <input class="form-control mb-1" id="wos_txt" name="wos_txt" type="file">
+																														
                                                         </div>
 
                                                         <div class="form-group col-sm-4">

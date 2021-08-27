@@ -24,7 +24,7 @@ if (file_exists("./HAL/OverHAL_pubmed_txt.bib")) {unlink("./HAL/OverHAL_pubmed_t
 if (file_exists("./HAL/OverHAL_pubmed_csv.bib")) {unlink("./HAL/OverHAL_pubmed_csv.bib");}
 if (file_exists("./HAL/OverHAL_pubmed_fcgi.bib")) {unlink("./HAL/OverHAL_pubmed_fcgi.bib");}
 if (file_exists("./HAL/OverHAL_dimensions.bib")) {unlink("./HAL/OverHAL_dimensions.bib");}
-if (file_exists("./HAL/OverHAL_pubmed_txt.bib")) {unlink("./HAL/OverHAL_pubmed_txt.bib");}
+if (file_exists("./HAL/OverHAL_wos_txt.bib")) {unlink("./HAL/OverHAL_wos_txt.bib");}
 
 //TEI files deletion
 if (file_exists("./HAL/OverHAL_scopus.zip")) {unlink("./HAL/OverHAL_scopus.zip");}
@@ -35,7 +35,7 @@ if (file_exists("./HAL/OverHAL_pubmed_xml.zip")) {unlink("./HAL/OverHAL_pubmed_x
 if (file_exists("./HAL/OverHAL_pubmed_txt.zip")) {unlink("./HAL/OverHAL_pubmed_txt.zip");}
 if (file_exists("./HAL/OverHAL_pubmed_fcgi.zip")) {unlink("./HAL/OverHAL_pubmed_fcgi.zip");}
 if (file_exists("./HAL/OverHAL_dimensions.zip")) {unlink("./HAL/OverHAL_dimensions.zip");}
-if (file_exists("./HAL/OverHAL_pubmed_txt.zip")) {unlink("./HAL/OverHAL_pubmed_txt.zip");}
+if (file_exists("./HAL/OverHAL_wos_txt.zip")) {unlink("./HAL/OverHAL_wos_txt.zip");}
 
 //Possibilité de désactiver temporairement SR : = oui ou non
 $desactivSR = "non";
@@ -220,6 +220,36 @@ if (isset($_FILES['pubmed_fcgi']))
   }
 }
 
+$wos_txt= 0;
+if (isset($_FILES['wos_txt']))
+{
+  if ($_FILES['wos_txt']['error'] != 4)//Is there a wos TXT file ?
+  {
+    if ($_FILES['wos_txt']['error'])
+    {
+      switch ($_FILES['wos_txt']['error'])
+      {
+         case 1: // UPLOAD_ERR_INI_SIZE
+         Header("Location: "."OverHAL.php?erreur=1");
+         break;
+         case 2: // UPLOAD_ERR_FORM_SIZE
+         Header("Location: "."OverHAL.php?erreur=2");
+         break;
+         case 3: // UPLOAD_ERR_PARTIAL
+         Header("Location: "."OverHAL.php?erreur=3");
+         break;
+      }
+    }
+    $extension = strrchr($_FILES['wos_txt']['name'], '.');
+    if ($extension != ".txt") {
+      Header("Location: "."OverHAL.php?erreur=5");
+    }
+    move_uploaded_file($_FILES['wos_txt']['tmp_name'], "WoS.txt");
+    include "./OverHAL_TXT_WoS_import.php";
+    $wos_txt = 1;
+  }
+}
+
 //Bibliographic sources array -> first key must correspond to form field file name
 $souBib = array(
   "scopus" => array(
@@ -363,13 +393,28 @@ if ($pubmed_fcgi == 1)
   );
   $souBib["pubmed_fcgi"] = $pubmedFCGITab;
 }
+
+if ($wos_txt == 1)
+{
+  $wosTxtTab = array(
+    "Maj" => "WoS (TXT)",
+    "Sep" => "^",
+    "Year" => "PY",
+    "Title" => "TI",
+    "DOI" => "DI",
+    "Authors" => "AU",
+    "Source" => "SO",
+    "Type" => "PT",
+  );
+  $souBib["wos_txt"] = $wosTxtTab;
+}
 //var_dump($souBib);
 $nbSouBib = count($souBib);
 
 //Tests errors on file submit
 foreach ($souBib as $key => $subTab)
 {
-  if ($key != "wos_html" && $key != "pubmed_html" && $key != "pubmed_xml" && $key != "pubmed_txt" && $key != "pubmed_fcgi")
+  if ($key != "wos_html" && $key != "pubmed_html" && $key != "pubmed_xml" && $key != "pubmed_txt" && $key != "pubmed_fcgi" && $key != "wos_txt")
   {
     if (isset($_FILES[$key]['name']) && $_FILES[$key]['name'] != "") //File has been submitted
     {
@@ -1351,7 +1396,12 @@ foreach ($souBib as $key => $subTab)
 						{
 							$handle = fopen("./HAL/pubmed_fcgi.csv",'r');
 						}else{
-							$handle = fopen($_FILES[$key]['tmp_name'],'r');
+							if($key == "wos_txt")
+							{
+								$handle = fopen("./HAL/wos_txt.csv",'r');
+							}else{
+								$handle = fopen($_FILES[$key]['tmp_name'],'r');
+							}
 						}
 					}
 				}
@@ -1447,7 +1497,7 @@ foreach ($souBib as $key => $subTab)
 					{
 					 $yearPaper = substr($result[$key][$nb][$colYear], 0, 4);
 					}else{
-						if ($key != "wos_csv")
+						if ($key != "wos_csv" && $key != "wos_txt")
 						{
 						 $yearPaper = $result[$key][$nb][$colYear];
 						}else{
@@ -1459,9 +1509,14 @@ foreach ($souBib as $key => $subTab)
 								{
 									$yearPaper = $result[$key][$nb]['EY'];
 								}else{
-									if (isset($result[$key][$nb]['EA']) && $result[$key][$nb]['EA'] != "")
+									if (isset($result[$key][$nb]['PY']) && $result[$key][$nb]['PY'] != "")
 									{
-										$yearPaper = substr($result[$key][$nb]['EA'], -4);
+										$yearPaper = $result[$key][$nb]['PY'];
+									}else{
+										if (isset($result[$key][$nb]['EA']) && $result[$key][$nb]['EA'] != "")
+										{
+											$yearPaper = substr($result[$key][$nb]['EA'], -4);
+										}
 									}
 								}
 							}
@@ -1707,21 +1762,31 @@ foreach ($souBib as $key => $subTab)
 				 $yearPaper = substr($data[$colYear], -4, 4);
 				 $revuePaper = substr($data[$colSource], 0, -6);
 				}else{
-					if ($key != "wos_csv")
+					if ($key == "pubmed_txt")
 					{
-					 $yearPaper = $data[$colYear];
+					 $yearPaper = substr($data[$colYear], 0, 4);
 					}else{
-						if (isset($data[$colYear]) && $data[$colYear] != "")
+						if ($key != "wos_csv" && $key != "wos_txt")
 						{
-							$yearPaper = $data[$colYear];
+						 $yearPaper = $data[$colYear];
 						}else{
-							if (isset($data['EY']) && $data['EY'] != "")
+							if (isset($data[$colYear]) && $data[$colYear] != "")
 							{
-								$yearPaper = $data['EY'];
+								$yearPaper = $data[$colYear];
 							}else{
-								if (isset($data['EA']) && $data['EA'] != "")
+								if (isset($data['EY']) && $data['EY'] != "")
 								{
-									$yearPaper = substr($data['EA'], -4);
+									$yearPaper = $data['EY'];
+								}else{
+									if (isset($data['PY']) && $data['PY'] != "")
+									{
+										$yearPaper = $data['PY'];
+									}else{
+										if (isset($data['EA']) && $data['EA'] != "")
+										{
+											$yearPaper = substr($data['EA'], -4);
+										}
+									}
 								}
 							}
 						}
@@ -1735,6 +1800,7 @@ foreach ($souBib as $key => $subTab)
 				switch($key)
 				{
 					case "wos_csv":
+					case "wos_txt":
 						if ($papers[$key][$key2]['SN'] != "")
 						{
 							$url = 'https://v2.sherpa.ac.uk/cgi/retrieve?item-type=publication&api-key='.$akSR.'&format=Json&filter=[["issn","equals",".'.$papers[$key][$key2]['SN'].'"]]';
@@ -2077,6 +2143,7 @@ foreach ($souBib as $key => $subTab)
 						$linkSource = "<a target=\"_blank\" href=\"".$papers[$key][$key2]['Link Attachments']."\"><img alt='Zotero' src=\"./img/zotero_128.png\"></a>";
 						break;
 					case "wos_csv":
+					case "wos_txt":
 						$linkSource = "<a target=\"_blank\" href=\"http://ws.isiknowledge.com/cps/openurl/service?url_ver=Z39.88-2004&rft_id=info:ut/".str_replace("WOS:", "",$papers[$key][$key2]['UT'])."\"><img alt='WoS' src=\"./img/wos.png\"></a>";
 						break;
 					case "dimensions":
@@ -2504,8 +2571,9 @@ foreach ($souBib as $key => $subTab)
 						fwrite($inF, $chaine);
 						break;
 					case "wos_csv":
+					case "wos_txt":
 						mb_internal_encoding('UTF-8');
-						$Fnm = "./HAL/OverHAL_wos_csv.bib";
+						$Fnm = "./HAL/OverHAL_".$key.".bib";
 						$inF = fopen($Fnm,"a+");
 						fseek($inF, 0);
 						//$chaine = "\xEF\xBB\xBF";//UTF-8
@@ -3081,6 +3149,7 @@ foreach ($souBib as $key => $subTab)
 				switch($key)
 				{
 					case "wos_csv":
+					case "wos_txt":
 						$aut = $papers[$key][$key2]['AU'];
 						$autTab = explode("; ",$aut);
 						if (count($autTab) < $limNbAut)
@@ -3189,11 +3258,11 @@ foreach ($souBib as $key => $subTab)
 							$ddn = supprAmp(str_replace("WOS:", "", $papers[$key][$key2]['UT']));//Document Delivery Number > Accession Number
 							mb_internal_encoding('UTF-8');
 							$zip = new ZipArchive();
-							$FnmZ = "./HAL/OverHAL_wos_csv.zip";
+							$FnmZ = "./HAL/OverHAL_".$key.".zip";
 							if ($zip->open($FnmZ, ZipArchive::CREATE)!==TRUE) {
 								exit("Impossible d'ouvrir le fichier <$FnmZ>\n");
 							}
-							$Fnm = "./HAL/OverHAL_wos_csv_".$ddn.".xml";
+							$Fnm = "./HAL/OverHAL_".$key."_".$ddn.".xml";
 							$inF = fopen($Fnm,"a+");
 							fseek($inF, 0);
 							//$chaine = "\xEF\xBB\xBF";//UTF-8
@@ -5844,6 +5913,11 @@ if (file_exists("./HAL/OverHAL_pubmed_csv.bib"))
 {
 	echo '<br /><a class="btn btn-secondary mt-2" target="_blank" rel="noopener noreferrer" href="./HAL/OverHAL_pubmed_csv.bib">Exporter les résultats PubMed pour Bib2HAL</a>';
 }
+if (file_exists("./HAL/OverHAL_wos_txt.bib"))
+{
+	echo '<br /><a class="btn btn-secondary mt-2" target="_blank" rel="noopener noreferrer" href="./HAL/OverHAL_wos_txt.bib">Exporter les résultats WoS pour Bib2HAL</a>';
+}
+
 if (file_exists("./HAL/OverHAL_scopus.zip"))
 {
 	echo '&nbsp;<a class="btn btn-secondary mt-2" target="_blank" rel="noopener noreferrer" href="./HAL/OverHAL_scopus.zip">Exporter les résultats Scopus au format TEI</a><br />';
@@ -5875,6 +5949,10 @@ if (file_exists("./HAL/OverHAL_pubmed_fcgi.zip"))
 if (file_exists("./HAL/OverHAL_dimensions.zip"))
 {
 	echo '<br /><a class="btn btn-secondary mt-2" target="_blank" rel="noopener noreferrer" href="./HAL/OverHAL_dimensions.zip">Exporter les résultats Dimensions au format TEI</a>';
+}
+if (file_exists("./HAL/OverHAL_wos_txt.zip"))
+{
+	echo '<br /><a class="btn btn-secondary mt-2" target="_blank" rel="noopener noreferrer" href="./HAL/OverHAL_wos_txt.zip">Exporter les résultats WoS au format TEI</a>';
 }
 
 if (!empty($papers[$key])) {//Affichage des tableaux uniquement si présence de résultats !
