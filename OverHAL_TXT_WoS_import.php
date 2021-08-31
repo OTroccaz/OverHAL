@@ -287,7 +287,7 @@ if (file_exists('./WoS.txt')) {//TXT WoS file has been submitted
 
 	$inF = fopen($Fnm,"a+"); 
 	fseek($inF, 0);
-	fwrite($inF, "UT^PM^SE^BN^BE^CL^CY^EY^CT^PT^DI^DT^LA^VL^IS^BP^EP^AR^EA^PY^SO^JI^SN^EI^TI^AF^AU^C1^RI^OI^DE^FU^AB^RP^EM^PU^WC^OA".chr(13).chr(10));
+	fwrite($inF, "UT^PM^SE^BN^BE^CL^CY^EY^CT^PT^DI^DT^LA^VL^IS^BP^EP^AR^EA^PY^SO^JI^SN^EI^TI^AU^AF^C1^RI^OI^DE^FU^AB^RP^EM^PU^WC^OA".chr(13).chr(10));
 		
 	for ($i = 0; $i < count($tabPM['WoS']); $i++) {
 		$chaine = "";
