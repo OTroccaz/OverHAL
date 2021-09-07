@@ -156,7 +156,6 @@ Tel : + 33 (0)2 23 23 34 78<br>\
 <br>\
 (1) Publisher and journal archiving policies can be checked in the <a href=&quot;http://www.sherpa.ac.uk/romeo/&quot;>Sherpa Romeo</a> database. We always check publisher policies for any deposit. Moreover, no article will be visible before the end of the embargo period, depending on journal policies.<br>\
 (2) If you need help to <b>get your manuscript from the journal submission system</b>, please check <a href=&quot;https://openaccessbutton.org/direct2aam&quot;>Direct2AAM</a>. Please, do not send the publisher's PDF nor the proof version, since such versions cannot be deposited in a repository.</font><br>\
-(3) All deposits are made <a href=&quot;https://creativecommons.org/licenses/by-nc/4.0/&quot;>CC-BY-NC</a> by default, in compliance with the <a href=&quot;https://en.wikipedia.org/wiki/Loi_pour_une_R%C3%A9publique_num%C3%A9rique&quot;>French Loi Numérique</a>.<br>\
 ";
 
 $bodyM = str_replace("'", "\'", $body);
@@ -317,7 +316,6 @@ Tel : + 33 (0)2 23 23 34 78<br>\
 <a href=&quot;https://openaccess.univ-rennes1.fr/&quot;>https://openaccess.univ-rennes1.fr/</a><br>\
 <br>\
 (*) Publisher and journal archiving policies can be checked in the <a href=&quot;http://www.sherpa.ac.uk/romeo/&quot;>Sherpa Romeo</a> database. We always check publisher policies for any deposit. Moreover, no article will be visible before the end of the embargo period, depending on journal policies. We also add the supplementary data whenever possible.<br>\
-All deposits are made <a href=&quot;https://creativecommons.org/licenses/by-nc/4.0/&quot;>CC-BY-NC</a> by default, in compliance with the <a href=&quot;https://en.wikipedia.org/wiki/Loi_pour_une_R%C3%A9publique_num%C3%A9rique&quot;>French Loi Numérique</a>.<br>\
 ";
 
 $bodyP = str_replace("'", "\'", $body);
