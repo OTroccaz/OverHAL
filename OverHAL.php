@@ -281,7 +281,7 @@ if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
                                                             <div class="input-group">
                                                                 <div class="input-group-prepend">
                                                                     <button type="button" tabindex="0" class="btn btn-info" data-html="true" data-toggle="popover" data-trigger="focus" title="" data-content="consultez l'API de HAL <a href='https://api.archives-ouvertes.fr/docs/search'>https://api.archives-ouvertes.fr/docs/search</a>" data-original-title="">
-                                                                    <i class="mdi mdi-comment-question text-white"></i>
+                                                                    <i class="mdi mdi-help text-white"></i>
                                                                     </button>
                                                                 </div>
                                                                 <input type="text" id="reqHAL" name="hal" class="form-control"  value='<?php echo $reqHAL;?>'>
@@ -317,7 +317,7 @@ if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
                                                         <div class="input-group-prepend">
                                                             <button type="button" tabindex="0" class="btn btn-info" data-html="true" data-toggle="popover" data-trigger="focus" title="" data-content='Code visible dans l&apos;URL d&apos;une collection.
                                             Exemple : IPR-MOL est le code de la collection http://hal.archives-ouvertes.fr/ <span class="font-weight-bold">IPR-PMOL</span> de l&apos;équipe Physique moléculaire de l&apos;unité IPR UMR CNRS 6251' data-original-title="">
-                                                            <i class="mdi mdi-comment-question text-white"></i>
+                                                            <i class="mdi mdi-help text-white"></i>
                                                             </button>
                                                         </div>
                                                         <input type="text" id="team" name="team" class="form-control"  value="IRSET" onchange="majReqHAL();">
