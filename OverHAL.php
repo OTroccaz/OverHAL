@@ -157,7 +157,10 @@ if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
                                         <div class=" mb-2">
                                             <ul class="list-group">
                                                 <li class="list-group-item">
-                                                    <a target="_blank" rel="noopener noreferrer" href="https://halur1.univ-rennes1.fr/Manuel-OverHAL.pdf"><i class="mdi mdi-file-pdf-box-outline mr-1"></i> Télécharger le manuel</a>
+                                                    <a target="_blank" rel="noopener noreferrer" href="https://halur1.univ-rennes1.fr/Manuel-OverHAL.pdf"><i class="mdi mdi-file-pdf-box-outline mr-1"></i> Télécharger le manuel</a><br>
+                                                </li>
+																								<li class="list-group-item">
+																										<a target="_blank" rel="noopener noreferrer" href="https://halur1.univ-rennes1.fr/Installer-OverHAL.pdf"><i class="mdi mdi-file-pdf-box-outline mr-1"></i> Installer OverHAL</a>
                                                 </li>
                                                
                                             </ul> 
