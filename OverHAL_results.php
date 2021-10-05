@@ -1483,7 +1483,7 @@ foreach ($souBib as $key => $subTab)
 				//Extract the type only for Scopus, Zotero or WoS communication
 				$comm = "";
 				$test = $result[$key][$nb][$colType];
-				if ($test == "Conference Paper" || $test == "Conference Review" || $test == "conferencePaper" || $test == "S")
+				if ($test == "Conference Paper" || $test == "Conference Review" || $test == "conferencePaper" || $test == "S" || $test == "C") 
 				{
 				 $comm = "ok";
 				}
@@ -2590,6 +2590,7 @@ foreach ($souBib as $key => $subTab)
 									$type = "article";
 									break;
 								case "S":
+								case "C":
 									$type = "inproceedings";
 									break;
 								case "B":
@@ -3373,7 +3374,8 @@ foreach ($souBib as $key => $subTab)
 										foreach ($tabMail as $elt) {
 											if (stripos(trim(normalize($elt)), normalize($nom)) !== false)
 											{
-												$chaine .= '                  <email>'.trim($elt).'</email>'."\r\n";
+												//$chaine .= '                  <email>'.trim($elt).'</email>'."\r\n";
+												$chaine .= '                  <email type="domain">'.str_replace('@', '', strstr(trim($elt), '@')).'</email>'."\r\n";
 												break;//email ajouté > on sort de la boucle
 											}
 										}
@@ -3459,6 +3461,7 @@ foreach ($souBib as $key => $subTab)
 										$typeDocp = "Journal articles";
 										break;
 									case "S"://inproceedings
+									case "C":
 									case "B"://book
 										if ($papers[$key][$key2]['DT'] == "Proceedings Paper") {
 											$chaine .= '                <title level="j">'.supprAmp($papers[$key][$key2]['SO']).'</title>'."\r\n";
@@ -3656,7 +3659,7 @@ foreach ($souBib as $key => $subTab)
 										//review, book chapter
 										if ($papers[$key][$key2]['DT'] == "Book" || $papers[$key][$key2]['DT'] == "Review; Book Chapter" || $papers[$key][$key2]['DT'] == "Editorial Material; Book Chapter" || $papers[$key][$key2]['DT'] == "Article; Book Chapter") {
 											$chaine .= '                <idno type="isbn">'.supprAmp($papers[$key][$key2]['BN']).'</idno>'."\r\n";
-											if ($papers[$key][$key2]['PT'] == "S" || $papers[$key][$key2]['PT'] == "B") {
+											if ($papers[$key][$key2]['PT'] == "S" || $papers[$key][$key2]['PT'] == "B" || $papers[$key][$key2]['PT'] == "C") {
 												$chaine .= '                <title level="m">'.supprAmp($papers[$key][$key2]['SO']).'</title>'."\r\n";
 											}else{
 												$chaine .= '                <title level="m">'.supprAmp($papers[$key][$key2]['SE']).'</title>'."\r\n";
@@ -3681,7 +3684,7 @@ foreach ($souBib as $key => $subTab)
 												}
 											}
 											$chaine .= '                </imprint>'."\r\n";
-											if ($papers[$key][$key2]['PT'] == "S" || $papers[$key][$key2]['PT'] == "B") {
+											if ($papers[$key][$key2]['PT'] == "S" || $papers[$key][$key2]['PT'] == "B" || $papers[$key][$key2]['PT'] == "C") {
 												$typeDoc = "COUV";
 												$typeDocp = "Book sections";//???
 											}else{
@@ -4041,7 +4044,8 @@ foreach ($souBib as $key => $subTab)
 									if ($rolAut == "crp") {
 										if (stripos($papers[$key][$key2]['Correspondence Address'], "email") !== false) {
 											$tabCrp = explode("email:", $papers[$key][$key2]['Correspondence Address']);
-											$chaine .= '                  <email>'.trim($tabCrp[1]).'</email>'."\r\n";
+											//$chaine .= '                  <email>'.trim($tabCrp[1]).'</email>'."\r\n";
+											$chaine .= '                  <email type="domain">'.str_replace('@', '', strstr(trim($tabCrp[1]), '@')).'</email>'."\r\n";
 										}
 									}
 									$kT = array_search($nompre, $autTab);
@@ -4692,6 +4696,7 @@ foreach ($souBib as $key => $subTab)
 										break;
 									/*
 									case "S":
+									case "C":
 										//inproceedings
 										if ($papers[$key][$key2]['DT'] == "Proceedings Paper") {
 											$chaine .= '                <title level="j">'.supprAmp($papers[$key][$key2]['SO']).'</title>'."\r\n";
