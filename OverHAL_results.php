@@ -2288,14 +2288,15 @@ foreach ($souBib as $key => $subTab)
 						{
 							if ($lang == "FR")
 							{
-								include "./OverHAL_mails_premier_fr.php";
+								if ($callNumber == "ISCR-AP") {include "./OverHAL_mails_premier_fr_ISCR-AP.php";}else{include "./OverHAL_mails_premier_fr.php";}
 							}else{
 								include "./OverHAL_mails_premier_en.php";
 							}
 							if ($imgMailM == "")
 							{
-								$imgMailM = "./img/bouton-m.jpg";
+								if ($callNumber == "ISCR-AP") {$imgMailM = "./img/bouton-m-iscr-ap.jpg";}else{$imgMailM = "./img/bouton-m.jpg";}
 							}
+							
 							$linkMailM = "<div id=\"".$titreNorm."M\"><a href=\"#".$titreNorm."\" onClick=\"majMailsM('".$adr."','".$titreNorm."','".$refdoi."','M','','".strtoupper($lang)."','".$callNumber."'); mailto('".$adr."','".$subjectM."','".$bodyM."');\"><img alt='".$adr."' title='".$adr."' src='".$imgMailM."'></a></div>";
 						}else{//new solicitation
 							if ($lang == "FR")
@@ -2306,7 +2307,7 @@ foreach ($souBib as $key => $subTab)
 							}
 							if ($imgMailM == "")
 							{
-								$imgMailM = "./img/bouton-m.jpg";
+								if ($callNumber == "ISCR-AP") {$imgMailM = "./img/bouton-m-iscr-ap.jpg";}else{$imgMailM = "./img/bouton-m.jpg";}
 							}
 							$linkMailM = "<div id=\"".$titreNorm."M\"><a href=\"#".$titreNorm."\" onClick=\"majMailsM('".$adr."','".$titreNorm."','".$refdoi."','M','','".strtoupper($lang)."','".$callNumber."'); mailto('".$adr."','".$subjectM."','".$bodyM."');\"><img alt='".$adr."' title='".$adr."' src='".$imgMailM."'></a></div>";
 						}
@@ -2314,13 +2315,13 @@ foreach ($souBib as $key => $subTab)
 						{
 							if ($lang == "FR")
 							{
-								include "./OverHAL_mails_premier_fr.php";
+								if ($callNumber == "ISCR-AP") {include "./OverHAL_mails_premier_fr_ISCR-AP.php";}else{include "./OverHAL_mails_premier_fr.php";}
 							}else{
 								include "./OverHAL_mails_premier_en.php";
 							}
 							if ($imgMailP == "")
 							{
-								$imgMailP = "./img/bouton-p.jpg";
+								if ($callNumber == "ISCR-AP") {$imgMailP = "./img/bouton-p-iscr-ap.jpg";}else{$imgMailP = "./img/bouton-p.jpg";}
 							}
 							$linkMailP = "<div id=\"".$titreNorm."P\"><a href=\"#".$titreNorm."\" onClick=\"majMailsP('".$adr."','".$titreNorm."','".$refdoi."','P','','".strtoupper($lang)."','".$callNumber."'); mailto('".$adr."','".$subjectP."','".$bodyP."');\"><img alt='".$adr."' title='".$adr."' src='".$imgMailP."'></a></div>";
 						}else{//new solicitation
@@ -2332,7 +2333,7 @@ foreach ($souBib as $key => $subTab)
 							}
 							if ($imgMailP == "")
 							{
-								$imgMailP = "./img/bouton-p.jpg";
+								if ($callNumber == "ISCR-AP") {$imgMailP = "./img/bouton-p-iscr-ap.jpg";}else{$imgMailP = "./img/bouton-p.jpg";}
 							}
 							$linkMailP = "<div id=\"".$titreNorm."P\"><a href=\"#".$titreNorm."\" onClick=\"majMailsP('".$adr."','".$titreNorm."','".$refdoi."','P','','".strtoupper($lang)."','".$callNumber."'); mailto('".$adr."','".$subjectP."','".$bodyP."');\"><img alt='".$adr."' title='".$adr."' src='".$imgMailP."'></a></div>";
 						}
