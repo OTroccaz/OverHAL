@@ -1,6 +1,6 @@
 <?php
 //M
-$subjectM = "ISCR / Texte intégral de votre article pour diffusion dans HAL";
+$subjectM = "ISCR / Texte integral de votre article pour diffusion dans HAL";
 $body = "<font face='corbel'>Bonjour,\
 <br>\
 <br>\
@@ -44,7 +44,7 @@ Tél : (0)2 23 23 34 78<br>\
 $bodyM = str_replace("'", "\'", $body);
 
 //P
-$subjectP = "ISCR / POSTPRINT Texte intégral de votre article pour diffusion dans HAL";
+$subjectP = "ISCR / POSTPRINT Texte integral de votre article pour diffusion dans HAL";
 
 $body .= "<br><b>Merci d'ajouter le manuscrit à la référence HAL</b> ainsi que les données de recherche (supplementary data), soit via <b>l'application <a href=&quot;https://halur1.univ-rennes1.fr/MyHAL.php&quot;>MyHAL</a></b>, soit en demandant la <b>propriété du dépôt HAL</b> (bouton en bas de la page).<br>\
 <br>\

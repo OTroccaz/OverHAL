@@ -26,12 +26,13 @@ function majMailsP(adr,titre,doi,typ,file,lang,labo) {
   document.getElementById(titre+'P').innerHTML = "<b>OK</b>";
 }
 
-function mailto(adr,sub,mes) {
-  //alert(mes);
+function mailto(fic,adr,sub,mes) {
+  //alert(fic);
   $.post("OverHAL_mailto.php", {
-    qui: adr,
+    fich: fic,
+		qui: adr,
     quoi: sub,
-    mess: mes
+		mess: mes
   });
 }
  
