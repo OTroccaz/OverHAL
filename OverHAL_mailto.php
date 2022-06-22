@@ -28,7 +28,7 @@ $headers .= "Content-Transfer-Encoding: 8bit"."\r\n";
 $laurent = stripAccents(mb_encode_mimeheader("Laurent Jonchere", "UTF-8"));
 $headers .= 'From: '.$laurent.' <laurent.jonchere@univ-rennes1.fr>'."\r\n";
 $headers .= 'Reply-to: '.$laurent.' <laurent.jonchere@univ-rennes1.fr>'."\r\n";
-//$headers .= 'Cc: laurent.jonchere@univ-rennes1.fr'."\r\n";
+$headers .= 'Cc: laurent.jonchere@univ-rennes1.fr'."\r\n";
 //$headers .= 'BCc: olivier.troccaz@univ-rennes1.fr'."\r\n";
 
 //Message
