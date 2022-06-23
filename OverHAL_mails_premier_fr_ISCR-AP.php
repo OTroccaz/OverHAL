@@ -46,6 +46,23 @@ $bodyM = str_replace("'", "\'", $body);
 //P
 $subjectP = "ISCR / POSTPRINT Texte integral de votre article pour diffusion dans HAL";
 
+$body = "<font face='corbel'>Bonjour,\
+<br>\
+<br>\
+Je suis chargé du suivi de l'open access des publications de l'UMR CNRS 6226 dans <a href=&quot;https://hal-univ-rennes1.archives-ouvertes.fr/&quot;>l'archive ouverte HAL-Rennes 1</a>.<br>\
+";
+
+$body .= "<br>\
+Vous êtes l'auteur d'un article récent, dont la diffusion du <a href=&quot;https://openaccess.univ-rennes1.fr/quelles-versions-deposer-dans-hal&quot;>manuscrit auteur final (pre-proof)</a> est autorisée dans HAL (*) :<br>\
+";
+
+if ($refdoi != "")
+{
+  $body .= "<br><b><a href=&quot;https://dx.doi.org/".$refdoi."&quot;>".$data[$colTitle]."</a></b><br>\\";
+}else{
+  $body .= "<br><b>".$data[$colTitle]."</b><br>\\";
+}
+
 $body .= "<br><b>Merci d'ajouter le manuscrit à la référence HAL</b> ainsi que les données de recherche (supplementary data), soit via <b>l'application <a href=&quot;https://halur1.univ-rennes1.fr/MyHAL.php&quot;>MyHAL</a></b>, soit en demandant la <b>propriété du dépôt HAL</b> (bouton en bas de la page).<br>\
 <br>\
 Le manuscrit auteur &quot;pre-proof&quot; (<a href=&quot;https://hal.archives-ouvertes.fr/hal-01115003/document&quot;>exemple</a>) est la version après relecture des pairs (clean copy / pre-copy edit) qui précède les corrections finales des épreuves et la mise en forme de l'éditeur.<br>\

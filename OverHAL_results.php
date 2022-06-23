@@ -2224,16 +2224,20 @@ foreach ($souBib as $key => $subTab)
 					$mailOK = "";
 					$file = "";
 
-					foreach($MAILS_LISTE AS $i => $valeur) {
-						if ($refdoi != "" && strtolower($MAILS_LISTE[$i]["quoi2"]) == strtolower($refdoi)) //mail already send
-						{
-							$mailOK = "OK";
-						}
-						if ($adr != "" && strtolower($MAILS_LISTE[$i]["qui"]) == strtolower($adr))
-						{
-							$nouvelEnvoiM = "oui";
-							$nouvelEnvoiP = "oui";
-							$lang = strtoupper($MAILS_LISTE[$i]["lang"]);
+					if ($key == "zotero" && isset($papers[$key][$key2]['Call Number']) && $papers[$key][$key2]['Call Number'] == "ISCR-AP") {
+						//Blocage du mécanisme de nouvel envoi si Zotero et 'ISCR-AP'
+					}else{
+						foreach($MAILS_LISTE AS $i => $valeur) {
+							if ($refdoi != "" && strtolower($MAILS_LISTE[$i]["quoi2"]) == strtolower($refdoi)) //mail already send
+							{
+								$mailOK = "OK";
+							}
+							if ($adr != "" && strtolower($MAILS_LISTE[$i]["qui"]) == strtolower($adr))
+							{
+								$nouvelEnvoiM = "oui";
+								$nouvelEnvoiP = "oui";
+								$lang = strtoupper($MAILS_LISTE[$i]["lang"]);
+							}
 						}
 					}
 					//Language to use for the mail

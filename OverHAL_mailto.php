@@ -13,6 +13,8 @@ $adr = str_replace(";", ",", $adr);
 $sub = stripAccents($_POST['quoi']);
 $fic = $_POST['fich'];
 //$fic = str_replace('\\', '\\\\', $fic);
+$nom_fichier = substr(strrchr($fic, "\\"), 1);
+$fic = './OverHAL_PDF/'.$nom_fichier;
 $mes = $_POST['mess'];
 $mes = wordwrap($mes, 70, "\r\n", false);
 
@@ -20,7 +22,7 @@ $boundary = md5(rand()); // clé aléatoire de limite
 
 // Pour envoyer un mail HTML, l'en-tête Content-type doit être défini
 $headers  = 'MIME-Version: 1.0'."\r\n";
-$headers .= 'Content-Type: multipart/mixed; boundary='.$boundary .' '."\r\n"; 
+$headers .= 'Content-Type: multipart/mixed; boundary='.$boundary .' '."\r\n";
 $headers .= "Content-Transfer-Encoding: 8bit"."\r\n";
 
 // En-têtes additionnels
@@ -35,11 +37,12 @@ $headers .= 'Cc: laurent.jonchere@univ-rennes1.fr'."\r\n";
 $email_message = '--' . $boundary."\r\n"; //Séparateur d'ouverture
 $email_message .= "Content-Type: text/html; charset=utf-8"."\r\n"; //Type du contenu
 $email_message .= "Content-Transfer-Encoding: 8bit"."\r\n"; //Encodage
-$email_message .= "\r\n".clean_string($mes)."\r\n"; //Contenu du message
+//$email_message .= "\r\n";
+$email_message .= "\r\n".$mes."\r\n"; //Contenu du message
 
+/*
 //Pièce jointe
 if (!empty($fic)) {
-	$nom_fichier = basename($fic);
 	$type_fichier = "application/pdf";
 	$handle = fopen($fic, 'r'); //Ouverture du fichier
 	$content = fread($handle, filesize($fic)); //Lecture du fichier
@@ -52,7 +55,11 @@ if (!empty($fic)) {
 	$email_message .= 'Content-transfer-encoding:base64'."\r\n"; //Encodage
 	$email_message .= "\r\n"; //Ligne blanche. IMPORTANT !
 	$email_message .= $encoded_content."\r\n"; //Pièce jointe
+	//$email_message .= "\r\n";
 }
+*/
+
+$email_message .= "\r\n"."--".$boundary."--"."\r\n"; //Séparateur de fermeture
 
 // Envoi
 //$adr = "olivier.troccaz@univ-rennes1.fr";
