@@ -370,7 +370,7 @@ if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
                                                     </div>
                                                     <div class="custom-control custom-checkbox">
 																												<input type="checkbox" class="custom-control-input" name="txtint" id="txtint" value="ok" onchange="majReqHAL();">
-                                                        <label class="custom-control-label" for="txtint">Requête uniquement sur le texte intégral (dépôt HAL ou lien arxiv ou lien Pubmed Central)</label>
+                                                        <label class="custom-control-label" for="txtint">Requête uniquement sur le texte intégral (dépôt HAL ou lien arxiv)</label>
                                                     </div>
                                                     <div class="custom-control custom-checkbox">
 																												<input type="checkbox" checked class="custom-control-input" name="desactSR" value="oui" id="desactSR">
