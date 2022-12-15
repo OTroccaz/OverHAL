@@ -2052,6 +2052,8 @@ foreach ($souBib as $key => $subTab)
 							if (isset ($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on")	{
 								curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, TRUE);
 								curl_setopt($ch, CURLOPT_CAINFO, "cacert.pem");
+							}else{
+								curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 							}
 							$temp = curl_exec($ch);
 							curl_close($ch);

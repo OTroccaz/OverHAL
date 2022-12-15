@@ -58,6 +58,8 @@ if ($fcgi == 1)
 	if (isset ($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on")	{
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, TRUE);
 		curl_setopt($ch, CURLOPT_CAINFO, "cacert.pem");
+	}else{
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 	}
 	$resultat = curl_exec($ch);
 	fwrite($fp, $resultat);
