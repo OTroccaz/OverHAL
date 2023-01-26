@@ -1374,7 +1374,7 @@ foreach ($souBib as $key => $subTab)
 		{
 			echo "<a name='Chargement du fichier ".$nomSouBib."'></a><h4>Chargement du fichier ".$nomSouBib." - <a href='#Resultats'><em>Retour aux résultats</em></a></h4>";
 		}
-		ini_set('auto_detect_line_endings',TRUE);
+		//ini_set('auto_detect_line_endings',TRUE);
 
 		if($key == "wos_html")
 		{
@@ -2303,8 +2303,8 @@ foreach ($souBib as $key => $subTab)
 							{
 								if ($callNumber == "ISCR-AP") {$imgMailM = "./img/bouton-m-iscr-ap.jpg";}else{$imgMailM = "./img/bouton-m.jpg";}
 							}
-							
-							$linkMailM = "<div id=\"".$titreNorm."M\"><a href=\"#".$titreNorm."\" onClick=\"majMailsM('".$adr."','".$titreNorm."','".$refdoi."','M','','".strtoupper($lang)."','".$callNumber."'); mailto('".$file."','".$adr."','".$subjectM."','".$bodyM."');\"><img alt='".$adr."' title='".$adr."' src='".$imgMailM."'></a></div>";
+							//Titre = $data[$colTitle]
+							$linkMailM = "<div id=\"".$titreNorm."M\"><a href=\"#".$titreNorm."\" onClick=\"majMailsM('".$adr."','".$titreNorm."','".$refdoi."','M','','".strtoupper($lang)."','".$callNumber."','".str_replace("'", "\'", $data[$colTitle])."'); mailto('".$file."','".$adr."','".$subjectM."','".$bodyM."');\"><img alt='".$adr."' title='".$adr."' src='".$imgMailM."'></a></div>";
 						}else{//new solicitation
 							if ($lang == "FR")
 							{
@@ -2316,7 +2316,7 @@ foreach ($souBib as $key => $subTab)
 							{
 								if ($callNumber == "ISCR-AP") {$imgMailM = "./img/bouton-m-iscr-ap.jpg";}else{$imgMailM = "./img/bouton-m.jpg";}
 							}
-							$linkMailM = "<div id=\"".$titreNorm."M\"><a href=\"#".$titreNorm."\" onClick=\"majMailsM('".$adr."','".$titreNorm."','".$refdoi."','M','','".strtoupper($lang)."','".$callNumber."'); mailto('".$file."','".$adr."','".$subjectM."','".$bodyM."');\"><img alt='".$adr."' title='".$adr."' src='".$imgMailM."'></a></div>";
+							$linkMailM = "<div id=\"".$titreNorm."M\"><a href=\"#".$titreNorm."\" onClick=\"majMailsM('".$adr."','".$titreNorm."','".$refdoi."','M','','".strtoupper($lang)."','".$callNumber."','".str_replace("'", "\'", $data[$colTitle])."'); mailto('".$file."','".$adr."','".$subjectM."','".$bodyM."');\"><img alt='".$adr."' title='".$adr."' src='".$imgMailM."'></a></div>";
 						}
 						if ($nouvelEnvoiP == "non")
 						{
@@ -2335,7 +2335,7 @@ foreach ($souBib as $key => $subTab)
 									$imgMailP = "./img/bouton-p.jpg";
 								}
 							}
-							$linkMailP = "<div id=\"".$titreNorm."P\"><a href=\"#".$titreNorm."\" onClick=\"majMailsP('".$adr."','".$titreNorm."','".$refdoi."','P','','".strtoupper($lang)."','".$callNumber."'); mailto('".$file."','".$adr."','".$subjectP."','".$bodyP."');\"><img alt='".$adr."' title='".$adr."' src='".$imgMailP."'></a></div>";
+							$linkMailP = "<div id=\"".$titreNorm."P\"><a href=\"#".$titreNorm."\" onClick=\"majMailsP('".$adr."','".$titreNorm."','".$refdoi."','P','','".strtoupper($lang)."','".$callNumber."','".str_replace("'", "\'", $data[$colTitle])."'); mailto('".$file."','".$adr."','".$subjectP."','".$bodyP."');\"><img alt='".$adr."' title='".$adr."' src='".$imgMailP."'></a></div>";
 						}else{//new solicitation
 							if ($lang == "FR")
 							{
@@ -2347,7 +2347,7 @@ foreach ($souBib as $key => $subTab)
 							{
 								if ($callNumber == "ISCR-AP") {$imgMailP = "./img/bouton-p-iscr-ap.jpg";}else{$imgMailP = "./img/bouton-p.jpg";}
 							}
-							$linkMailP = "<div id=\"".$titreNorm."P\"><a href=\"#".$titreNorm."\" onClick=\"majMailsP('".$adr."','".$titreNorm."','".$refdoi."','P','','".strtoupper($lang)."','".$callNumber."'); mailto('".$file."','".$adr."','".$subjectP."','".$bodyP."');\"><img alt='".$adr."' title='".$adr."' src='".$imgMailP."'></a></div>";
+							$linkMailP = "<div id=\"".$titreNorm."P\"><a href=\"#".$titreNorm."\" onClick=\"majMailsP('".$adr."','".$titreNorm."','".$refdoi."','P','','".strtoupper($lang)."','".$callNumber."','".str_replace("'", "\'", $data[$colTitle])."'); mailto('".$file."','".$adr."','".$subjectP."','".$bodyP."');\"><img alt='".$adr."' title='".$adr."' src='".$imgMailP."'></a></div>";
 						}
 					}else{
 						$linkMailM = "<strong>OK</strong>";

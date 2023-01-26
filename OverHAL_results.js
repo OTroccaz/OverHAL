@@ -1,29 +1,33 @@
-function majMailsM(adr,titre,doi,typ,file,lang,labo) {
+//titreN = titre normalisé
+//titreO = titre original
+function majMailsM(adr,titreN,doi,typ,file,lang,labo,titreO) {
   alert('Mail envoyé à ' + adr);
   $.post("OverHAL_mails_maj.php", {
     qui: adr,
-    quoi1: titre,
+    quoi1: titreN,
     quoi2: doi,
     type: typ,
     fic: file,
     lang: lang,
-		labo: labo
+		labo: labo,
+		titre: titreO
   });
-  document.getElementById(titre+'M').innerHTML = "<b>OK</b>";
+  document.getElementById(titreN+'M').innerHTML = "<b>OK</b>";
 }
 
-function majMailsP(adr,titre,doi,typ,file,lang,labo) {
+function majMailsP(adr,titreN,doi,typ,file,lang,labo,titreO) {
   alert('Mail envoyé à ' + adr);
   $.post("OverHAL_mails_maj.php", {
     qui: adr,
-    quoi1: titre,
+    quoi1: titreN,
     quoi2: doi,
     type: typ,
     fic: file,
     lang: lang,
-		labo: labo
+		labo: labo,
+		titre: titreO
   });
-  document.getElementById(titre+'P').innerHTML = "<b>OK</b>";
+  document.getElementById(titreN+'P').innerHTML = "<b>OK</b>";
 }
 
 function mailto(fic,adr,sub,mes) {
