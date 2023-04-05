@@ -570,7 +570,7 @@ foreach ($souBib as $key => $subTab)
                                         </p>
 																				
 																				<p class="mb-4">
-                                            Contacts : <a target='_blank' rel='noopener noreferrer' href="https://openaccess.univ-rennes1.fr/interlocuteurs/laurent-jonchere">Laurent Jonchère</a> (Université de Rennes 1) / <a target='_blank' rel='noopener noreferrer' href="https://ecobio.univ-rennes1.fr/personnel.php?qui=Olivier_Troccaz">Olivier Troccaz</a> (CNRS CReAAH/OSUR).
+                                            Contacts : <a target='_blank' rel='noopener noreferrer' href="https://openaccess.univ-rennes1.fr/interlocuteurs/laurent-jonchere">Laurent Jonchère</a> (Université de Rennes 1) / <a target='_blank' rel='noopener noreferrer' href="https://creaah.cnrs.fr/team/troccaz-olivier/">Olivier Troccaz</a> (CNRS CReAAH/OSUR).
                                         </p>
 
                                     </div> <!-- end card-body-->
@@ -1140,8 +1140,7 @@ function storePrm($entry, $nbHAL, $doi, $pubLink, $seeAlso, $titlePlus, $titreIn
 	//Saving full citation
 	$halFullRef[$encodedTitle]=($entry->citationFull_s);
 	if(strlen($doi)>0){$halFullRef[$doi]=($entry->citationFull_s);}
-	//echo "<li>".$entry->halId_s." - ".normalize(utf8_encode(mb_strtolower(utf8_decode($entry->title_s[0]))))."</li>";
-
+	//echo "<li>".$entry->halId_s." - ".normalize(mb_convert_encoding(mb_strtolower(mb_convert_encoding($entry->title_s[0], 'ISO-8859-1', 'UTF-8')), 'UTF-8', 'ISO-8859-1'))."</li>";
 	if (isset($entry->docType_s)) {$halDoctyp[$encodedTitle] = ($entry->docType_s);}
 	if (isset($entry->arxivId_s)) {$halArxivs[$encodedTitle] = ($entry->arxivId_s);}
 	if (isset($entry->pubmedcentralId_s)) {$halPubmed[$encodedTitle] = ($entry->pubmedcentralId_s);}
@@ -1149,7 +1148,7 @@ function storePrm($entry, $nbHAL, $doi, $pubLink, $seeAlso, $titlePlus, $titreIn
 	$nbHAL+=1;
 
 	if (isset($entry->subTitle_s[0])) {//Duplication of the entry with the reducted title
-		$encodedTitle=normalize(utf8_encode(mb_strtolower(utf8_decode($titreInit))));
+		$encodedTitle = normalize(mb_convert_encoding(mb_strtolower(mb_convert_encoding($titreInit, 'ISO-8859-1', 'UTF-8')), 'UTF-8', 'ISO-8859-1'));
 
 		$halId[$encodedTitle]=($entry->halId_s);
 
@@ -1293,11 +1292,12 @@ if(isset($_POST['hal']))
 				$posi = strpos($entry->title_s[0], "[")+1;
 				$posf = strpos($entry->title_s[0], "]");
 				$tradTitle = substr($entry->title_s[0], $posi, $posf-$posi);
-				$encodedTitle=normalize(utf8_encode(mb_strtolower($tradTitle)));
+				$encodedTitle = normalize(mb_convert_encoding(mb_strtolower(mb_convert_encoding($tradTitle, 'ISO-8859-1', 'UTF-8')), 'UTF-8', 'ISO-8859-1'));
+
 			}else{
 				//Does the title integrates a traduction with title_s[1]?
 				if (isset($entry->title_s[1]) && $entry->title_s[1] != "") {
-					$encodedTitle=normalize(utf8_encode(mb_strtolower($entry->title_s[1])));
+					$encodedTitle = normalize(mb_convert_encoding(mb_strtolower(mb_convert_encoding($entry->title_s[1], 'ISO-8859-1', 'UTF-8')), 'UTF-8', 'ISO-8859-1'));
 				}else{
 					//Is there a subTitle ?
 					$titlePlus = $entry->title_s[0];
@@ -1305,7 +1305,7 @@ if(isset($_POST['hal']))
 						$titreInit = $titlePlus;
 						$titlePlus .= " : ".$entry->subTitle_s[0];
 					}
-					$encodedTitle=normalize(utf8_encode(mb_strtolower(utf8_decode($titlePlus))));
+					$encodedTitle = normalize(mb_convert_encoding(mb_strtolower(mb_convert_encoding($titlePlus, 'ISO-8859-1', 'UTF-8')), 'UTF-8', 'ISO-8859-1'));
 				}
 			}
 			
@@ -1332,11 +1332,11 @@ if(isset($_POST['hal']))
 				$posi = strpos($entry->title_s[0], "[")+1;
 				$posf = strpos($entry->title_s[0], "]");
 				$tradTitle = substr($entry->title_s[0], $posi, $posf-$posi);
-				$encodedTitle=normalize(utf8_encode(mb_strtolower($tradTitle)));
+				$encodedTitle = normalize(mb_convert_encoding(mb_strtolower(mb_convert_encoding($tradTitle, 'ISO-8859-1', 'UTF-8')), 'UTF-8', 'ISO-8859-1'));
 			}else{
 				//Does the title integrates a traduction with title_s[1]?
 				if (isset($entry->title_s[1]) && $entry->title_s[1] != "") {
-					$encodedTitle=normalize(utf8_encode(mb_strtolower($entry->title_s[1])));
+					$encodedTitle=normalize(mb_convert_encoding(mb_strtolower(mb_convert_encoding($entry->title_s[1], 'ISO-8859-1', 'UTF-8')), 'UTF-8', 'ISO-8859-1'));
 				}else{
 					//Is there a subTitle ?
 					$titlePlus = $entry->title_s[0];
@@ -1344,7 +1344,7 @@ if(isset($_POST['hal']))
 						$titreInit = $titlePlus;
 						$titlePlus .= " : ".$entry->subTitle_s[0];
 					}
-					$encodedTitle=normalize(utf8_encode(mb_strtolower(utf8_decode($titlePlus))));
+					$encodedTitle = normalize(mb_convert_encoding(mb_strtolower(mb_convert_encoding($titlePlus, 'ISO-8859-1', 'UTF-8')), 'UTF-8', 'ISO-8859-1'));
 				}
 			}
 			
@@ -1570,7 +1570,7 @@ foreach ($souBib as $key => $subTab)
 				}
 
 				// Extract the  title
-				$Title = (utf8_encode(mb_strtolower(utf8_decode(str_replace(", Abstract", "", $result[$key][$nb][$colTitle])))));
+				$Title = mb_convert_encoding(mb_strtolower(mb_convert_encoding(str_replace(", Abstract", "", $result[$key][$nb][$colTitle]), 'ISO-8859-1', 'UTF-8')), 'UTF-8', 'ISO-8859-1');
 				$tabTitle = explode(":", $Title);
 				$redTitle = normalize(trim($tabTitle[0]));
 				//echo array_key_exists('',$halTitles).'-<br>';
@@ -2219,7 +2219,7 @@ foreach ($souBib as $key => $subTab)
 						}
 					}
 					//Does a mail have already be sent to the corresponding author for this doi reference?
-					$titreNorm = normalize(utf8_encode(mb_strtolower(utf8_decode($data[$colTitle]))));
+					$titreNorm = normalize(mb_convert_encoding(mb_strtolower(mb_convert_encoding($data[$colTitle], 'ISO-8859-1', 'UTF-8')), 'UTF-8', 'ISO-8859-1'));
 					include ('./OverHAL_mails_envoyes.php');
 					$nouvelEnvoiM = "non";
 					$nouvelEnvoiP = "non";
@@ -2600,7 +2600,7 @@ foreach ($souBib as $key => $subTab)
 							switch($type)
 							{
 								case "J":
-									$type = "article";
+									$type = ($papers[$key][$key2]['DT'] == "Meeting Abstract") ? "inproceedings" : "article";
 									break;
 								case "S":
 								case "C":
@@ -3451,32 +3451,35 @@ foreach ($souBib as $key => $subTab)
 								$type = $papers[$key][$key2]['PT'];
 								switch($type)
 								{
-									case "J"://article
-										$chaine .= '                <title level="j">'.supprAmp(minRev($papers[$key][$key2]['SO'])).'</title>'."\r\n";
-										$chaine .= '                <imprint>'."\r\n";
-										$chaine .= '                  <publisher>'.supprAmp($papers[$key][$key2]['PU']).'</publisher>'."\r\n";
-										$chaine .= '                  <biblScope unit="volume">'.supprAmp($papers[$key][$key2]['VL']).'</biblScope>'."\r\n";
-										$chaine .= '                  <biblScope unit="issue">'.supprAmp($papers[$key][$key2]['IS']).'</biblScope>'."\r\n";
-										$chaine .= '                  <biblScope unit="pp">'.supprAmp($papers[$key][$key2]['BP']).'-'.$papers[$key][$key2]['EP'].'</biblScope>'."\r\n";
-										if (isset($papers[$key][$key2]['PY']) && $papers[$key][$key2]['PY'] != "") {
-											$chaine .= '                  <date type="datePub">'.supprAmp($papers[$key][$key2]['PY']).'</date>'."\r\n";
-										}else{
-											if (isset($papers[$key][$key2]['EY']) && $papers[$key][$key2]['EY'] != "") {
-												$chaine .= '                  <date type="datePub">'.supprAmp($papers[$key][$key2]['EY']).'</date>'."\r\n";
+									case "J"://article (Article)
+										if ($papers[$key][$key2]['DT'] == "Article") {
+											$chaine .= '                <title level="j">'.supprAmp(minRev($papers[$key][$key2]['SO'])).'</title>'."\r\n";
+											$chaine .= '                <imprint>'."\r\n";
+											$chaine .= '                  <publisher>'.supprAmp($papers[$key][$key2]['PU']).'</publisher>'."\r\n";
+											$chaine .= '                  <biblScope unit="volume">'.supprAmp($papers[$key][$key2]['VL']).'</biblScope>'."\r\n";
+											$chaine .= '                  <biblScope unit="issue">'.supprAmp($papers[$key][$key2]['IS']).'</biblScope>'."\r\n";
+											$chaine .= '                  <biblScope unit="pp">'.supprAmp($papers[$key][$key2]['BP']).'-'.$papers[$key][$key2]['EP'].'</biblScope>'."\r\n";
+											if (isset($papers[$key][$key2]['PY']) && $papers[$key][$key2]['PY'] != "") {
+												$chaine .= '                  <date type="datePub">'.supprAmp($papers[$key][$key2]['PY']).'</date>'."\r\n";
 											}else{
-												if (isset($papers[$key][$key2]['EA']) && $papers[$key][$key2]['EA'] != "") {
-													$chaine .= '                  <date type="datePub">'.supprAmp(substr($papers[$key][$key2]['EA'], -4)).'</date>'."\r\n";
+												if (isset($papers[$key][$key2]['EY']) && $papers[$key][$key2]['EY'] != "") {
+													$chaine .= '                  <date type="datePub">'.supprAmp($papers[$key][$key2]['EY']).'</date>'."\r\n";
+												}else{
+													if (isset($papers[$key][$key2]['EA']) && $papers[$key][$key2]['EA'] != "") {
+														$chaine .= '                  <date type="datePub">'.supprAmp(substr($papers[$key][$key2]['EA'], -4)).'</date>'."\r\n";
+													}
 												}
 											}
+											$chaine .= '                </imprint>'."\r\n";
+											$typeDoc = "ART";
+											$typeDocp = "Journal articles";
+											break;
 										}
-										$chaine .= '                </imprint>'."\r\n";
-										$typeDoc = "ART";
-										$typeDocp = "Journal articles";
-										break;
+									case "J"://communication (Meeting Abstract)
 									case "S"://inproceedings
 									case "C":
 									case "B"://book
-										if ($papers[$key][$key2]['DT'] == "Proceedings Paper") {
+										if ($papers[$key][$key2]['DT'] == "Proceedings Paper" || $papers[$key][$key2]['DT'] == "Meeting Abstract") {
 											$chaine .= '                <title level="j">'.supprAmp($papers[$key][$key2]['SO']).'</title>'."\r\n";
 											$chaine .= '                <title level="m">'.supprAmp($papers[$key][$key2]['CT']).'</title>'."\r\n";
 											$chaine .= '                <meeting>'."\r\n";
@@ -3668,6 +3671,7 @@ foreach ($souBib as $key => $subTab)
 											$chaine .= '                </imprint>'."\r\n";
 											$typeDoc = "COMM";
 											$typeDocp = "Conference papers";
+											break;
 										}
 										//review, book chapter
 										if ($papers[$key][$key2]['DT'] == "Book" || $papers[$key][$key2]['DT'] == "Review; Book Chapter" || $papers[$key][$key2]['DT'] == "Editorial Material; Book Chapter" || $papers[$key][$key2]['DT'] == "Article; Book Chapter") {
@@ -3704,8 +3708,8 @@ foreach ($souBib as $key => $subTab)
 												$typeDoc = "BOOK";
 												$typeDocp = "Book";//???
 											}
+											break;
 										}
-										break;
 									case "P"://patent > il n'y en a pas dans WoS
 										$typeDoc = "PATENT";
 										$typeDocp = "Patent";//???
