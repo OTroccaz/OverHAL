@@ -138,7 +138,7 @@ if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
 																				<p class="font-italic">Photo : Horgenberg, Horgen, Switzerland by Ricardo Gomez Angel on Unsplash (détail)</p>
 
                                         <p class=" mb-2 text-justify">
-																					OverHAL permet d'une part de générer un fichier de publications TEI HAL pour Zip2HAL à partir d'un fichier source, d'autre part d'envoyer des mails aux auteurs pour récupération du manuscrit auteur. Conçu à partir d'un script de <a target="_blank" rel="noopener noreferrer" href="http://igm.univ-mlv.fr/~gambette/ExtractionHAL/CouvertureHAL/">Philippe Gambette</a> (CouvertureHAL), il a été créé par Olivier Troccaz (conception-développement) et Laurent Jonchère (conception).																					
+																					OverHAL permet d'une part de générer un fichier de publications TEI HAL pour Zip2HAL à partir d'un fichier source, d'autre part d'envoyer des mails aux auteurs pour récupération du manuscrit auteur. Conçu à partir d'un script de <a target="_blank" rel="noopener noreferrer" href="http://igm.univ-mlv.fr/~gambette/ExtractionHAL/CouvertureHAL/">Philippe Gambette</a> (CouvertureHAL), il a été créé par Olivier Troccaz (conception-développement) et Laurent Jonchère (conception). Son code est disponible <a target='_blank' rel='noopener noreferrer' href="https://github.com/OTroccaz/OverHAL">sur GitHub</a> sous licence <a target='_blank' rel='noopener noreferrer' href="https://www.gnu.org/licenses/gpl-3.0.fr.html">GPLv3</a>.
                                         </p>
 																				
 																				<p class="mb-4">
