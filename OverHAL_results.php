@@ -3452,7 +3452,7 @@ foreach ($souBib as $key => $subTab)
 								switch($type)
 								{
 									case "J"://article (Article)
-										if ($papers[$key][$key2]['DT'] == "Article") {
+										if ($papers[$key][$key2]['DT'] == "Article" || $papers[$key][$key2]['DT'] == "Article; Early Access") {
 											$chaine .= '                <title level="j">'.supprAmp(minRev($papers[$key][$key2]['SO'])).'</title>'."\r\n";
 											$chaine .= '                <imprint>'."\r\n";
 											$chaine .= '                  <publisher>'.supprAmp($papers[$key][$key2]['PU']).'</publisher>'."\r\n";
