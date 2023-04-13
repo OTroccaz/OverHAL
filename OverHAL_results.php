@@ -3452,7 +3452,7 @@ foreach ($souBib as $key => $subTab)
 								switch($type)
 								{
 									case "J"://article (Article)
-										if ($papers[$key][$key2]['DT'] == "Article" || $papers[$key][$key2]['DT'] == "Article; Early Access") {
+										if ($papers[$key][$key2]['DT'] == "Article" || $papers[$key][$key2]['DT'] == "Article; Early Access" || $papers[$key][$key2]['DT'] == "Letter" || $papers[$key][$key2]['DT'] == "Letter; Early Access" || $papers[$key][$key2]['DT'] == "Editorial Material" || $papers[$key][$key2]['DT'] == "Editorial Material; Early Access" || $papers[$key][$key2]['DT'] == "Review" || $papers[$key][$key2]['DT'] == "Review; Early Access") {
 											$chaine .= '                <title level="j">'.supprAmp(minRev($papers[$key][$key2]['SO'])).'</title>'."\r\n";
 											$chaine .= '                <imprint>'."\r\n";
 											$chaine .= '                  <publisher>'.supprAmp($papers[$key][$key2]['PU']).'</publisher>'."\r\n";
@@ -3473,6 +3473,9 @@ foreach ($souBib as $key => $subTab)
 											$chaine .= '                </imprint>'."\r\n";
 											$typeDoc = "ART";
 											$typeDocp = "Journal articles";
+											break;
+										}
+										if ($papers[$key][$key2]['DT'] == "Correction" || $papers[$key][$key2]['DT'] == "Correction; Early Access") {//Ligne de type article mais à ignorer
 											break;
 										}
 									case "J"://communication (Meeting Abstract)
