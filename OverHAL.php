@@ -324,7 +324,7 @@ if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
                                                             </button>
                                                         </div>
                                                         <input type="text" id="team" name="team" class="form-control"  value="IRSET" onchange="majReqHAL();">
-                                                    <a class="ml-2 small" target="_blank" rel="noopener noreferrer" href="https://hal-univ-rennes1.archives-ouvertes.fr/page/codes-collections">Trouver le code<br>de mon équipe / labo</a>
+                                                    <a class="ml-2 small" target="_blank" rel="noopener noreferrer" href="https://univ-rennes.hal.science/page/codes-collections">Trouver le code<br>de mon équipe / labo</a>
                                                     </div>
 
                                                     
