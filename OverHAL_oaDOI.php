@@ -1,5 +1,14 @@
 <?php
 /*
+ * OverHAL - Convertissez vos imports Ã©diteurs en TEI - Convert your publisher imports to TEI
+ *
+ * Copyright (C) 2023 Olivier Troccaz (olivier.troccaz@cnrs.fr) and Laurent JonchÃ¨re (laurent.jonchere@univ-rennes.fr)
+ * Released under the terms and conditions of the GNU General Public License (https://www.gnu.org/licenses/gpl-3.0.txt)
+ *
+ * Recherche du critÃ¨re Open Acces en fonction du DOI - Search for Open Access criteria by DOI
+ */
+ 
+/*
 include("./normalize.php");
 */
 function testFic($fileUrl)
@@ -52,7 +61,7 @@ function testOALic($url, $vol, $iss, $pag, $dat, $pdfCR, &$evd, &$titLic, &$typL
   //$url = "https://api.oadoi.org/v2/10.1016/j.neulet.2016.02.038";
   //$url = "https://api.oadoi.org/v2/10.1038/s41598-017-12398-0";//Nature Publishing Group
   //$url = "https://api.oadoi.org/v2/10.1063/1.4996175";//American Institute of Physics
-  //$url = "https://api.oadoi.org/v2/10.1155/2017/1694671";//Hindawi Publishing Corporation > à supprimer !
+  //$url = "https://api.oadoi.org/v2/10.1155/2017/1694671";//Hindawi Publishing Corporation > Ã  supprimer !
   //$url = "https://api.oadoi.org/v2/10.1088/1361-6595/aa8dcc";//IOP Publishing
   //$url = "https://api.oadoi.org/v2/10.3847/1538-4357/aa8e41";//American Astronomical Society via IOP Publishing
   //$url = "https://api.oadoi.org/v2/10.1371/journal.pone.0187019";//Public Library of Science
@@ -62,7 +71,7 @@ function testOALic($url, $vol, $iss, $pag, $dat, $pdfCR, &$evd, &$titLic, &$typL
   //$url = "https://api.oadoi.org/v2/10.1111/j.1600-0390.2016.12170.x";//Wiley Blackwell (Blackwell Publishing) > ???
   //$url = "https://api.oadoi.org/v2/10.1021/acs.accounts.7b00343";//American Chemical Society
   //$url = "https://api.oadoi.org/v2/10.1021/acs.accounts.7b00343";//The Royal Society of Chemistry
-  //$url = "https://api.oadoi.org/v2/10.4000/sdt.828";//CLEO Revues.org > maintenance quand test > à retester
+  //$url = "https://api.oadoi.org/v2/10.4000/sdt.828";//CLEO Revues.org > maintenance quand test > Ã  retester
   //$url = "https://api.oadoi.org/v2/10.1182/blood-2016-04-709774";$vol = 127;$iss = 23;$pag = 2779;//American Society of Hematology
   //$url = "https://api.oadoi.org/v2/10.1136/bmj.j4619";$vol = 359;//BMJ Publishing Group
   //$url = "https://api.oadoi.org/v2/10.3917/docsi.514.0070";//CAIRN > ???
@@ -72,9 +81,9 @@ function testOALic($url, $vol, $iss, $pag, $dat, $pdfCR, &$evd, &$titLic, &$typL
   //$url = "https://api.oadoi.org/v2/10.1080/10106049.2016.1195885";//Informa UK (Taylor & Francis)
   //$url = "https://api.oadoi.org/v2/10.1142/S0218625X16500414";//World Scientific
   //$url = "https://api.oadoi.org/v2/10.1186/s12862-017-1062-4";//Springer (Biomed Central Ltd.)
-  //$url = "https://api.oadoi.org/v2/10.1103/PhysRevMaterials.1.043401";//American Physical Society> nécessité d'avoir l'acronyme de la revue dans l'URL > trop dur !
+  //$url = "https://api.oadoi.org/v2/10.1103/PhysRevMaterials.1.043401";//American Physical Society> nÃ©cessitÃ© d'avoir l'acronyme de la revue dans l'URL > trop dur !
   //$url = "https://api.oadoi.org/v2/10.1007/s11467-017-0728-0";//Springer-Verlag
-  //$url = "https://api.oadoi.org/v2/10.1159/000480289";//S. Karger AG > ok mais est-ce vraiment '000' à remplacer par '' ?
+  //$url = "https://api.oadoi.org/v2/10.1159/000480289";//S. Karger AG > ok mais est-ce vraiment '000' Ã  remplacer par '' ?
   //$url = "https://api.oadoi.org/v2/10.1117/12.2223086";//SPIE - International Society for Optical Engineering >ok mais attention : proceedings; journalIssue, etc.
   //$url = "https://api.oadoi.org/v2/10.1055/s-0043-116661";//Thieme Publishing Group
 

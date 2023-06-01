@@ -1,4 +1,13 @@
 <?php
+/*
+ * OverHAL - Convertissez vos imports éditeurs en TEI - Convert your publisher imports to TEI
+ *
+ * Copyright (C) 2023 Olivier Troccaz (olivier.troccaz@cnrs.fr) and Laurent Jonchère (laurent.jonchere@univ-rennes.fr)
+ * Released under the terms and conditions of the GNU General Public License (https://www.gnu.org/licenses/gpl-3.0.txt)
+ *
+ * Contenu du corps du premier mail envoyé en anglais - Content of the body of the first e-mail sent in English
+ */
+ 
 //M
 $subjectM = "Copy request for deposit in Rennes 1 Open Access Repository";
 $body = "<font face='corbel'>Dear Colleague,\
@@ -13,10 +22,10 @@ switch($team)
     $body .= "We work in collaboration with <b>Prof Ronan Sauleau</b>, director of the IETR UMR CNRS 6164 research unit.<br>\\";
     break;
   case "FOTON":
-    $body .= "We work in collaboration with <b>Prof Pascal Besnard</b>, director of the FOTON UMR CNRS 6082 research unit.<br>\\";
+    $body .= "We work in collaboration with the FOTON UMR CNRS 6082 research unit.<br>\\";
     break;
   case "LTSI":
-    $body .= "We work in collaboration with <b>Prof Lotfi Senhadji</b>, director of the Signal and Image Processing research unit (LTSI) - U Inserm 1099.<br>\\";
+    $body .= "We work in collaboration with the Signal and Image Processing research unit (LTSI) - U Inserm 1099.<br>\\";
     break;
   case "ISCR":
     $body .= "We work in collaboration with <b>Prof Marc Fourmigue</b>, director of the Chemical Institute of Rennes - UMR CNRS 6226.<br>\\";
@@ -45,6 +54,9 @@ switch($team)
   case "IGDR":
     $body .= "We work in collaboration with <b>Prof Reynald Gillet</b>, director of the Institute of Genetics and Development of Rennes (IGDR) UMR CNRS 6290.<br>\\";
     break;
+  case "BGC":
+    $body .= "We work in collaboration with <b>Prof Reynald Gillet</b>, director of the Biology Genetics and Cancer research unit ERL U 1305.<br>\\";
+    break;
   case "IRSET":
     $body .= "We work in collaboration with <b>Prof Michel Samson</b>, director of the Research Institute in Health, Environment and Occupation (IRSET) U Inserm 1085.<br>\\";
     break;
@@ -63,8 +75,8 @@ switch($team)
   case "U917":
     $body .= "We work in collaboration with <b>Prof Karin Tarte</b>, director of the Microenvironment, Cell Differentiation, Immunology and Cancer (MICMAC) - U Inserm 1236 research unit.<br>\\";
     break;
-  case "U1236":
-    $body .= "We work in collaboration with <b>Prof Karin Tarte</b>, director of the Microenvironment, Cell Differentiation, Immunology and Cancer (MICMAC) - U Inserm 1236 research unit.<br>\\";
+  case "MOBIDIC":
+    $body .= "We work in collaboration with <b>Prof Karin Tarte</b>, director of the Microenvironment and B-cells: Immunopathology, Cell Differentiation, and Cancer (MOBIDIC) - U Inserm research unit.<br>\\";
     break;
   case "MICMAC":
     $body .= "We work in collaboration with <b>Prof Karin Tarte</b>, director of the Microenvironment, Cell Differentiation, Immunology and Cancer (MICMAC) - U Inserm 1236 research unit.<br>\\";
@@ -114,8 +126,8 @@ switch($team)
   case "SCANMAT":
     $body .= "We work in collaboration with Prof <b>Maryline Guilloux-Viry</b>, director of ScanMAT Research Platforms.<br>\\";
     break;
-  case "GERMO":
-    $body .= "We work in collaboration with Prof <b>Samer Kayal</b>, director of the GeRMO research unit.<br>\\";
+  case "RSMS":
+    $body .= "We work in collaboration with Prof <b>Emmanuelle Leray</b>, director of the RSMS Inserm ERL u 1309 research unit.<br>\\";
     break;
   case "REPERES":
     $body .= "We work in collaboration with Prof <b>Emmanuel Oger</b>, director of the REPERES EA 7449 research unit.<br>\\";
@@ -175,10 +187,10 @@ switch($team)
     $body .= "We work in collaboration with <b>Prof Ronan Sauleau</b>, director of the IETR UMR CNRS 6164 research unit.<br>\\";
     break;
   case "FOTON":
-    $body .= "We work in collaboration with <b>Prof Pascal Besnard</b>, director of the FOTON UMR CNRS 6082 research unit.<br>\\";
+    $body .= "We work in collaboration with the FOTON UMR CNRS 6082 research unit.<br>\\";
     break;
   case "LTSI":
-    $body .= "We work in collaboration with <b>Prof Lotfi Senhadji</b>, director of the Signal and Image Processing research unit (LTSI) - U Inserm 1099.<br>\\";
+    $body .= "We work in collaboration with the Signal and Image Processing research unit (LTSI) - U Inserm 1099.<br>\\";
     break;
   case "ISCR":
     $body .= "We work in collaboration with <b>Prof Marc Fourmigue</b>, director of the Chemical Institute of Rennes - UMR CNRS 6226.<br>\\";
@@ -225,8 +237,8 @@ switch($team)
   case "U917":
     $body .= "We work in collaboration with <b>Prof Karin Tarte</b>, director of the Microenvironment, Cell Differentiation, Immunology and Cancer (MICMAC) - U Inserm 1236 research unit.<br>\\";
     break;
-  case "U1236":
-    $body .= "We work in collaboration with <b>Prof Karin Tarte</b>, director of the Microenvironment, Cell Differentiation, Immunology and Cancer (MICMAC) - U Inserm 1236 research unit.<br>\\";
+  case "MOBIDIC":
+    $body .= "We work in collaboration with <b>Prof Karin Tarte</b>, director of the Microenvironment and B-cells: Immunopathology, Cell Differentiation, and Cancer (MOBIDIC) - U inserm research unit.<br>\\";
     break;
   case "MICMAC":
     $body .= "We work in collaboration with <b>Prof Karin Tarte</b>, director of the Microenvironment, Cell Differentiation, Immunology and Cancer (MICMAC) - U Inserm 1236 research unit.<br>\\";
@@ -276,8 +288,8 @@ switch($team)
   case "SCANMAT":
     $body .= "We work in collaboration with Prof <b>Maryline Guilloux-Viry</b>, director of ScanMAT Research Platforms.<br>\\";
     break;
-  case "GERMO":
-    $body .= "We work in collaboration with Prof <b>Samer Kayal</b>, director of the GeRMO research unit.<br>\\";
+  case "RSMS":
+    $body .= "We work in collaboration with Prof <b>Emmanuelle Leray</b>, director of the RSMS Inserm ERL u 1309 research unit.<br>\\";
     break;
   case "REPERES":
     $body .= "We work in collaboration with Prof <b>Emmanuel Oger</b>, director of the REPERES EA 7449 research unit.<br>\\";

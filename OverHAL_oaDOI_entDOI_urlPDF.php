@@ -1,4 +1,13 @@
 <?php
+/*
+ * OverHAL - Convertissez vos imports Ã©diteurs en TEI - Convert your publisher imports to TEI
+ *
+ * Copyright (C) 2023 Olivier Troccaz (olivier.troccaz@cnrs.fr) and Laurent JonchÃ¨re (laurent.jonchere@univ-rennes.fr)
+ * Released under the terms and conditions of the GNU General Public License (https://www.gnu.org/licenses/gpl-3.0.txt)
+ *
+ * Correspondances URL de PDF en fonction du dÃ©but du code DOI - PDF URL matches based on the start of the DOI code
+ */
+ 
 $entURL = array(
 'http://aip.scitation.org/doi/pdf/DOI'=>'10.1063',
 //'http://downloads.hindawi.com/journals/prm/SUFFIXE.pdf'=>'10.1155',
@@ -9,7 +18,7 @@ $entURL = array(
 'http://journals.sagepub.com/doi/pdf/DOI/DuplicateKey'=>'10.1177',
 'http://online.liebertpub.com/doi/pdfplus/DOI'=>'10.1089',
 'http://onlinelibrary.wiley.com/doi/DOI/pdf'=>'10.1111',
-//'http://onlinelibrary.wiley.com/doi/DOI/pdf'=>'10.1002',//pas de récupération du PDF même si URL ok
+//'http://onlinelibrary.wiley.com/doi/DOI/pdf'=>'10.1002',//pas de rÃ©cupÃ©ration du PDF mÃªme si URL ok
 'http://pubs.acs.org/doi/pdfplus/DOI'=>'10.1021',
 'http://pubs.rsc.org/en/content/articlepdf/ANNEE/nr/SUFFIXE'=>'10.1039',
 'http://sdt.revues.org/pdf/NUMERO-SUFFIXE'=>'10.4000',
@@ -17,7 +26,7 @@ $entURL = array(
 'http://www.bmj.com/content/VOL/SUFFIXE.full.pdf'=>'10.1136',
 'http://www.cairn.info/load_pdf.php?ID_ARTICLE=SUFFIXE'=>'10.3917',
 'http://www.emeraldinsight.com/doi/pdfplus/DOI'=>'10.1108',
-//'http://www.nature.com/articles/SUFFIXE.pdf'=>'10.1038',//pas de récupération du PDF même si URL ok
+//'http://www.nature.com/articles/SUFFIXE.pdf'=>'10.1038',//pas de rÃ©cupÃ©ration du PDF mÃªme si URL ok
 //'http://www.nature.com/nature/journal/vVOL/nNUM/pdf/SUFFIXE.pdf'=>'10.1038',//pas toujours ok > plantage script
 'http://www.pnas.org/content/VOL/NUM/STARTPAGE.full.pdf'=>'10.1073',
 'http://www.tandfonline.com/doi/pdf/DOI?needAccess=true'=>'10.1080',

@@ -1,4 +1,13 @@
 <?php
+/*
+ * OverHAL - Convertissez vos imports éditeurs en TEI - Convert your publisher imports to TEI
+ *
+ * Copyright (C) 2023 Olivier Troccaz (olivier.troccaz@cnrs.fr) and Laurent Jonchère (laurent.jonchere@univ-rennes.fr)
+ * Released under the terms and conditions of the GNU General Public License (https://www.gnu.org/licenses/gpl-3.0.txt)
+ *
+ * Contenu du corps du mail de rappel envoyé en français - Content of the body of the reminder e-mail sent in French
+ */
+ 
 //M
 $subjectM = "Texte integral de votre article pour diffusion dans HAL : nouvel article";
 $body = "<font face='corbel'>Bonjour,\

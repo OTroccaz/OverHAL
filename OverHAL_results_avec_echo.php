@@ -1,4 +1,13 @@
 <?php
+/*
+ * OverHAL - Convertissez vos imports éditeurs en TEI - Convert your publisher imports to TEI
+ *
+ * Copyright (C) 2023 Olivier Troccaz (olivier.troccaz@cnrs.fr) and Laurent Jonchère (laurent.jonchere@univ-rennes.fr)
+ * Released under the terms and conditions of the GNU General Public License (https://www.gnu.org/licenses/gpl-3.0.txt)
+ *
+ * Autre forme de page d'accueil des résultats - Another form of results home page
+ */
+ 
 header('Content-type: text/html; charset=UTF-8');
 mb_internal_encoding("UTF-8");
 
@@ -227,7 +236,7 @@ if (isset($_GET['css']) && ($_GET['css'] != ""))
 {
   $css = $_GET['css'];
 }else{
-  $css = "https://ecobio.univ-rennes1.fr/HAL_SCD.css";
+  $css = "https://halur1.univ-rennes1.fr/HAL_SCD.css";
 }
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">

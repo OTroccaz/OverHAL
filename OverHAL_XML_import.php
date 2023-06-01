@@ -1,9 +1,18 @@
 <?php
+/*
+ * OverHAL - Convertissez vos imports éditeurs en TEI - Convert your publisher imports to TEI
+ *
+ * Copyright (C) 2023 Olivier Troccaz (olivier.troccaz@cnrs.fr) and Laurent Jonchère (laurent.jonchere@univ-rennes.fr)
+ * Released under the terms and conditions of the GNU General Public License (https://www.gnu.org/licenses/gpl-3.0.txt)
+ *
+ * Procédure XML - XML procedure
+ */
+ 
 if (isset($_GET['css']) && ($_GET['css'] != ""))
 {
   $css = $_GET['css'];
 }else{
-  $css = "https://ecobio.univ-rennes1.fr/HAL_SCD.css";
+  $css = "https://halur1.univ-rennes1.fr/HAL_SCD.css";
 }
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
@@ -30,7 +39,7 @@ function decrypt($str) {
   $str = str_replace(array("[[b]]","[[/b]]"), array("<b>","</b>"), $str);
   $str = str_replace(array("[[i]]","[[/i]]"), array("<i>","</i>"), $str);
   $str = str_replace(array("[[u]]","[[/u]]"), array("<u>","</u>"), $str);
-  $str = str_replace(" ", "", $str);
+  $str = str_replace("â€ƒ", "", $str);
   return $str;
 }
 
@@ -140,7 +149,7 @@ foreach($xml as $PubmedArticle){
   //Volume
   extrSimp($PubmedArticle->MedlineCitation->Article->Journal->JournalIssue->Volume, $chaine);
   
-  //Num�ro
+  //Numéro
   extrSimp($PubmedArticle->MedlineCitation->Article->Journal->JournalIssue->Issue, $chaine);
   
   //Pagination
@@ -155,7 +164,7 @@ foreach($xml as $PubmedArticle){
     $chaine .= $MedlineDate."^";
   }
   
-  //Statut (publi� / in press)
+  //Statut (publié / in press)
   extrSimp($PubmedArticle->PubmedData->PublicationStatus, $chaine);
   
   //Date de mise en ligne
@@ -174,7 +183,7 @@ foreach($xml as $PubmedArticle){
   //Titre de la revue
   extrSimp($PubmedArticle->MedlineCitation->Article->Journal->Title, $chaine);
   
-  //Titre abr�g� de la revue (ISO)
+  //Titre abrégé de la revue (ISO)
   extrSimp($PubmedArticle->MedlineCitation->Article->Journal->ISOAbbreviation, $chaine);
   
   //ISSN
@@ -250,7 +259,7 @@ foreach($xml as $PubmedArticle){
     $chaine .= "^";
   }
   
-  //Mots-cl�s
+  //Mots-clés
   $listMC = "";
   $qui = $PubmedArticle->MedlineCitation->KeywordList->Keyword;
   if (isset($qui) && $qui != "") {
@@ -288,19 +297,19 @@ foreach($xml as $PubmedArticle){
     $chaine .= "^";
   }
 
-  //R�sum�
+  //Résumé
   //echo $PubmedArticle->MedlineCitation->Article->Abstract->AbstractText->b.'<br><br>';
   /*
   if (!isset($PubmedArticle->MedlineCitation->Article->Abstract->AbstractText->b) && !isset($PubmedArticle->MedlineCitation->Article->Abstract->AbstractText->i)) {
     extrSimp($PubmedArticle->MedlineCitation->Article->Abstract->AbstractText, $chaine);
   }else{
     echo $PubmedArticle->MedlineCitation->Article->Abstract->AbstractText.'<br>';
-    $abstract = str_replace(" ", "", $PubmedArticle->MedlineCitation->Article->Abstract->AbstractText);
+    $abstract = str_replace("â€ƒ", "", $PubmedArticle->MedlineCitation->Article->Abstract->AbstractText);
     extrSimp(trim($abstract), $chaine);
   }
   */
   $abstract = $PubmedArticle->MedlineCitation->Article->Abstract->AbstractText;
-  //$abstract = str_replace(" ", "", $abstract);
+  //$abstract = str_replace("â€ƒ", "", $abstract);
   $abstract = decrypt($abstract);
   //echo $abstract;
   extrSimp(trim($abstract), $chaine);

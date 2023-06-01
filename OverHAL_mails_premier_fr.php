@@ -1,4 +1,13 @@
 <?php
+/*
+ * OverHAL - Convertissez vos imports éditeurs en TEI - Convert your publisher imports to TEI
+ *
+ * Copyright (C) 2023 Olivier Troccaz (olivier.troccaz@cnrs.fr) and Laurent Jonchère (laurent.jonchere@univ-rennes.fr)
+ * Released under the terms and conditions of the GNU General Public License (https://www.gnu.org/licenses/gpl-3.0.txt)
+ *
+ * Contenu du corps du premier mail envoyé en français - Content of the body of the first e-mail sent in French
+ */
+ 
 //M
 $subjectM = "Texte integral de votre article pour diffusion dans HAL";
 $body = "<font face='corbel'>Bonjour,\
@@ -16,7 +25,7 @@ switch($team)
     $body .= "Nous travaillons en collaboration avec <b>Pascal Besnard</b>, directeur de FOTON UMR CNRS 6082.<br>\\";
     break;
   case "LTSI":
-    $body .= "Nous travaillons en collaboration avec <b>Lotfi Senhadji</b>, directeur du LTSI, Laboratoire traitement du signal et de l'image - U Inserm 1099.<br>\\";
+    $body .= "Nous travaillons en collaboration avec le LTSI, Laboratoire traitement du signal et de l'image - U Inserm 1099.<br>\\";
     break;
   case "ISCR":
     $body .= "Nous travaillons en collaboration avec <b>Marc Fourmigué</b>, directeur de l'Institut des Sciences chimiques de Rennes UMR CNRS 6226.<br>\\";
@@ -45,11 +54,14 @@ switch($team)
   case "IGDR":
     $body .= "Nous travaillons en collaboration avec <b>Reynald Gillet</b>, directeur de l'UMR CNRS 6290 - Institut de génétique et développement de Rennes (IGDR).<br>\\";
     break;
+  case "BGC":
+    $body .= "Nous travaillons en collaboration avec <b>Reynald Gillet</b>, directeur de l'ERL U 1305 - Biologie et génétique du cancer.<br>\\";
+    break;
   case "IRSET":
     $body .= "Nous travaillons en collaboration avec <b>Michel Samson</b>, directeur de l'Institut de recherche en santé, environnement et travail (IRSET) U Inserm 1085.<br>\\";
     break;
   case "U991":
-    $body .= "Nous travaillons en collaboration avec <b>Bruno Clément</b>, directeur de l'U Inserm 991 « Foie, Métabolismes et Cancer ».<br>\\";
+    $body .= "Nous travaillons en collaboration avec <b>Olivier Loréal</b>, directeur de l'U Inserm 991 « Foie, Métabolismes et Cancer ».<br>\\";
     break;
   case "U835":
     $body .= "Nous travaillons en collaboration avec l'<b>U Inserm 1230- ARN régulateurs bactériens et médecine</b>.<br>\\";
@@ -63,8 +75,8 @@ switch($team)
   case "U917":
     $body .= "Nous travaillons en collaboration avec <b>Karin Tarte</b>, directrice de l'U Inserm 1236 - Microenvironment, Cell Differentiation, Immunology and Cancer (MICMAC).<br>\\";
     break;
-  case "U1236":
-    $body .= "Nous travaillons en collaboration avec <b>Karin Tarte</b>, directrice de l'U Inserm 1236 - Microenvironment, Cell Differentiation, Immunology and Cancer (MICMAC).<br>\\";
+  case "MOBIDIC":
+    $body .= "Nous travaillons en collaboration avec <b>Karin Tarte</b>, directrice de l'U Inserm - Microenvironment and B-cells: Immunopathology, Cell Differentiation, and Cancer (MOBIDIC).<br>\\";
     break;
   case "MICMAC":
     $body .= "Nous travaillons en collaboration avec <b>Karin Tarte</b>, directrice de l'U Inserm 1236 - Microenvironment, Cell Differentiation, Immunology and Cancer (MICMAC).<br>\\";
@@ -88,10 +100,10 @@ switch($team)
     $body .= "Nous travaillons en collaboration avec <b>Eric Chevet</b>, directeur de l'U Inserm 1242 COSS (Chemistry, Oncogenesis, Stress and Signaling).<br>\\";
     break;
   case "NUMECAN":
-    $body .= "Nous travaillons en collaboration avec <b>Bruno Clément</b>, directeur de l'U Inserm 1241 NuMeCan.<br>\\";
+    $body .= "Nous travaillons en collaboration avec <b>Olivier Loréal</b>, directeur de l'U Inserm 1241 NuMeCan.<br>\\";
     break;
   case "U1241":
-    $body .= "Nous travaillons en collaboration avec <b>Bruno Clément</b>, directeur de l'U Inserm 1241 NuMeCan.<br>\\";
+    $body .= "Nous travaillons en collaboration avec <b>Olivier Loréal</b>, directeur de l'U Inserm 1241 NuMeCan.<br>\\";
     break;
   case "CREM":
     $body .= "Nous travaillons en collaboration avec <b>l'UMR CNRS 6211 - CREM</b>.<br>\\";
@@ -114,8 +126,8 @@ switch($team)
   case "SCANMAT":
     $body .= "Nous travaillons en collaboration avec <b>Maryline Guilloux-Viry</b>, directrice de l'UMS ScanMAT.<br>\\";
     break;
-  case "GERMO":
-    $body .= "Nous travaillons en collaboration avec <b>Samer Kayal</b>, directeur de l'unité de recherche GeRMO.<br>\\";
+  case "RSMS":
+    $body .= "Nous travaillons en collaboration avec <b>Emmanuelle Leray</b>, directrice de l'unité Recherche sur les services et le management en santé ERL Inserm U 1309.<br>\\";
     break;
   case "REPERES":
     $body .= "Nous travaillons en collaboration avec <b>Emmanuel Oger</b>, directeur de l'unité de recherche Repères EA 7449.<br>\\";
@@ -180,7 +192,7 @@ switch($team)
     $body .= "Nous travaillons en collaboration avec <b>Pascal Besnard</b>, directeur de FOTON UMR CNRS 6082.<br>\\";
     break;
   case "LTSI":
-    $body .= "Nous travaillons en collaboration avec <b>Lotfi Senhadji</b>, directeur du LTSI, Laboratoire traitement du signal et de l'image - U Inserm 1099.<br>\\";
+    $body .= "Nous travaillons en collaboration avec le LTSI, Laboratoire traitement du signal et de l'image - U Inserm 1099.<br>\\";
     break;
   case "ISCR":
     $body .= "Nous travaillons en collaboration avec <b>Marc Fourmigué</b>, directeur de l'Institut des Sciences chimiques de Rennes UMR CNRS 6226.<br>\\";
@@ -209,6 +221,9 @@ switch($team)
   case "IGDR":
     $body .= "Nous travaillons en collaboration avec <b>Reynald Gillet</b>, directeur de l'UMR CNRS 6290 - Institut de génétique et développement de Rennes (IGDR).<br>\\";
     break;
+  case "BGC":
+    $body .= "Nous travaillons en collaboration avec <b>Reynald Gillet</b>, directeur de l'ERL U 1305 - Biologie et génétique du cancer.<br>\\";
+    break;
   case "IRSET":
     $body .= "Nous travaillons en collaboration avec <b>Michel Samson</b>, directeur de l'Institut de recherche en santé, environnement et travail (IRSET) U Inserm 1085.<br>\\";
     break;
@@ -227,8 +242,8 @@ switch($team)
   case "U917":
     $body .= "Nous travaillons en collaboration avec <b>Karin Tarte</b>, directrice de l'U Inserm 1236 - Microenvironment, Cell Differentiation, Immunology and Cancer (MICMAC).<br>\\";
     break;
-  case "U1236":
-    $body .= "Nous travaillons en collaboration avec <b>Karin Tarte</b>, directrice de l'U Inserm 1236 - Microenvironment, Cell Differentiation, Immunology and Cancer (MICMAC).<br>\\";
+  case "MOBIDIC":
+    $body .= "Nous travaillons en collaboration avec <b>Karin Tarte</b>, directrice de l'U Inserm - Microenvironment and B-cells: Immunopathology, Cell Differentiation, and Cancer (MOBIDIC).<br>\\";
     break;
   case "MICMAC":
     $body .= "Nous travaillons en collaboration avec <b>Karin Tarte</b>, directrice de l'U Inserm 1236 - Microenvironment, Cell Differentiation, Immunology and Cancer (MICMAC).<br>\\";
@@ -252,10 +267,10 @@ switch($team)
     $body .= "Nous travaillons en collaboration avec <b>Eric Chevet</b>, directeur de l'U Inserm 1242 COSS (Chemistry, Oncogenesis, Stress and Signaling).<br>\\";
     break;
   case "NUMECAN":
-    $body .= "Nous travaillons en collaboration avec <b>Bruno Clément</b>, directeur de l'U Inserm 1241 NuMeCan.<br>\\";
+    $body .= "Nous travaillons en collaboration avec <b>Olivier Loréal</b>, directeur de l'U Inserm 1241 NuMeCan.<br>\\";
     break;
   case "U1241":
-    $body .= "Nous travaillons en collaboration avec <b>Bruno Clément</b>, directeur de l'U Inserm 1241 NuMeCan.<br>\\";
+    $body .= "Nous travaillons en collaboration avec <b>Olivier Loréal</b>, directeur de l'U Inserm 1241 NuMeCan.<br>\\";
     break;
   case "CREM":
     $body .= "Nous travaillons en collaboration avec <b>l'UMR CNRS 6211 - CREM</b>.<br>\\";
@@ -278,8 +293,8 @@ switch($team)
   case "SCANMAT":
     $body .= "Nous travaillons en collaboration avec <b>Maryline Guilloux-Viry</b>, directrice de l'UMS ScanMAT.<br>\\";
     break;
-  case "GERMO":
-    $body .= "Nous travaillons en collaboration avec <b>Samer Kayal</b>, directeur de l'unité de recherche GeRMO.<br>\\";
+  case "RSMS":
+    $body .= "Nous travaillons en collaboration avec <b>Emmanuelle Leray</b>, directrice de l'unité Recherche sur les services et le management en santé ERL Inserm U 1309.<br>\\";
     break;
   case "REPERES":
     $body .= "Nous travaillons en collaboration avec <b>Emmanuel Oger</b>, directeur de l'unité de recherche Repères EA 7449.<br>\\";

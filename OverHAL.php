@@ -1,6 +1,15 @@
 <?php
+/*
+ * OverHAL - Convertissez vos imports éditeurs en TEI - Convert your publisher imports to TEI
+ *
+ * Copyright (C) 2023 Olivier Troccaz (olivier.troccaz@cnrs.fr) and Laurent Jonchère (laurent.jonchere@univ-rennes.fr)
+ * Released under the terms and conditions of the GNU General Public License (https://www.gnu.org/licenses/gpl-3.0.txt)
+ *
+ * Page d'accueil - Home page
+ */
+ 
 //authentification CAS ou autre ?
-if (strpos($_SERVER['HTTP_HOST'], '127.0.0.1') !== false || strpos($_SERVER['HTTP_HOST'], 'ecobio') !== false) {
+if (strpos($_SERVER['HTTP_HOST'], '127.0.0.1') !== false) {
   include('./_connexion.php');
 }else{
   require_once('./CAS_connect.php');
@@ -22,7 +31,7 @@ if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
 <html lang="fr">
 <head>
 	<meta charset="utf-8" />
-	<title>OverHAL - HAL - UR1</title>
+	<title>OverHAL - HAL - UR</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta content="OverHAL permet de générer un fichier de publications TEI HAL pour Zip2HAL à partir d'un fichier source et de contacter les auteurs pour leur manuscrit" />
 	<meta content="Coderthemes + Lizuka + OTroccaz + LJonchere" name="author" />

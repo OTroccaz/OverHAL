@@ -19,7 +19,6 @@ require_once $phpcas_path . '/CAS.php';
 // Enable debugging
 $httphost = $_SERVER['HTTP_HOST'];
 if (strpos($httphost, '127.0.0.1') !== false) {phpCAS::setDebug();}
-if (strpos($httphost, 'ecobio') !== false) {phpCAS::setDebug();}
 if (strpos($httphost, 'halur1') !== false) {/*To conserve?*/ }
 // Enable verbose error messages. Disable in production!
 phpCAS::setVerbose(true);

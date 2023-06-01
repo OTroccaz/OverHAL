@@ -1,4 +1,13 @@
 <?php
+/*
+ * OverHAL - Convertissez vos imports éditeurs en TEI - Convert your publisher imports to TEI
+ *
+ * Copyright (C) 2023 Olivier Troccaz (olivier.troccaz@cnrs.fr) and Laurent Jonchère (laurent.jonchere@univ-rennes.fr)
+ * Released under the terms and conditions of the GNU General Public License (https://www.gnu.org/licenses/gpl-3.0.txt)
+ *
+ * Equivalences intitulés et codes unités - Equivalence of unit titles and codes
+ */
+ 
 $search = array(
 "Fonctions optiques pour les technologies de l'information",
 "Institut d'électronique et de télécommunications de Rennes",

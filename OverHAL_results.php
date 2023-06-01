@@ -1,4 +1,13 @@
 <?php
+/*
+ * OverHAL - Convertissez vos imports éditeurs en TEI - Convert your publisher imports to TEI
+ *
+ * Copyright (C) 2023 Olivier Troccaz (olivier.troccaz@cnrs.fr) and Laurent Jonchère (laurent.jonchere@univ-rennes.fr)
+ * Released under the terms and conditions of the GNU General Public License (https://www.gnu.org/licenses/gpl-3.0.txt)
+ *
+ * Page d'accueil des résultats - Results home page
+ */
+ 
 header('Content-type: text/html; charset=UTF-8');
 mb_internal_encoding("UTF-8");
 $akSR = "13798F18-07B4-11EB-A9BD-C7111677CA68";//ApiKey Sherpa Romeo
@@ -450,7 +459,7 @@ foreach ($souBib as $key => $subTab)
 <html lang="fr">
 <head>
 	<meta charset="utf-8" />
-	<title>OverHAL - HAL - UR1</title>
+	<title>OverHAL - HAL - UR</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta content="OverHAL permet de générer un fichier de publications TEI HAL pour Zip2HAL à partir d'un fichier source et de contacter les auteurs pour leur manuscrit" />
 	<meta content="Coderthemes + Lizuka + OTroccaz + LJonchere" name="author" />
@@ -3166,7 +3175,7 @@ foreach ($souBib as $key => $subTab)
 					case "wos_txt":
 						$aut = $papers[$key][$key2]['AU'];
 						$autTab = explode("; ",$aut);
-						if (count($autTab) < $limNbAut)
+						if (count($autTab) <= $limNbAut)
 						{
 							//affiliation
 							$autTab = array();
@@ -3857,7 +3866,7 @@ foreach ($souBib as $key => $subTab)
 					case "scopus":
 						$aut = $papers[$key][$key2]['Authors'];
 						$autTab = explode(", ",$aut);
-						if (count($autTab) < $limNbAut)
+						if (count($autTab) <= $limNbAut)
 						{
 							//affiliation
 							$autTab = array();
@@ -4451,7 +4460,7 @@ foreach ($souBib as $key => $subTab)
 					case "pubmed_txt":
 						$aut = $papers[$key][$key2]['Auteurs'];
 						$autTab = explode("; ",$aut);
-						if (count($autTab) < $limNbAut)
+						if (count($autTab) <= $limNbAut)
 						{
 							//affiliation
 							$autTab = array();
@@ -4996,7 +5005,7 @@ foreach ($souBib as $key => $subTab)
 					case "pubmed_fcgi":
 						$aut = $papers[$key][$key2]['tabAut'];
 						$autTab = explode("~",$aut);
-						if (count($autTab) < $limNbAut)
+						if (count($autTab) <= $limNbAut)
 						{
 							//affiliation
 							$autTab = array();
@@ -5384,7 +5393,7 @@ foreach ($souBib as $key => $subTab)
 					case "dimensions":
 						$aut = $papers[$key][$key2]['Authors'];
 						$autTab = explode("; ",$aut);
-						if (count($autTab) < $limNbAut)
+						if (count($autTab) <= $limNbAut)
 						{
 							//affiliation
 							$autTab = array();
