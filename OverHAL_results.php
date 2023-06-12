@@ -3865,7 +3865,7 @@ foreach ($souBib as $key => $subTab)
 
 					case "scopus":
 						$aut = $papers[$key][$key2]['Authors'];
-						$autTab = explode(", ",$aut);
+						$autTab = explode("; ",$aut);
 						if (count($autTab) <= $limNbAut)
 						{
 							//affiliation
@@ -3880,12 +3880,23 @@ foreach ($souBib as $key => $subTab)
 							$pays = "";
 							$quoi = $papers[$key][$key2]['Authors with affiliations'];
 							$quoi = trimUltime($quoi);
+							$aut = explode(";", $papers[$key][$key2]['Authors']);
 							$validHAL = "";//to privilegy the search by the unit code number rather than acronym
 							//echo "<br>".$j." - ".$quoi."<br>";
 							$diffQuoi = explode(";", $quoi);
 							//var_dump($diffQuoi);
 							for ($d = 0; $d < count($diffQuoi); $d++)
 							{
+								//Search for the author's name
+								$nom = "";
+								$quiTab = explode(" ", $aut[$d]);
+								if (!isset($quiTab[1])) {$prenom = "";}//in case of no comma for one author
+								foreach($quiTab as $elt) {
+									if (strpos($elt, ".") === false)//no point > part of the name
+									{
+										$nom .= " ".supprAmp(trim($elt));
+									}
+								}
 								$urlHAL = "";
 								$docid = 0;
 								$label = "";
@@ -3895,10 +3906,13 @@ foreach ($souBib as $key => $subTab)
 								$pays = "";
 								$eltTab = explode(",", $diffQuoi[$d]);
 								$aTester = "";
-								if (isset($eltTab[0]) && isset($eltTab[1])) {$aTester = "[".$eltTab[0].",".$eltTab[1]."]";}//to retrieve the WoS structure for affilId function
-								for ($t = 2; $t < count($eltTab); $t++)
+								//if (isset($eltTab[0]) && isset($eltTab[1])) {$aTester = "[".$eltTab[0].",".$eltTab[1]."]";}//to retrieve the WoS structure for affilId function
+								if (isset($eltTab[0])) {$aTester = "[".trim($eltTab[0])."]";}//to retrieve the WoS structure for affilId function
+								//Add a comma between the first and last name
+								$aTester = str_replace(trim($nom), trim($nom).',', $aTester);
+								for ($t = 1; $t < count($eltTab); $t++)
 								{
-									if ($t != 2) {$aTester .= ", ".trim($eltTab[$t]);}else{$aTester .= $eltTab[$t];}
+									if ($t != 1) {$aTester .= ", ".trim($eltTab[$t]);}else{$aTester .= $eltTab[$t];}
 								}
 								//echo $aTester.'<br>';
 								//Search for distinctive acronyms
@@ -4041,12 +4055,15 @@ foreach ($souBib as $key => $subTab)
 							}
 							$chaine .= '                <title xml:lang="'.$lng.'">'.supprAmp($papers[$key][$key2]['Title']).'</title>'."\r\n";
 							//auteurs
-							$aut = explode(",", $papers[$key][$key2]['Authors']);
+							$aut = explode(";", $papers[$key][$key2]['Authors']);
+							$autComplet = explode(";", $papers[$key][$key2]['Author full names']);
 							//var_dump($aut);
 							$iTp = 0;
+							$iAut = 0;
 							foreach ($aut as $qui) {
 								$nom = "";
 								$prenom = "";
+								$prenomComplet = "";
 								$quiTab = explode(" ", trim($qui));
 								if (!isset($quiTab[1])) {$prenom = "";}//in case of no comma for one author
 								//var_dump($quiTab);
@@ -4059,6 +4076,10 @@ foreach ($souBib as $key => $subTab)
 									}
 								}
 								$nom = trim($nom);
+								$prenomComplet = $autComplet[$iAut];
+								//If present, ignore numbers in brackets
+								if (strpos($prenomComplet, ' (') !== false) {$prenomComplet = substr($prenomComplet, 0, strpos($prenomComplet, ' ('));}
+								$prenomComplet = trim(str_replace(trim($nom).', ', '', $prenomComplet));
 								$nompre = $nom .", ".$prenom;
 								$rolAut = "aut";
 								if (stripos($papers[$key][$key2]['Correspondence Address'], $nom .", ".substr($prenom, 0, 1)) !== false) {$rolAut = "crp";}
@@ -4066,7 +4087,7 @@ foreach ($souBib as $key => $subTab)
 								if ($prenom != "") {
 									$chaine .= '                <author role="'.$rolAut.'">'."\r\n";
 									$chaine .= '                  <persName>'."\r\n";
-									$chaine .= '                    <forename type="first">'.$prenom.'</forename>'."\r\n";
+									$chaine .= '                    <forename type="first">'.$prenomComplet.'</forename>'."\r\n";
 									$chaine .= '                    <surname>'.$nom.'</surname>'."\r\n";
 									$chaine .= '                  </persName>'."\r\n";
 									//Si auteur correspondant, recherche du mail
@@ -4096,6 +4117,7 @@ foreach ($souBib as $key => $subTab)
 									}
 									$chaine .= '                </author>'."\r\n";
 								}
+								$iAut++;
 							}
 							//var_dump($strTab);
 							$chaine .= '              </analytic>'."\r\n";
