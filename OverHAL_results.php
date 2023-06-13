@@ -267,7 +267,7 @@ $souBib = array(
     "Year" => "Year",
     "Title" => "Title",
     "DOI" => "DOI",
-    "Authors" => "Authors",
+    "Authors" => "\"Authors\"",
     "Source" => "Source title",
     "Type" => "Document Type",
   ),
@@ -3864,7 +3864,7 @@ foreach ($souBib as $key => $subTab)
 						break;
 
 					case "scopus":
-						$aut = $papers[$key][$key2]['Authors'];
+						$aut = $papers[$key][$key2]['"Authors"'];
 						$autTab = explode("; ",$aut);
 						if (count($autTab) <= $limNbAut)
 						{
@@ -3880,7 +3880,7 @@ foreach ($souBib as $key => $subTab)
 							$pays = "";
 							$quoi = $papers[$key][$key2]['Authors with affiliations'];
 							$quoi = trimUltime($quoi);
-							$aut = explode(";", $papers[$key][$key2]['Authors']);
+							$aut = explode(";", $papers[$key][$key2]['"Authors"']);
 							$validHAL = "";//to privilegy the search by the unit code number rather than acronym
 							//echo "<br>".$j." - ".$quoi."<br>";
 							$diffQuoi = explode(";", $quoi);
@@ -4055,7 +4055,7 @@ foreach ($souBib as $key => $subTab)
 							}
 							$chaine .= '                <title xml:lang="'.$lng.'">'.supprAmp($papers[$key][$key2]['Title']).'</title>'."\r\n";
 							//auteurs
-							$aut = explode(";", $papers[$key][$key2]['Authors']);
+							$aut = explode(";", $papers[$key][$key2]['"Authors"']);
 							$autComplet = explode(";", $papers[$key][$key2]['Author full names']);
 							//var_dump($aut);
 							$iTp = 0;
