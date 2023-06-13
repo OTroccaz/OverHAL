@@ -2426,27 +2426,27 @@ foreach ($souBib as $key => $subTab)
 						fseek($inF, 0);
 						if (isset($papers[$key][$key2]['Document Type']))
 						{
-							$type = $papers[$key][$key2]['Document Type'];
+							$type = strtolower($papers[$key][$key2]['Document Type']);
 							switch($type)
 							{
-								case "Article":
-								case "Article in Press":
-								case "Review":
-								case "Erratum":
-								case "Editorial":
-								case "Short Survey":
-								case "Letter":
-								case "Note":
+								case "article":
+								case "article in press":
+								case "review":
+								case "erratum":
+								case "editorial":
+								case "short survey":
+								case "letter":
+								case "note":
 									$type = "article";
 									break;
-								case "Conference Paper":
-								case "Conference Review":
+								case "conference paper":
+								case "conference review":
 									$type = "inproceedings";
 									break;
-								case "Book":
+								case "book":
 									$type = "book";
 									break;
-								case "Book Chapter":
+								case "book chapter":
 									$type = "inbook";
 									break;
 							}
@@ -4131,17 +4131,17 @@ foreach ($souBib as $key => $subTab)
 							{
 								$typDoc = "";
 								$typDocp = "";
-								$type = $papers[$key][$key2]['Document Type'];
+								$type = strtolower($papers[$key][$key2]['Document Type']);
 								switch($type)
 								{
-									case "Article"://article
-									case "Article in Press":
-									case "Review":
-									case "Erratum":
-									case "Editorial":
-									case "Short Survey":
-									case "Letter":
-									case "Note":
+									case "article"://article
+									case "article in press":
+									case "review":
+									case "erratum":
+									case "editorial":
+									case "short survey":
+									case "letter":
+									case "note":
 										$chaine .= '                <title level="j">'.supprAmp($papers[$key][$key2]['Source title']).'</title>'."\r\n";
 										$chaine .= '                <imprint>'."\r\n";
 										$chaine .= '                  <publisher>'.supprAmp($papers[$key][$key2]['Publisher']).'</publisher>'."\r\n";
@@ -4158,8 +4158,8 @@ foreach ($souBib as $key => $subTab)
 										$typeDoc = "ART";
 										$typeDocp = "Journal articles";
 										break;
-									case "Conference Paper"://inproceedings
-									case "Conference Review":
+									case "conference paper"://inproceedings
+									case "conference review":
 										//Source Title
 										$chaine .= '                <title level="j">'.supprAmp($papers[$key][$key2]['Source title']).'</title>'."\r\n";
 										$chaine .= '                <meeting>'."\r\n";
@@ -4306,8 +4306,8 @@ foreach ($souBib as $key => $subTab)
 										$typeDoc = "COMM";
 										$typeDocp = "Conference papers";
 										break;
-									case "Book"://book
-									case "Book Chapter":
+									case "book"://book
+									case "book chapter":
 										$chaine .= '                <idno type="isbn">'.supprAmp($papers[$key][$key2]['ISBN']).'</idno>'."\r\n";
 										$chaine .= '                <title level="m">'.supprAmp($papers[$key][$key2]['Source title']).'</title>'."\r\n";
 										$chaine .= '                <editor>'.supprAmp($papers[$key][$key2]['Editors']).'</editor>'."\r\n";
@@ -4318,7 +4318,7 @@ foreach ($souBib as $key => $subTab)
 										$chaine .= '                  <biblScope unit="pp">'.supprAmp($papers[$key][$key2]['Page start']).'-'.$papers[$key][$key2]['Page end'].'</biblScope>'."\r\n";
 										$chaine .= '                  <date type="datePub">'.supprAmp($papers[$key][$key2]['Year']).'</date>'."\r\n";
 										$chaine .= '                </imprint>'."\r\n";
-										if ($type == "Book") {
+										if ($type == "book") {
 											$typeDoc = "OUV";
 											$typeDocp = "Ouv";
 										}else{
@@ -4326,7 +4326,7 @@ foreach ($souBib as $key => $subTab)
 											$typeDocp = "Couv";
 										}
 										break;
-									case "P"://patent > il n'y en a pas dans WoS
+									case "p"://patent > il n'y en a pas dans WoS
 										$typeDoc = "PATENT";
 										$typeDocp = "Patent";//???
 										break;
