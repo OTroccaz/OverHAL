@@ -2524,42 +2524,42 @@ foreach ($souBib as $key => $subTab)
 									//year
 									$confdate = trim($res[2])."-";
 									//month
-									switch($res[1])
+									switch(strtolower($res[1]))
 									{
-										case "January":
+										case "january":
 											$confdate .= "01-";
 											break;
-										case "February":
+										case "february":
 											$confdate .= "02-";
 											break;
-										case "March":
+										case "march":
 											$confdate .= "03-";
 											break;
-										case "April":
+										case "april":
 											$confdate .= "04-";
 											break;
-										case "May":
+										case "may":
 											$confdate .= "05-";
 											break;
-										case "June":
+										case "june":
 											$confdate .= "06-";
 											break;
-										case "July":
+										case "july":
 											$confdate .= "07-";
 											break;
-										case "August":
+										case "august":
 											$confdate .= "08-";
 											break;
-										case "September":
+										case "september":
 											$confdate .= "09-";
 											break;
-										case "October":
+										case "october":
 											$confdate .= "10-";
 											break;
-										case "November":
+										case "november":
 											$confdate .= "11-";
 											break;
-										case "December":
+										case "december":
 											$confdate .= "12-";
 											break;
 									}
@@ -2605,20 +2605,20 @@ foreach ($souBib as $key => $subTab)
 						fseek($inF, 0);
 						if (isset($papers[$key][$key2]['PT']))
 						{
-							$type = $papers[$key][$key2]['PT'];
+							$type = strtolower($papers[$key][$key2]['PT']);
 							switch($type)
 							{
-								case "J":
+								case "j":
 									$type = ($papers[$key][$key2]['DT'] == "Meeting Abstract") ? "inproceedings" : "article";
 									break;
-								case "S":
-								case "C":
+								case "s":
+								case "c":
 									$type = "inproceedings";
 									break;
-								case "B":
+								case "b":
 									$type = "book";
 									break;
-								case "P":
+								case "p":
 									$type = "patent";
 									break;
 							}
@@ -2701,42 +2701,42 @@ foreach ($souBib as $key => $subTab)
 									//year
 									$confdate = trim($res[2])."-";
 									//month
-									switch($res[0])
+									switch(strtolower($res[0]))
 									{
-										case "JAN":
+										case "jan":
 											$confdate .= "01-";
 											break;
-										case "FEB":
+										case "feb":
 											$confdate .= "02-";
 											break;
-										case "MAR":
+										case "mar":
 											$confdate .= "03-";
 											break;
-										case "APR":
+										case "apr":
 											$confdate .= "04-";
 											break;
-										case "MAY":
+										case "may":
 											$confdate .= "05-";
 											break;
-										case "JUN":
+										case "jun":
 											$confdate .= "06-";
 											break;
-										case "JUL":
+										case "jul":
 											$confdate .= "07-";
 											break;
-										case "AUG":
+										case "aug":
 											$confdate .= "08-";
 											break;
-										case "SEP":
+										case "sep":
 											$confdate .= "09-";
 											break;
-										case "OCT":
+										case "oct":
 											$confdate .= "10-";
 											break;
-										case "NOV":
+										case "nov":
 											$confdate .= "11-";
 											break;
-										case "DEC":
+										case "dec":
 											$confdate .= "12-";
 											break;
 									}
@@ -2747,42 +2747,42 @@ foreach ($souBib as $key => $subTab)
 									//year
 									$confDate = trim($res[3])."-";
 									//month
-									switch($res[0])
+									switch(strtolower($res[0]))
 									{
-										case "JAN":
+										case "jan":
 											$confStartDate .= "01-";
 											break;
-										case "FEB":
+										case "feb":
 											$confStartDate .= "02-";
 											break;
-										case "MAR":
+										case "mar":
 											$confStartDate .= "03-";
 											break;
-										case "APR":
+										case "apr":
 											$confStartDate .= "04-";
 											break;
-										case "MAY":
+										case "may":
 											$confStartDate .= "05-";
 											break;
-										case "JUN":
+										case "jun":
 											$confStartDate .= "06-";
 											break;
-										case "JUL":
+										case "jul":
 											$confStartDate .= "07-";
 											break;
-										case "AUG":
+										case "aug":
 											$confStartDate .= "08-";
 											break;
-										case "SEP":
+										case "sep":
 											$confStartDate .= "09-";
 											break;
-										case "OCT":
+										case "oct":
 											$confStartDate .= "10-";
 											break;
-										case "NOV":
+										case "nov":
 											$confStartDate .= "11-";
 											break;
-										case "DEC":
+										case "dec":
 											$confStartDate .= "12-";
 											break;
 									}
@@ -2821,16 +2821,16 @@ foreach ($souBib as $key => $subTab)
 						fseek($inF, 0);
 						if (isset($papers[$key][$key2]['Document Type']))
 						{
-							$type = $papers[$key][$key2]['Document Type'];
+							$type = strtolower($papers[$key][$key2]['Document Type']);
 							switch($type)
 							{
-								case "Journal; Online Computer File":
-								case "Journal":
-								case "Preprint":
-								case "Journal; General Review; Online Computer File":
+								case "journal; online computer file":
+								case "journal":
+								case "preprint":
+								case "journal; general review; online computer file":
 									$type = "article";
 									break;
-								case "Patent":
+								case "patent":
 									$type = "patent";
 									break;
 							}
@@ -2892,19 +2892,19 @@ foreach ($souBib as $key => $subTab)
 						fseek($inF, 0);
 						if (isset($papers[$key][$key2]['Item Type']))
 						{
-							$type = $papers[$key][$key2]['Item Type'];
+							$type = strtolower($papers[$key][$key2]['Item Type']);
 							switch($type)
 							{
-								case "journalArticle":
+								case "journalarticle":
 									$type = "article";
 									break;
-								case "conferencePaper":
+								case "conferencepaper":
 									$type = "inproceedings";
 									break;
 								case "book":
 									$type = "book";
 									break;
-								case "bookSection":
+								case "booksection":
 									$type = "inbook";
 									break;
 								case "patent":
@@ -3457,10 +3457,10 @@ foreach ($souBib as $key => $subTab)
 							{
 								$typDoc = "";
 								$typDocp = "";
-								$type = $papers[$key][$key2]['PT'];
+								$type = strtolower($papers[$key][$key2]['PT']);
 								switch($type)
 								{
-									case "J"://article (Article)
+									case "j"://article (Article)
 										if ($papers[$key][$key2]['DT'] == "Article" || $papers[$key][$key2]['DT'] == "Article; Early Access" || $papers[$key][$key2]['DT'] == "Letter" || $papers[$key][$key2]['DT'] == "Letter; Early Access" || $papers[$key][$key2]['DT'] == "Editorial Material" || $papers[$key][$key2]['DT'] == "Editorial Material; Early Access" || $papers[$key][$key2]['DT'] == "Review" || $papers[$key][$key2]['DT'] == "Review; Early Access") {
 											$chaine .= '                <title level="j">'.supprAmp(minRev($papers[$key][$key2]['SO'])).'</title>'."\r\n";
 											$chaine .= '                <imprint>'."\r\n";
@@ -3487,10 +3487,10 @@ foreach ($souBib as $key => $subTab)
 										if ($papers[$key][$key2]['DT'] == "Correction" || $papers[$key][$key2]['DT'] == "Correction; Early Access") {//Ligne de type article mais à ignorer
 											break;
 										}
-									case "J"://communication (Meeting Abstract)
-									case "S"://inproceedings
-									case "C":
-									case "B"://book
+									case "j"://communication (Meeting Abstract)
+									case "s"://inproceedings
+									case "c":
+									case "b"://book
 										if ($papers[$key][$key2]['DT'] == "Proceedings Paper" || $papers[$key][$key2]['DT'] == "Meeting Abstract") {
 											$chaine .= '                <title level="j">'.supprAmp($papers[$key][$key2]['SO']).'</title>'."\r\n";
 											$chaine .= '                <title level="m">'.supprAmp($papers[$key][$key2]['CT']).'</title>'."\r\n";
@@ -3508,53 +3508,53 @@ foreach ($souBib as $key => $subTab)
 														$confStartDate = trim($res[2])."-";
 														$confEndDate = trim($res[2])."-";
 														//month
-														switch($res[0])
+														switch(strtolower($res[0]))
 														{
-															case "JAN":
+															case "jan":
 																$confStartDate .= "01-";
 																$confEndDate .= "01-";
 																break;
-															case "FEB":
+															case "feb":
 																$confStartDate .= "02-";
 																$confEndDate .= "02-";
 																break;
-															case "MAR":
+															case "mar":
 																$confStartDate .= "03-";
 																$confEndDate .= "03-";
 																break;
-															case "APR":
+															case "apr":
 																$confStartDate .= "04-";
 																$confEndDate .= "04-";
 																break;
-															case "MAY":
+															case "may":
 																$confStartDate .= "05-";
 																$confEndDate .= "05-";
 																break;
-															case "JUN":
+															case "jun":
 																$confStartDate .= "06-";
 																$confEndDate .= "06-";
 																break;
-															case "JUL":
+															case "jul":
 																$confStartDate .= "07-";
 																$confEndDate .= "07-";
 																break;
-															case "AUG":
+															case "aug":
 																$confStartDate .= "08-";
 																$confEndDate .= "08-";
 																break;
-															case "SEP":
+															case "sep":
 																$confStartDate .= "09-";
 																$confEndDate .= "09-";
 																break;
-															case "OCT":
+															case "oct":
 																$confStartDate .= "10-";
 																$confEndDate .= "10-";
 																break;
-															case "NOV":
+															case "nov":
 																$confStartDate .= "11-";
 																$confEndDate .= "11-";
 																break;
-															case "DEC":
+															case "dec":
 																$confStartDate .= "12-";
 																$confEndDate .= "12-";
 																break;
@@ -3568,83 +3568,83 @@ foreach ($souBib as $key => $subTab)
 														$confStartDate = trim($res[3])."-";
 														$confEndDate = trim($res[3])."-";
 														//month
-														switch($res[0])//startdate
+														switch(strtolower($res[0]))//startdate
 														{
-															case "JAN":
+															case "jan":
 																$confStartDate .= "01-";
 																break;
-															case "FEB":
+															case "feb":
 																$confStartDate .= "02-";
 																break;
-															case "MAR":
+															case "mar":
 																$confStartDate .= "03-";
 																break;
-															case "APR":
+															case "apr":
 																$confStartDate .= "04-";
 																break;
-															case "MAY":
+															case "may":
 																$confStartDate .= "05-";
 																break;
-															case "JUN":
+															case "jun":
 																$confStartDate .= "06-";
 																break;
-															case "JUL":
+															case "jul":
 																$confStartDate .= "07-";
 																break;
-															case "AUG":
+															case "aug":
 																$confStartDate .= "08-";
 																break;
-															case "SEP":
+															case "sep":
 																$confStartDate .= "09-";
 																break;
-															case "OCT":
+															case "oct":
 																$confStartDate .= "10-";
 																break;
-															case "NOV":
+															case "nov":
 																$confStartDate .= "11-";
 																break;
-															case "DEC":
+															case "dec":
 																$confStartDate .= "12-";
 																break;
 														}
 														//enddate
 														$tabCD = explode("-", trim($res[1]));
-														switch($tabCD[1])
+														switch(strtolower($tabCD[1]))
 														{
-															case "JAN":
+															case "jan":
 																$confEndDate .= "01-";
 																break;
-															case "FEB":
+															case "feb":
 																$confEndDate .= "02-";
 																break;
-															case "MAR":
+															case "mar":
 																$confEndDate .= "03-";
 																break;
-															case "APR":
+															case "apr":
 																$confEndDate .= "04-";
 																break;
-															case "MAY":
+															case "may":
 																$confEndDate .= "05-";
 																break;
-															case "JUN":
+															case "jun":
 																$confEndDate .= "06-";
 																break;
-															case "JUL":
+															case "jul":
 																$confEndDate .= "07-";
 																break;
-															case "AUG":
+															case "aug":
 																$confEndDate .= "08-";
 																break;
-															case "SEP":
+															case "sep":
 																$confEndDate .= "09-";
 																break;
-															case "OCT":
+															case "oct":
 																$confEndDate .= "10-";
 																break;
-															case "NOV":
+															case "nov":
 																$confEndDate .= "11-";
 																break;
-															case "DEC":
+															case "dec":
 																$confEndDate .= "12-";
 																break;
 														}
@@ -3722,7 +3722,7 @@ foreach ($souBib as $key => $subTab)
 											}
 											break;
 										}
-									case "P"://patent > il n'y en a pas dans WoS
+									case "p"://patent > il n'y en a pas dans WoS
 										$typeDoc = "PATENT";
 										$typeDocp = "Patent";//???
 										break;
@@ -4184,83 +4184,83 @@ foreach ($souBib as $key => $subTab)
 														$confStartDate = trim($res[2])."-";
 														$confEndDate = trim($res[6])."-";
 														//start month
-														switch($res[1])
+														switch(strtolower($res[1]))
 														{
-															case "January":
+															case "january":
 																$confStartDate .= "01-";
 																break;
-															case "February":
+															case "february":
 																$confStartDate .= "02-";
 																break;
-															case "March":
+															case "march":
 																$confStartDate .= "03-";
 																break;
-															case "April":
+															case "april":
 																$confStartDate .= "04-";
 																break;
-															case "May":
+															case "may":
 																$confStartDate .= "05-";
 																break;
-															case "June":
+															case "june":
 																$confStartDate .= "06-";
 																break;
-															case "July":
+															case "july":
 																$confStartDate .= "07-";
 																$confEndDate .= "07-";
 																break;
-															case "August":
+															case "august":
 																$confStartDate .= "08-";
 																break;
-															case "September":
+															case "september":
 																$confStartDate .= "09-";
 																break;
-															case "October":
+															case "october":
 																$confStartDate .= "10-";
 																break;
-															case "November":
+															case "november":
 																$confStartDate .= "11-";
 																break;
-															case "December":
+															case "december":
 																$confStartDate .= "12-";
 																break;
 														}
 														//start month
-														switch($res[5])
+														switch(strtolower($res[5]))
 														{
-															case "January":
+															case "january":
 																$confEndDate .= "01-";
 																break;
-															case "February":
+															case "february":
 																$confEndDate .= "02-";
 																break;
-															case "March":
+															case "march":
 																$confEndDate .= "03-";
 																break;
-															case "April":
+															case "april":
 																$confEndDate .= "04-";
 																break;
-															case "May":
+															case "may":
 																$confEndDate .= "05-";
 																break;
-															case "June":
+															case "june":
 																$confEndDate .= "06-";
 																break;
-															case "July":
+															case "july":
 																$confEndDate .= "07-";
 																break;
-															case "August":
+															case "august":
 																$confEndDate .= "08-";
 																break;
-															case "September":
+															case "september":
 																$confEndDate .= "09-";
 																break;
-															case "October":
+															case "october":
 																$confEndDate .= "10-";
 																break;
-															case "November":
+															case "november":
 																$confEndDate .= "11-";
 																break;
-															case "December":
+															case "december":
 																$confEndDate .= "12-";
 																break;
 														}
@@ -4731,9 +4731,9 @@ foreach ($souBib as $key => $subTab)
 								$type = $papers[$key][$key2]['Type'];
 								//if (strpos($type, "Journal Article") !== false) {$typeDef = "Journal Article";}
 								$typeDef = "Journal Article";
-								switch($typeDef)
+								switch(strtolower($typeDef))
 								{
-									case "Journal Article"://article
+									case "journal article"://article
 										$chaine .= '                <title level="j">'.supprAmp(minRev($papers[$key][$key2]['Revue'])).'</title>'."\r\n";
 										$chaine .= '                <imprint>'."\r\n";
 										$chaine .= '                  <biblScope unit="volume">'.supprAmp($papers[$key][$key2]['Volume']).'</biblScope>'."\r\n";
@@ -4746,8 +4746,8 @@ foreach ($souBib as $key => $subTab)
 										$typeDocp = "Journal articles";
 										break;
 									/*
-									case "S":
-									case "C":
+									case "s":
+									case "c":
 										//inproceedings
 										if ($papers[$key][$key2]['DT'] == "Proceedings Paper") {
 											$chaine .= '                <title level="j">'.supprAmp($papers[$key][$key2]['SO']).'</title>'."\r\n";
@@ -4874,8 +4874,8 @@ foreach ($souBib as $key => $subTab)
 											$typeDocp = "Book";//???
 										}
 										break;
-									case "B"://book
-									case "P"://patent > il n'y en a pas dans WoS
+									case "b"://book
+									case "p"://patent > il n'y en a pas dans WoS
 										$typeDoc = "PATENT";
 										$typeDocp = "Patent";//???
 										break;
@@ -5254,11 +5254,11 @@ foreach ($souBib as $key => $subTab)
 								$type = $papers[$key][$key2]['Type'];
 								//if (strpos($type, "Journal Article") !== false) {$typeDef = "Journal Article";}
 								$typeDef = "Journal Article";
-								switch($typeDef)
+								switch(strtolower($typeDef))
 								{
-									case "Journal Article"://article
-									case "Editorial"://???
-									case "Case Reports"://???
+									case "journal article"://article
+									case "editorial"://???
+									case "case reports"://???
 										$chaine .= '                <title level="j">'.supprAmp(minRev($papers[$key][$key2]['titRev'])).'</title>'."\r\n";
 										$chaine .= '                <imprint>'."\r\n";
 										$chaine .= '                  <biblScope unit="volume">'.supprAmp($papers[$key][$key2]['Volume']).'</biblScope>'."\r\n";
@@ -5627,7 +5627,7 @@ foreach ($souBib as $key => $subTab)
 							{
 								$typDoc = "";
 								$typDocp = "";
-								$type = $papers[$key][$key2]['Publication Type'];
+								$type = strtolower($papers[$key][$key2]['Publication Type']);
 								switch($type)
 								{
 									case "article"://article
