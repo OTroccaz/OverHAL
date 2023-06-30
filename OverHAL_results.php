@@ -7,7 +7,8 @@
  *
  * Page d'accueil des résultats - Results home page
  */
- 
+
+header('Content-Encoding: none;'); 
 header('Content-type: text/html; charset=UTF-8');
 mb_internal_encoding("UTF-8");
 $akSR = "13798F18-07B4-11EB-A9BD-C7111677CA68";//ApiKey Sherpa Romeo
@@ -459,7 +460,7 @@ foreach ($souBib as $key => $subTab)
 <html lang="fr">
 <head>
 	<meta charset="utf-8" />
-	<title>OverHAL - HAL - UR</title>
+	<title>OverHAL - HALUR</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta content="OverHAL permet de générer un fichier de publications TEI HAL pour Zip2HAL à partir d'un fichier source et de contacter les auteurs pour leur manuscrit" />
 	<meta content="Coderthemes + Lizuka + OTroccaz + LJonchere" name="author" />
@@ -579,7 +580,7 @@ foreach ($souBib as $key => $subTab)
                                         </p>
 																				
 																				<p class="mb-4">
-                                            Contacts : <a target='_blank' rel='noopener noreferrer' href="https://openaccess.univ-rennes1.fr/interlocuteurs/laurent-jonchere">Laurent Jonchère</a> (Université de Rennes 1) / <a target='_blank' rel='noopener noreferrer' href="https://openaccess.univ-rennes1.fr/interlocuteurs/olivier-troccaz">Olivier Troccaz</a> (CNRS CReAAH/OSUR).
+                                            Contacts : <a target='_blank' rel='noopener noreferrer' href="https://scienceouverte.univ-rennes.fr/interlocuteurs/laurent-jonchere">Laurent Jonchère</a> (Université de Rennes 1) / <a target='_blank' rel='noopener noreferrer' href="https://scienceouverte.univ-rennes.fr/interlocuteurs/olivier-troccaz">Olivier Troccaz</a> (CNRS CReAAH/OSUR).
                                         </p>
 
                                     </div> <!-- end card-body-->
