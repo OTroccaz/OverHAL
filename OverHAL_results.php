@@ -4083,7 +4083,7 @@ foreach ($souBib as $key => $subTab)
 								$prenomComplet = trim(str_replace(trim($nom).', ', '', $prenomComplet));
 								$nompre = $nom .", ".$prenom;
 								$rolAut = "aut";
-								if (stripos($papers[$key][$key2]['Correspondence Address'], $nom .", ".substr($prenom, 0, 1)) !== false) {$rolAut = "crp";}
+								if (stripos($papers[$key][$key2]['Correspondence Address'], substr($prenom, 0, 1).". ".$nom) !== false) {$rolAut = "crp";}
 								//echo $nompre.'<br>';
 								if ($prenom != "") {
 									$chaine .= '                <author role="'.$rolAut.'">'."\r\n";
