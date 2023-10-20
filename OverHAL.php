@@ -225,11 +225,15 @@ if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
                                                             <label for="scifin" class="badge badge-secondary-lighten">SciFinder (CSV) :</label>
                                                             <input class="form-control mb-1" id="scifin" name="scifin" type="file">
 																														
-																														<label for="pubmed_fcgi" class="badge badge-secondary-lighten">Pubmed (FCGI) :</label>
-                                                            <input class="form-control mb-1" id="pubmed_fcgi" name="pubmed_fcgi" type="file">
+																														<?php
+																														include("./Glob_IP_list.php");
+																														if (in_array($ip, $IP_aut)) {
+																															echo '<label for="pubmed_fcgi" class="badge badge-secondary-lighten">Pubmed (FCGI) :</label>';
+																															echo '<input class="form-control mb-1" id="pubmed_fcgi" name="pubmed_fcgi" type="file">';
+																															echo '<span><a target="_blank" rel="noopener noreferrer" href="OverHAL_FCGI_construct_import.php"> Construire un fichier FCGI à partir d\'une liste de PMID</a>, puis l\'envoyer à OverHAL avec le formulaire ci-dessus.</span>';
+																														}
+																														?>
 																														
-																														<span><a target="_blank" rel="noopener noreferrer" href="OverHAL_FCGI_construct_import.php"> Construire un fichier FCGI à partir d'une liste de PMID</a>, puis l'envoyer à OverHAL avec le formulaire ci-dessus.</span>
-                                                            
                                                         </div>
 
                                                         <div class="form-group col-sm-4">
@@ -244,7 +248,11 @@ if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
 																														include("./Glob_IP_list.php");
 																														if (in_array($ip, $IP_aut)) {
 																															echo '<label for="dimensions" class="badge badge-secondary-lighten">Dimensions (CSV) :</label>';
-																															echo '<input class="form-control mb-1" id="dimensions" name="dimensions" type="file" /><br/>';
+																															echo '<input class="form-control mb-1" id="dimensions" name="dimensions" type="file" />';
+																															
+																															echo '<label for="openalex" class="badge badge-secondary-lighten">OpenAlex :</label>';
+																															echo '<input class="form-control mb-1" id="openalex" name="openalex" type="file">';
+																															echo '<span><a target="_blank" rel="noopener noreferrer" href="OverHAL_OpenAlex_construct_import.php"> Construire un fichier CSV à partir d\'une URL OpenAlex</a>, puis l\'envoyer à OverHAL avec le formulaire ci-dessus.</span>';
 																														}
 																														?>
                                                         </div>
