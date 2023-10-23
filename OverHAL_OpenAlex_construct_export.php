@@ -273,7 +273,7 @@ while ($cpt < ($numFound+1)) {
 						}
 					}
 				}
-				
+
 				if (!empty($keysF)) {
 					foreach ($keysF as $keys) {
 						$inst_DN .= expcsv($tabInst['DN'][$keys]).'~||~';

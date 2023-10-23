@@ -6034,9 +6034,11 @@ foreach ($souBib as $key => $subTab)
 						$affil = '';
 						foreach ($autTab as $iaut){
 							$autaffil = '['.$iaut.'] ';
-							$autAff = explode('~||~',$affTab[$a]);
-							foreach ($autAff as $iaff){
-								$affil .= $autaffil.$iaff.'; ';
+							if (isset($affTab[$a])) {
+								$autAff = explode('~||~',$affTab[$a]);
+								foreach ($autAff as $iaff){
+									$affil .= $autaffil.$iaff.'; ';
+								}
 							}
 							//$affil = substr($affil, 0, -2).'; ';
 							$a++;
@@ -6240,8 +6242,8 @@ foreach ($souBib as $key => $subTab)
 							$a = 0;
 							foreach ($aut as $qui) {
 								$quiTab = explode(" ", $qui);
-								$prenom = supprAmp(trim($quiTab[0]));
-								$nom = supprAmp(trim($quiTab[1]));
+								$prenom = supprAmp(trim($quiTab[0] ?? ''));
+								$nom = supprAmp(trim($quiTab[1] ?? ''));
 								$nompre = $prenom ." ".$nom;
 								$role = ($crp[$a] == 1) ? '"crp"':'"aut"';
 								if ($prenom != "") {
