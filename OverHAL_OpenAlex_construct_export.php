@@ -167,8 +167,8 @@ while ($cpt < ($numFound+1)) {
 				$j++;
 			}
 		}
-		$chaine .= substr($funder_DN, 0, -3).";";
-		$chaine .= substr($funder_AI, 0, -3).";";
+		$chaine .= (substr($funder_DN, -3) == '~|~') ? substr($funder_DN, 0, -3).";" : ";";
+		$chaine .= (substr($funder_AI, -3) == '~|~') ? substr($funder_AI, 0, -3).";" : ";";
 		
 		//Auteur(s)
 		$j = 0;
@@ -292,7 +292,7 @@ while ($cpt < ($numFound+1)) {
 					}
 				}
 				
-				if (!empty($inst_DN)) {
+				if (!empty($inst_DN) && substr($inst_DN, -4) == '~||~') {
 					$inst_DN = substr($inst_DN, 0, -4);
 					$inst_RO = substr($inst_RO, 0, -4);
 					$inst_CY = substr($inst_CY, 0, -4);
@@ -306,14 +306,14 @@ while ($cpt < ($numFound+1)) {
 				$j++;
 			}
 		}
-		$chaine .= substr($author_DN, 0, -3).";";
-		$chaine .= substr($orcid, 0, -3).";";
-		$chaine .= substr($is_cor, 0, -3).";";
-		//$chaine .= substr($domaine, 0, -3).";";
-		$chaine .= substr($inst_DN, 0, -3).";";
-		$chaine .= substr($inst_RO, 0, -3).";";
-		$chaine .= substr($inst_CY, 0, -3).";";
-		$chaine .= substr($inst_TY, 0, -3).";";
+		$chaine .= (substr($author_DN, -3) == '~|~') ? substr($author_DN, 0, -3).";" : ";";
+		$chaine .= (substr($orcid, -3) == '~|~') ? substr($orcid, 0, -3).";" : ";";
+		$chaine .= (substr($is_cor, -3) == '~|~') ? substr($is_cor, 0, -3).";" : ";";
+		//$chaine .= (substr($domaine, -3) == '~|~') ? substr($domaine, 0, -3).";" : ";";
+		$chaine .= (substr($inst_DN, -3) == '~|~') ? substr($inst_DN, 0, -3).";" : ";";
+		$chaine .= (substr($inst_RO, -3) == '~|~') ? substr($inst_RO, 0, -3).";" : ";";
+		$chaine .= (substr($inst_CY, -3) == '~|~') ? substr($inst_CY, 0, -3).";" : ";";
+		$chaine .= (substr($inst_TY, -3) == '~|~') ? substr($inst_TY, 0, -3).";" : ";";
 		
 		//ISSN
 		$chaine .= (isset($resOA->results[$i]->primary_location->source->issn_l)) ? expcsv($resOA->results[$i]->primary_location->source->issn_l).";" : ";";
