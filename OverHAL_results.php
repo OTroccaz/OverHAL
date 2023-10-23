@@ -6241,9 +6241,10 @@ foreach ($souBib as $key => $subTab)
 							$iTp = 0;
 							$a = 0;
 							foreach ($aut as $qui) {
+								//Règle : le premier terme avant le premier espace est le prénom et tout le reste est le nom
 								$quiTab = explode(" ", $qui);
 								$prenom = supprAmp(trim($quiTab[0] ?? ''));
-								$nom = supprAmp(trim($quiTab[1] ?? ''));
+								$nom = supprAmp(str_replace($prenom.' ', '', $qui) ?? ''); 
 								$nompre = $prenom ." ".$nom;
 								$role = ($crp[$a] == 1) ? '"crp"':'"aut"';
 								if ($prenom != "") {
