@@ -6044,7 +6044,7 @@ foreach ($souBib as $key => $subTab)
 							$a++;
 						}
 						$affil = substr($affil, 0, -2);
-						//echo $affil;
+						//echo $affil.'<br>';
 						if (count($autTab) <= $limNbAut)
 						{
 							//affiliation
@@ -6436,6 +6436,7 @@ foreach ($souBib as $key => $subTab)
 									if (!empty($ror)) {
 										$chaine .= '            <idno type="ROR">'.$ror.'</idno>'."\r\n";
 									}
+									$orgName = str_replace('~troliv~', ',', $orgName);
 									$chaine .= '            <orgName>'.$orgName.'</orgName>'."\r\n";
 									if ($pays != "")
 									{

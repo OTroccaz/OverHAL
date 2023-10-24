@@ -238,7 +238,7 @@ while ($cpt < ($numFound+1)) {
 							}
 						}
 						
-						$tabInst['DN'][$k] = $resOA->results[$i]->authorships[$j]->institutions[$k]->display_name;
+						$tabInst['DN'][$k] = str_replace(',', '~troliv~', $resOA->results[$i]->authorships[$j]->institutions[$k]->display_name);
 						$tabInst['RO'][$k] = $resOA->results[$i]->authorships[$j]->institutions[$k]->ror;
 						$tabInst['CY'][$k] = $resOA->results[$i]->authorships[$j]->institutions[$k]->country_code;
 						$tabInst['TY'][$k] = $resOA->results[$i]->authorships[$j]->institutions[$k]->type;
