@@ -139,7 +139,12 @@ while ($cpt < ($numFound+1)) {
 		//Source OpenAlex
 		$chaine .= (isset($resOA->results[$i]->id)) ? expcsv($resOA->results[$i]->id).";" : ";";
 		//Type de notice
-		$chaine .= (isset($resOA->results[$i]->type)) ? expcsv($resOA->results[$i]->type).";" : ";";
+			//Si primary_location->source = array, c'est un article, sinon c'est une communication, même si type = article
+			if (is_array($resOA->results[$i]->primary_location->source)) {
+				$chaine .= (isset($resOA->results[$i]->type)) ? expcsv($resOA->results[$i]->type).";" : ";";
+			}else{
+				$chaine .= 'comm;';
+			}
 		//DOI
 		$chaine .= (isset($resOA->results[$i]->doi)) ? expcsv(str_replace('https://doi.org/', '', $resOA->results[$i]->doi)).";" : ";";
 		//PMID
@@ -162,8 +167,8 @@ while ($cpt < ($numFound+1)) {
 		$funder_AI = '';
 		if (isset($resOA->results[$i]->grants[$j])) {
 			while (isset($resOA->results[$i]->grants[$j])) {
-				$funder_DN .= (!empty(($resOA->results[$i]->grants[$j]->funder_display_name))) ? expcsv($resOA->results[$i]->grants[$j]->funder_display_name).'~|~' : '';
-				$funder_AI .= (!empty(($resOA->results[$i]->grants[$j]->award_id))) ? expcsv($resOA->results[$i]->grants[$j]->award_id).'~|~' : '';
+				$funder_DN .= (!empty($resOA->results[$i]->grants[$j]->funder_display_name)) ? expcsv($resOA->results[$i]->grants[$j]->funder_display_name).'~|~' : '';
+				$funder_AI .= (!empty($resOA->results[$i]->grants[$j]->award_id)) ? expcsv($resOA->results[$i]->grants[$j]->award_id).'~|~' : '';
 				$j++;
 			}
 		}

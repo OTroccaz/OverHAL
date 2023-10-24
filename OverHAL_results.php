@@ -6315,6 +6315,20 @@ foreach ($souBib as $key => $subTab)
 										$typeDoc = "ART";
 										$typeDocp = "Journal articles";
 										break;
+									
+									case "comm"://communication
+										$chaine .= '                <title level="j">'.supprAmp(minRev($papers[$key][$key2]['Titre revue'])).'</title>'."\r\n";
+										$chaine .= '                <imprint>'."\r\n";
+										$chaine .= '                  <publisher>'.supprAmp($papers[$key][$key2]['Editor']).'</publisher>'."\r\n";
+										$chaine .= '                  <biblScope unit="volume">'.supprAmp($papers[$key][$key2]['Volume']).'</biblScope>'."\r\n";
+										$chaine .= '                  <biblScope unit="issue">'.supprAmp($papers[$key][$key2]['Issue']).'</biblScope>'."\r\n";
+										$chaine .= '                  <biblScope unit="pp">'.supprAmp($papers[$key][$key2]['Pages']).'</biblScope>'."\r\n";
+										$chaine .= '                  <date type="datePub">'.supprAmp($papers[$key][$key2]['Date']).'</date>'."\r\n";
+										//$chaine .= '                  <date type="dateEpub">'.supprAmp($papers[$key][$key2]['aMel']).'</date>'."\r\n";
+										$chaine .= '                </imprint>'."\r\n";
+										$typeDoc = "COMM";
+										$typeDocp = "Conference papers";
+										break;
 								}
 							}
 							$chaine .= '              </monogr>'."\r\n";
