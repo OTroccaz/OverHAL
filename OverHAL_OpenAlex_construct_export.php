@@ -188,7 +188,8 @@ while ($cpt < ($numFound+1)) {
 		if (isset($resOA->results[$i]->authorships[$j])) {
 			while (isset($resOA->results[$i]->authorships[$j])) {
 				//Attribut(s) de l'auteur
-				$author_DN .= expcsv($resOA->results[$i]->authorships[$j]->author->display_name).'~|~';
+				//$author_DN .= expcsv($resOA->results[$i]->authorships[$j]->author->display_name).'~|~';
+				$author_DN .= expcsv($resOA->results[$i]->authorships[$j]->raw_author_name).'~|~';
 				$orcid .= str_replace('https://orcid.org/', '', expcsv($resOA->results[$i]->authorships[$j]->author->orcid) ?? '').'~|~';
 				$is_cor .= expcsv($resOA->results[$i]->authorships[$j]->is_corresponding).'~|~';
 				
