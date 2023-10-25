@@ -139,8 +139,8 @@ while ($cpt < ($numFound+1)) {
 		//Source OpenAlex
 		$chaine .= (isset($resOA->results[$i]->id)) ? expcsv($resOA->results[$i]->id).";" : ";";
 		//Type de notice
-			//Si primary_location->source = array, c'est un article, sinon c'est une communication, même si type = article
-			if (is_array($resOA->results[$i]->primary_location->source)) {
+			//Si primary_location->source = objet, c'est un article, sinon c'est une communication, même si type = article
+			if (is_object($resOA->results[$i]->primary_location->source)) {
 				$chaine .= (isset($resOA->results[$i]->type)) ? expcsv($resOA->results[$i]->type).";" : ";";
 			}else{
 				$chaine .= 'comm;';
@@ -243,7 +243,7 @@ while ($cpt < ($numFound+1)) {
 							}
 						}
 						
-						$tabInst['DN'][$k] = str_replace(',', '~troliv~', $resOA->results[$i]->authorships[$j]->institutions[$k]->display_name);
+						$tabInst['DN'][$k] = str_replace(array(",", "'"), array("~troliv~", "~trolia~"), $resOA->results[$i]->authorships[$j]->institutions[$k]->display_name);
 						$tabInst['RO'][$k] = $resOA->results[$i]->authorships[$j]->institutions[$k]->ror;
 						$tabInst['CY'][$k] = $resOA->results[$i]->authorships[$j]->institutions[$k]->country_code;
 						$tabInst['TY'][$k] = $resOA->results[$i]->authorships[$j]->institutions[$k]->type;

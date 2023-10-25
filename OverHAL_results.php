@@ -6450,7 +6450,7 @@ foreach ($souBib as $key => $subTab)
 									if (!empty($ror)) {
 										$chaine .= '            <idno type="ROR">'.$ror.'</idno>'."\r\n";
 									}
-									$orgName = str_replace('~troliv~', ',', $orgName);
+									$orgName = str_replace(array("~troliv~", "~trolia~"), array(",", "'"), $orgName);
 									$chaine .= '            <orgName>'.$orgName.'</orgName>'."\r\n";
 									if ($pays != "")
 									{
