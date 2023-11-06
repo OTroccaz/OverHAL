@@ -6193,18 +6193,17 @@ foreach ($souBib as $key => $subTab)
 														 '              <ref type="file" subtype="'.$evd.'" n="1" target="'.$urlPDF.'"></ref>'."\r\n".
 														 '            </edition>'."\r\n".
 														 '          </editionStmt>'."\r\n";
-									/*
-									$avail = 'http://creativecommons.org/licenses/by';
-									if ($compNC != "") {$avail .= '-nc';}
-									if ($compND != "") {$avail .= '-nd';}
-									if ($compSA != "") {$avail .= '-sa';}
-									$avail .= '/';
+									$avail = '';
+									//$avail = 'https://creativecommons.org/licenses/by';
+									//if ($compNC != "") {$avail .= '-nc';}
+									//if ($compND != "") {$avail .= '-nd';}
+									//if ($compSA != "") {$avail .= '-sa';}
+									if ($papers[$key][$key2]['License'] == 'cc-by') $avail = "https://creativecommons.org/licenses/by/4.0/";
 									$chaine .= '          <publicationStmt>'."\r\n".
 														 '            <availability>'."\r\n".
 														 '              <licence target="'.$avail.'"/>'."\r\n".
 														 '            </availability>'."\r\n".
 														 '          </publicationStmt>'."\r\n";
-									*/
 								}
 							}
 							$chaine .= '          <seriesStmt>'."\r\n".
