@@ -670,6 +670,69 @@ function ctype_alpup($str) {
 	return $flag;
 }
 */
+function testLab($labElt) {
+	$eltTab = explode("~|~", $labElt);
+	$orgName = $eltTab[2];
+	$orgName = str_replace(array("UR1", " UR1"), "", $orgName);
+	if ($eltTab[3] == "institution") {//abbreviation between crochet
+		if (strpos($orgName, "CHU") !== false) {
+			$nameTab = explode(",", $orgName);
+			$ville = $nameTab[count($nameTab)-2];
+			$ville = str_ireplace(" cedex", "", $ville);
+			$villeTab = explode(" ", $ville);
+			$orgName = "CHU ".$villeTab[count($villeTab)-1];
+		}
+		$nameTab = explode(",", $orgName);
+		$orgName = "";
+		$oN = 0;
+		$iName = 0;
+		foreach ($nameTab as $name) {
+			if ($iName != count($nameTab)-2) {//do not insert the penultimate term = address
+				if ($name == "Universite CHU") {
+					$ville = $nameTab[count($nameTab)-2];
+					$ville = str_ireplace(" cedex", "", $ville);
+					$villeTab = explode(" ", $ville);
+					$name = $name.' '.$villeTab[count($villeTab)-1];
+				}
+				if ($oN == 0) {
+					$oN = 1;
+				}else{
+					$orgName .= ", ";
+				}
+				$eltNameTab = explode(" ", trim($name));
+				$oNE = 0;
+				foreach ($eltNameTab as $elt) {
+					if ($oNE == 0) {
+						$oNE = 1;
+					}else{
+						$orgName .= " ";
+					}
+					if (ctype_upper(trim($elt)) && !is_numeric(trim($elt)) && strlen(trim($elt)) > 3 && trim($elt) != "CNRS" && trim($elt) != "INSERM" && trim($elt) != "INRA" && trim($elt) != "INRIA" && trim($elt) != "IRSTEA") {
+						$orgName .= "[".trim($elt)."]";
+					}else{
+						$orgName .= "".trim($elt);
+					}
+				}
+			}
+			$iName += 1;
+		}
+	}
+	//suppression/remplacement divers
+	$orgName = str_replace(array("(", ")"), "", $orgName);
+	$orgName = str_replace("/", " ", $orgName);
+	//test présence 'Department' ou 'Service d' pour suppression
+	$orgTab = explode(", ", $orgName);
+	if (stripos($orgTab[0], "Department") !== false || stripos($orgTab[0], "Service d") !== false) {
+		$orgTab[0] = "";
+		$orgName = "";
+		for($dpt = 0; $dpt < count($orgTab); $dpt++) {
+			if ($orgTab[$dpt] != "") {$orgName .= $orgTab[$dpt]. ", ";}
+		}
+		$orgName = substr($orgName, 0, (strlen($orgName) - 2));
+	}
+	return $orgName;
+}
+
 function array2xml($array, $xml = false){
 	if($xml === false){
 			$xml = new SimpleXMLElement('<result/>');
@@ -3391,6 +3454,7 @@ foreach ($souBib as $key => $subTab)
 							//var_dump($autTab);
 							//var_dump($labTab);
 							$strTab = array();
+							$unqOrg = array();//Tableau pour tester l'unicité des organismes
 							$ddn = supprAmp(str_replace("WOS:", "", $papers[$key][$key2]['UT']));//Document Delivery Number > Accession Number
 							mb_internal_encoding('UTF-8');
 							$zip = new ZipArchive();
@@ -3542,12 +3606,15 @@ foreach ($souBib as $key => $subTab)
 									//var_dump($labTab);
 									if ($kT !== FALSE) {
 										foreach ($labTab[$nompre] as $lab) {
+											$orgName = testLab($lab);
+											//echo $orgName;
 											//$str = array_search($labTab[$nompre][$kT], $strTab);
-											$str = array_search($lab, $strTab);
+											$str = array_search($orgName, $unqOrg);
 											if ($str === FALSE) {
 												$iTp += 1;
 												$kTp = $iTp;
 												array_push($strTab, $lab);
+												array_push($unqOrg, $orgName);
 											}else{
 												$kTp = $str + 1;
 											}
@@ -4215,12 +4282,15 @@ foreach ($souBib as $key => $subTab)
 									//echo $kT." - ".$nom." - ".$labTab[$nompre][$kT]."<br>";
 									if ($kT !== FALSE) {
 										foreach ($labTab[$nompre] as $lab) {
+											$orgName = testLab($lab);
+											//echo $orgName;
 											//$str = array_search($labTab[$nompre][$kT], $strTab);
-											$str = array_search($lab, $strTab);
+											$str = array_search($orgName, $unqOrg);
 											if ($str === FALSE) {
 												$iTp += 1;
 												$kTp = $iTp;
 												array_push($strTab, $lab);
+												array_push($unqOrg, $orgName);
 											}else{
 												$kTp = $str + 1;
 											}
@@ -4688,6 +4758,7 @@ foreach ($souBib as $key => $subTab)
 							//var_dump($autTab);
 							//var_dump($labTab);
 							$strTab = array();
+							$unqOrg = array();//Tableau pour tester l'unicité des organismes
 							$pmid = supprAmp($papers[$key][$key2]['PMID']);//PMID
 							mb_internal_encoding('UTF-8');
 							$zip = new ZipArchive();
@@ -4811,12 +4882,15 @@ foreach ($souBib as $key => $subTab)
 									//var_dump($autTab);
 									if ($kT !== FALSE) {
 										foreach ($labTab[$nompre] as $lab) {
+											$orgName = testLab($lab);
+											//echo $orgName;
 											//$str = array_search($labTab[$nompre][$kT], $strTab);
-											$str = array_search($lab, $strTab);
+											$str = array_search($orgName, $unqOrg);
 											if ($str === FALSE) {
 												$iTp += 1;
 												$kTp = $iTp;
 												array_push($strTab, $lab);
+												array_push($unqOrg, $orgName);
 											}else{
 												$kTp = $str + 1;
 											}
@@ -5233,6 +5307,7 @@ foreach ($souBib as $key => $subTab)
 							//var_dump($autTab);
 							//var_dump($labTab);
 							$strTab = array();
+							$unqOrg = array();//Tableau pour tester l'unicité des organismes
 							$pmid = supprAmp($papers[$key][$key2]['Pubmed']);//PMID
 							mb_internal_encoding('UTF-8');
 							$zip = new ZipArchive();
@@ -5336,12 +5411,15 @@ foreach ($souBib as $key => $subTab)
 									//var_dump($autTab);
 									if ($kT !== FALSE) {
 										foreach ($labTab[$nompre] as $lab) {
+											$orgName = testLab($lab);
+											//echo $orgName;
 											//$str = array_search($labTab[$nompre][$kT], $strTab);
-											$str = array_search($lab, $strTab);
+											$str = array_search($orgName, $unqOrg);
 											if ($str === FALSE) {
 												$iTp += 1;
 												$kTp = $iTp;
 												array_push($strTab, $lab);
+												array_push($unqOrg, $orgName);
 											}else{
 												$kTp = $str + 1;
 											}
@@ -5629,6 +5707,7 @@ foreach ($souBib as $key => $subTab)
 							//var_dump($autTab);
 							//var_dump($labTab);
 							$strTab = array();
+							$unqOrg = array();//Tableau pour tester l'unicité des organismes
 							$ddn = supprAmp($papers[$key][$key2]['Publication ID']);//Publication ID
 							mb_internal_encoding('UTF-8');
 							$zip = new ZipArchive();
@@ -5716,12 +5795,15 @@ foreach ($souBib as $key => $subTab)
 									//var_dump($labTab);
 									if ($kT !== FALSE) {
 										foreach ($labTab[$nompre] as $lab) {
+											$orgName = testLab($lab);
+											//echo $orgName;
 											//$str = array_search($labTab[$nompre][$kT], $strTab);
-											$str = array_search($lab, $strTab);
+											$str = array_search($orgName, $unqOrg);
 											if ($str === FALSE) {
 												$iTp += 1;
 												$kTp = $iTp;
 												array_push($strTab, $lab);
+												array_push($unqOrg, $orgName);
 											}else{
 												$kTp = $str + 1;
 											}
@@ -6138,6 +6220,7 @@ foreach ($souBib as $key => $subTab)
 							//var_dump($autTab);
 							//var_dump($labTab);
 							$strTab = array();
+							$unqOrg = array();//Tableau pour tester l'unicité des organismes
 							$soa = str_replace('https://openalex.org/', '', $papers[$key][$key2]['Source']);//Source OpenAlex
 							mb_internal_encoding('UTF-8');
 							$zip = new ZipArchive();
@@ -6262,12 +6345,15 @@ foreach ($souBib as $key => $subTab)
 									//var_dump($labTab);
 									if ($kT !== FALSE) {
 										foreach ($labTab[$nompre] as $lab) {
+											$orgName = testLab($lab);
+											//echo $orgName;
 											//$str = array_search($labTab[$nompre][$kT], $strTab);
-											$str = array_search($lab, $strTab);
+											$str = array_search($orgName, $unqOrg);
 											if ($str === FALSE) {
 												$iTp += 1;
 												$kTp = $iTp;
 												array_push($strTab, $lab);
+												array_push($unqOrg, $orgName);
 											}else{
 												$kTp = $str + 1;
 											}
