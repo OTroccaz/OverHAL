@@ -3607,7 +3607,7 @@ foreach ($souBib as $key => $subTab)
 									if ($kT !== FALSE) {
 										foreach ($labTab[$nompre] as $lab) {
 											$orgName = testLab($lab);
-											//echo $orgName;
+											//echo $orgName.'<br>';
 											//$str = array_search($labTab[$nompre][$kT], $strTab);
 											$str = array_search($orgName, $unqOrg);
 											if ($str === FALSE) {
@@ -4065,6 +4065,20 @@ foreach ($souBib as $key => $subTab)
 							//echo "<br>".$j." - ".$quoi."<br>";
 							$diffQuoi = explode(";", $quoi);
 							//var_dump($diffQuoi);
+							//Vérification d'une "fausse" affiliation
+							for ($d = 0; $d < count($diffQuoi); $d++) {
+								$verifTab = explode(',', $diffQuoi[$d]);
+								$aff = 'no';
+								for ($a = 0; $a < count($aut); $a++) {
+									if (trim($verifTab[0]) == trim($aut[$a])) {
+										$aff = 'ok';
+									}
+								}
+								if ($aff == 'no') {unset($diffQuoi[$d]);}
+							}
+							//var_dump($diffQuoi);
+							$diffQuoi = array_merge($diffQuoi);
+							//var_dump($diffQuoi);
 							for ($d = 0; $d < count($diffQuoi); $d++)
 							{
 								//Search for the author's name
@@ -4150,6 +4164,7 @@ foreach ($souBib as $key => $subTab)
 							//var_dump($autTab);
 							//var_dump($labTab);
 							$strTab = array();
+							$unqOrg = array();//Tableau pour tester l'unicité des organismes
 							$eid = supprAmp($papers[$key][$key2]['EID']);//unique academic work identifier assigned in Scopus bibliographic database
 							mb_internal_encoding('UTF-8');
 							$zip = new ZipArchive();
