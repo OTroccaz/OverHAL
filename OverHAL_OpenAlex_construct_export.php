@@ -72,8 +72,9 @@ $chaine .= "OA;";//Is OA ?
 $chaine .= "PDF;";//URL PDF
 $chaine .= "License;";//License
 //Chaque financement sera séparé par des '~|~'
-$chaine .= "Funder_DN;";//Funder display name
-$chaine .= "Funder_AI;";//Funder award ID
+//$chaine .= "Funder_DN;";//Funder display name
+//$chaine .= "Funder_AI;";//Funder award ID
+$chaine .= "Funder;";//Funder DN : AI
 //Chaque auteur et ses attributs seront séparés par des '~|~'
 $chaine .= "Author_DN;";//Author display name
 $chaine .= "ORCID;";//Author ORCID
@@ -97,7 +98,7 @@ $chaine .= "Volume;";//Volume
 $chaine .= "Issue;";//Issue
 $chaine .= "Pages;";//Pages
 
-$chaine .= "Keywords;";//Mots-clés
+//$chaine .= "Keywords;";//Mots-clés
 
 $chaine .= "Abstract;";//Résumé
 
@@ -163,17 +164,21 @@ while ($cpt < ($numFound+1)) {
 		$chaine .= (isset($resOA->results[$i]->primary_location->license)) ? expcsv($resOA->results[$i]->primary_location->license).";" : ";";
 		//Financement(s)
 		$j = 0;
-		$funder_DN = '';
-		$funder_AI = '';
+		//$funder_DN = '';
+		//$funder_AI = '';
+		$funder = '';//DN : AI
 		if (isset($resOA->results[$i]->grants[$j])) {
 			while (isset($resOA->results[$i]->grants[$j])) {
-				$funder_DN .= (!empty($resOA->results[$i]->grants[$j]->funder_display_name)) ? expcsv($resOA->results[$i]->grants[$j]->funder_display_name).'~|~' : '';
-				$funder_AI .= (!empty($resOA->results[$i]->grants[$j]->award_id)) ? expcsv($resOA->results[$i]->grants[$j]->award_id).'~|~' : '';
+				$funder .= expcsv($resOA->results[$i]->grants[$j]->funder_display_name);
+				$funder .= (!empty($resOA->results[$i]->grants[$j]->award_id)) ? ': '.expcsv($resOA->results[$i]->grants[$j]->award_id).'~|~' : '~|~';
+				//$funder_DN .= (!empty($resOA->results[$i]->grants[$j]->funder_display_name)) ? expcsv($resOA->results[$i]->grants[$j]->funder_display_name).'~|~' : '';
+				//$funder_AI .= (!empty($resOA->results[$i]->grants[$j]->award_id)) ? expcsv($resOA->results[$i]->grants[$j]->award_id).'~|~' : '';
 				$j++;
 			}
 		}
-		$chaine .= (substr($funder_DN, -3) == '~|~') ? substr($funder_DN, 0, -3).";" : ";";
-		$chaine .= (substr($funder_AI, -3) == '~|~') ? substr($funder_AI, 0, -3).";" : ";";
+		$chaine .= (substr($funder, -3) == '~|~') ? substr($funder, 0, -3).";" : ";";
+		//$chaine .= (substr($funder_DN, -3) == '~|~') ? substr($funder_DN, 0, -3).";" : ";";
+		//$chaine .= (substr($funder_AI, -3) == '~|~') ? substr($funder_AI, 0, -3).";" : ";";
 		
 		//Auteur(s)
 		$j = 0;
@@ -354,6 +359,8 @@ while ($cpt < ($numFound+1)) {
 		$chaine .= (isset($resOA->results[$i]->biblio->first_page)) ? expcsv($resOA->results[$i]->biblio->first_page)."-".expcsv($resOA->results[$i]->biblio->last_page).";" : ";";
 		
 		//Mots-clés
+		//Les mots-clés d'OpenAlex, ne sont pas fiables
+		/*
 		$j = 0;
 		$keywords = '';
 		if (isset($resOA->results[$i]->concepts)) {
@@ -363,6 +370,7 @@ while ($cpt < ($numFound+1)) {
 			}
 		}
 		$chaine .= substr($keywords, 0, -2).";";
+		*/
 		
 		$abstract = '';
 		if (isset($resOA->results[$i]->abstract_inverted_index)) {

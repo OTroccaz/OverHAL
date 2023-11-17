@@ -6256,14 +6256,8 @@ foreach ($souBib as $key => $subTab)
 												 '        <biblFull>'."\r\n".
 												 '          <titleStmt>'."\r\n";
 							//funder
-							if ($papers[$key][$key2]['Funder_DN'] != "") {
-								$eltFun = explode("~|~", $papers[$key][$key2]['Funder_DN']);
-								foreach($eltFun as $elt) {
-									$chaine .= '            <funder>'.supprAmp($elt).'</funder>'."\r\n";
-								}
-							}
-							if ($papers[$key][$key2]['Funder_AI'] != "") {
-								$eltFun = explode("~|~", $papers[$key][$key2]['Funder_AI']);
+							if ($papers[$key][$key2]['Funder'] != "") {
+								$eltFun = explode("~|~", $papers[$key][$key2]['Funder']);
 								foreach($eltFun as $elt) {
 									$chaine .= '            <funder>'.supprAmp($elt).'</funder>'."\r\n";
 								}
