@@ -46,7 +46,7 @@ curl_close($ch);
 //echo $contOA;
 $resOA = json_decode($contOA);
 //var_dump($resOA);
-echo $resOA->meta->count.' notices';
+echo $resOA->meta->count.' notice(s)';
 $numFound = $resOA->meta->count;
 echo '<br><br>';
 
@@ -224,27 +224,33 @@ while ($cpt < ($numFound+1)) {
 						if ($resOA->results[$i]->authorships[$j]->institutions[$k]->country_code == 'FR') {
 							$tabInst['AR'][$k] = '1';
 							switch($resOA->results[$i]->authorships[$j]->institutions[$k]->type) {
-								case 'facility':
+								case 'healthcare':
 									$tabInst['AR'][$k] .= '1';
 									break;
-								case 'education':
+								case 'facility':
 									$tabInst['AR'][$k] .= '2';
 									break;
-								case 'government':
+								case 'education':
 									$tabInst['AR'][$k] .= '3';
+									break;
+								case 'government':
+									$tabInst['AR'][$k] .= '4';
 									break;
 							}
 						}else{//Institutions étrangères
 							$tabInst['AR'][$k] = '2';
 							switch($resOA->results[$i]->authorships[$j]->institutions[$k]->type) {
-								case 'facility':
-									$tabInst['AR'][$k] .= '3';
-									break;
-								case 'education':
+								case 'healthcare':
 									$tabInst['AR'][$k] .= '1';
 									break;
-								case 'government':
+								case 'facility':
+									$tabInst['AR'][$k] .= '4';
+									break;
+								case 'education':
 									$tabInst['AR'][$k] .= '2';
+									break;
+								case 'government':
+									$tabInst['AR'][$k] .= '3';
 									break;
 							}
 						}
