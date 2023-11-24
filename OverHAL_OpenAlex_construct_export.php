@@ -100,7 +100,7 @@ $chaine .= "Pages;";//Pages
 
 //$chaine .= "Keywords;";//Mots-clés
 
-$chaine .= "Abstract;";//Résumé
+//$chaine .= "Abstract;";//Résumé
 
 
 $chaine .= chr(13).chr(10);
@@ -372,6 +372,9 @@ while ($cpt < ($numFound+1)) {
 		$chaine .= substr($keywords, 0, -2).";";
 		*/
 		
+		//Résumé
+		//Le résumé d'OpenAlex n'est pas fiable
+		/*
 		$abstract = '';
 		if (isset($resOA->results[$i]->abstract_inverted_index)) {
 			$tab = get_object_vars($resOA->results[$i]->abstract_inverted_index);
@@ -380,6 +383,7 @@ while ($cpt < ($numFound+1)) {
 			}
 		}
 		$chaine .= substr($abstract, 0, -1).";";
+		*/
 		
 		$chaine .= chr(13).chr(10);
 		fwrite($inF,$chaine);
