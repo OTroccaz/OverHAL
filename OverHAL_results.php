@@ -6465,7 +6465,8 @@ foreach ($souBib as $key => $subTab)
 							//Typologie
 							$chaine .= '             <classCode scheme="halTypology" n="'.$typeDoc.'">'.$typeDocp.'</classCode>'."\r\n";
 							$chaine .= '            </textClass>'."\r\n";
-							$chaine .= '            <abstract xml:lang="'.$lng.'">'.supprAmp($papers[$key][$key2]['Abstract']).'</abstract>'."\r\n";
+							$abstrTEI = (isset($papers[$key][$key2]['Abstract'])) ? supprAmp($papers[$key][$key2]['Abstract']) : '';
+							$chaine .= '            <abstract xml:lang="'.$lng.'">'.$abstrTEI.'</abstract>'."\r\n";
 							$chaine .= '          </profileDesc>'."\r\n";
 							$chaine .= '        </biblFull>'."\r\n";
 							$chaine .= '      </listBibl>'."\r\n";

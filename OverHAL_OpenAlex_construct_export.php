@@ -98,7 +98,7 @@ $chaine .= "Volume;";//Volume
 $chaine .= "Issue;";//Issue
 $chaine .= "Pages;";//Pages
 
-//$chaine .= "Keywords;";//Mots-clés
+$chaine .= "Keywords;";//Mots-clés
 
 //$chaine .= "Abstract;";//Résumé
 
@@ -153,7 +153,7 @@ while ($cpt < ($numFound+1)) {
 		//Titre
 		$chaine .= (isset($resOA->results[$i]->title)) ? expcsv($resOA->results[$i]->title).";" : ";";
 		//Date de publication
-		$chaine .= (isset($resOA->results[$i]->publication_date)) ? expcsv($resOA->results[$i]->publication_date).";" : ";";
+		$chaine .= (isset($resOA->results[$i]->publication_date)) ? expcsv(substr($resOA->results[$i]->publication_date, 0, 4)).";" : ";";
 		//Langue
 		$chaine .= (isset($resOA->results[$i]->language)) ? expcsv($resOA->results[$i]->language).";" : ";";
 		//Is OA ?
@@ -365,8 +365,6 @@ while ($cpt < ($numFound+1)) {
 		$chaine .= (isset($resOA->results[$i]->biblio->first_page)) ? expcsv($resOA->results[$i]->biblio->first_page)."-".expcsv($resOA->results[$i]->biblio->last_page).";" : ";";
 		
 		//Mots-clés
-		//Les mots-clés d'OpenAlex, ne sont pas fiables
-		/*
 		$j = 0;
 		$keywords = '';
 		if (isset($resOA->results[$i]->concepts)) {
@@ -376,7 +374,6 @@ while ($cpt < ($numFound+1)) {
 			}
 		}
 		$chaine .= substr($keywords, 0, -2).";";
-		*/
 		
 		//Résumé
 		//Le résumé d'OpenAlex n'est pas fiable
