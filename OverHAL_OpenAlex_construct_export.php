@@ -87,6 +87,7 @@ $chaine .= "Inst_DN;";//Nom de l'institution
 $chaine .= "Inst_RO;";//ROR de l'institution
 $chaine .= "Inst_CY;";//Pays de l'institution
 $chaine .= "Inst_TY;";//Type de l'institution
+$chaine .= "Inst_RW;";//Raw affiliation string
 
 $chaine .= "ISSN;";//ISSN
 $chaine .= "EISSN;";//EISSN  > si plusieurs numéros, séparés par '~|~'
@@ -190,6 +191,7 @@ while ($cpt < ($numFound+1)) {
 		$inst_RO = '';
 		$inst_CY = '';
 		$inst_TY = '';
+		$inst_RW = '';
 		if (isset($resOA->results[$i]->authorships[$j])) {
 			while (isset($resOA->results[$i]->authorships[$j])) {
 				//Attribut(s) de l'auteur
@@ -320,6 +322,7 @@ while ($cpt < ($numFound+1)) {
 				$inst_RO .= '~|~';
 				$inst_CY .= '~|~';
 				$inst_TY .= '~|~';
+				$inst_RW .= expcsv(str_replace(array(",", "'"), array("~troliv~", "~trolia~"), $resOA->results[$i]->authorships[$j]->raw_affiliation_string)).'~|~';
 				$j++;
 			}
 		}
@@ -331,6 +334,7 @@ while ($cpt < ($numFound+1)) {
 		$chaine .= (substr($inst_RO, -3) == '~|~') ? substr($inst_RO, 0, -3).";" : ";";
 		$chaine .= (substr($inst_CY, -3) == '~|~') ? substr($inst_CY, 0, -3).";" : ";";
 		$chaine .= (substr($inst_TY, -3) == '~|~') ? substr($inst_TY, 0, -3).";" : ";";
+		$chaine .= (substr($inst_RW, -3) == '~|~') ? substr($inst_RW, 0, -3).";" : ";";
 		
 		//ISSN
 		$chaine .= (isset($resOA->results[$i]->primary_location->source->issn_l)) ? expcsv($resOA->results[$i]->primary_location->source->issn_l).";" : ";";
