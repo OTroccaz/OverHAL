@@ -63,6 +63,13 @@ if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
 	
 </head>
 
+<?php
+//Stats Google
+if (strpos($_SERVER['HTTP_HOST'], '127.0.0.1') === false) {
+	include("./Glob_gstats.php");
+}
+?>
+
 <body class="loading" data-layout="topnav" >
 
 <noscript>
