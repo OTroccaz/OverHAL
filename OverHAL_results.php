@@ -6430,6 +6430,21 @@ foreach ($souBib as $key => $subTab)
 										$typeDoc = "COMM";
 										$typeDocp = "Conference papers";
 										break;
+										
+									case "book-chapter":
+										$chaine .= '                <idno type="issn">'.supprAmp($papers[$key][$key2]['ISSN']).'</idno>'."\r\n";
+										$chaine .= '                <idno type="eissn">'.supprAmp($papers[$key][$key2]['EISSN']).'</idno>'."\r\n";
+										$chaine .= '                <title level="m">'.supprAmp($papers[$key][$key2]['Titre revue']).'</title>'."\r\n";
+										$chaine .= '                <editor>'.supprAmp($papers[$key][$key2]['Editor']).'</editor>'."\r\n";
+										$chaine .= '                <imprint>'."\r\n";
+										$chaine .= '                  <biblScope unit="volume">'.supprAmp($papers[$key][$key2]['Volume']).'</biblScope>'."\r\n";
+										$chaine .= '                  <biblScope unit="issue">'.supprAmp($papers[$key][$key2]['Issue']).'</biblScope>'."\r\n";
+										$chaine .= '                  <biblScope unit="pp">'.supprAmp($papers[$key][$key2]['Pages']).'</biblScope>'."\r\n";
+										$chaine .= '                  <date type="datePub">'.supprAmp($papers[$key][$key2]['Date']).'</date>'."\r\n";
+										$chaine .= '                </imprint>'."\r\n";
+										$typeDoc = "COUV";
+										$typeDocp = "Book chapter";
+										break;
 								}
 							}
 							$chaine .= '              </monogr>'."\r\n";
