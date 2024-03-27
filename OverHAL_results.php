@@ -8,9 +8,8 @@
  * Page d'accueil des résultats - Results home page
  */
 
-if (strpos($_SERVER['HTTP_HOST'], 'cnrs.fr') !== false) {
-	header('Content-Encoding: none;');
-}
+header('Content-Encoding: none');
+
 header('Content-type: text/html; charset=UTF-8');
 mb_internal_encoding("UTF-8");
 $akSR = "13798F18-07B4-11EB-A9BD-C7111677CA68";//ApiKey Sherpa Romeo
