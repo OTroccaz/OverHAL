@@ -16,7 +16,7 @@ if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
 }else {
   $ip = $_SERVER['REMOTE_ADDR'];
 }
-
+echo $ip.'<br>';
 include("./Glob_IP_list.php");
 if (in_array($ip, $IP_aut)) {
   //accès autorisé
@@ -251,33 +251,35 @@ if (in_array($ip, $IP_aut)) {
       $text .= '</tr>';
       $iaff = 1;
       foreach($MAILS_LISTE AS $i => $valeur) {
-        $text .= '<tr><td valign=top>'.$iaff.'</td>';
-        $text .= '<td valign=top>'.date('d/m/Y', $MAILS_LISTE[$i]['quand']).'</td>';
-        $text .= '<td valign=top><a href=\'mailto:'.$MAILS_LISTE[$i]['qui'].'\'>'.$MAILS_LISTE[$i]['qui'].'</a></td>';
-        $refdoi = $MAILS_LISTE[$i]['quoi2'];
-        if ($refdoi != "")
-        {
-          $text .= '<td valign=top><a target=\'_blank\' href=\'https://doi.org/'.$refdoi.'\'>https://doi.org/'.$refdoi.'</a></td>';
-        }else{
-          $text .= '<td valign=top>&nbsp;</td>';
-        }
-        $text .= '<td valign=top>'.$MAILS_LISTE[$i]['type'].'</td>';
-        $fic = $MAILS_LISTE[$i]['file'];
-        if ($fic != "")
-        {
-          $text .= '<td valign=top><u>Présent</u></td>';
-        }else{
-          $text .= '<td valign=top>Aucun</td>';
-        }
-        $text .= '<td valign=top>'.$MAILS_LISTE[$i]['lang'].'</td>';
-				if (isset($MAILS_LISTE[$i]['labo'])) {$labo = $MAILS_LISTE[$i]['labo'];}else{$labo = "";}
-				$text .= '<td valign=top>'.$labo.'</td>';
-				if (isset($MAILS_LISTE[$i]['titre'])) {$titre = $MAILS_LISTE[$i]['titre'];}else{$titre = "";}
-				$text .= '<td valign=top>'.$titre.'</td>';
-        $text .= '<td valign=top><a href="OverHAL_mails_envoyes_listing.php?modif='.$i.'">Modifier</a></td>';
-        $text .= '<td valign=top><a href="OverHAL_mails_envoyes_listing.php?suppr='.$i.'" onclick="return confirm(\'Êtes-vous sûr de vouloir supprimer cette entrée ?\');">Supprimer</a></td>';
-        $text .= '</tr>';
-        $iaff += 1;
+				if ($MAILS_LISTE[$i]['type'] != 'R') {
+					$text .= '<tr><td valign=top>'.$iaff.'</td>';
+					$text .= '<td valign=top>'.date('d/m/Y', $MAILS_LISTE[$i]['quand']).'</td>';
+					$text .= '<td valign=top><a href=\'mailto:'.$MAILS_LISTE[$i]['qui'].'\'>'.$MAILS_LISTE[$i]['qui'].'</a></td>';
+					$refdoi = $MAILS_LISTE[$i]['quoi2'];
+					if ($refdoi != "")
+					{
+						$text .= '<td valign=top><a target=\'_blank\' href=\'https://doi.org/'.$refdoi.'\'>https://doi.org/'.$refdoi.'</a></td>';
+					}else{
+						$text .= '<td valign=top>&nbsp;</td>';
+					}
+					$text .= '<td valign=top>'.$MAILS_LISTE[$i]['type'].'</td>';
+					$fic = $MAILS_LISTE[$i]['file'];
+					if ($fic != "")
+					{
+						$text .= '<td valign=top><u>Présent</u></td>';
+					}else{
+						$text .= '<td valign=top>Aucun</td>';
+					}
+					$text .= '<td valign=top>'.$MAILS_LISTE[$i]['lang'].'</td>';
+					if (isset($MAILS_LISTE[$i]['labo'])) {$labo = $MAILS_LISTE[$i]['labo'];}else{$labo = "";}
+					$text .= '<td valign=top>'.$labo.'</td>';
+					if (isset($MAILS_LISTE[$i]['titre'])) {$titre = $MAILS_LISTE[$i]['titre'];}else{$titre = "";}
+					$text .= '<td valign=top>'.$titre.'</td>';
+					$text .= '<td valign=top><a href="OverHAL_mails_envoyes_listing.php?modif='.$i.'">Modifier</a></td>';
+					$text .= '<td valign=top><a href="OverHAL_mails_envoyes_listing.php?suppr='.$i.'" onclick="return confirm(\'Êtes-vous sûr de vouloir supprimer cette entrée ?\');">Supprimer</a></td>';
+					$text .= '</tr>';
+					$iaff += 1;
+				}
       }
       $text .= '</table>';
       echo $text;
