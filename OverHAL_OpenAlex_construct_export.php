@@ -22,10 +22,13 @@ function var_dump_pre($mixed = null) {
   return null;
 }
 
-$OAurl = htmlspecialchars($_POST['openalex_url']);
+//$OAurl = htmlspecialchars($_POST['openalex_url']);
+$OAurl = $_POST['openalex_url'];
 $OAurl = str_replace(" ", "%20", $OAurl);
+$OAurl = str_replace("\"", "%22", $OAurl);
 $OAurl = str_replace("&amp;", "&", $OAurl);
 $OAurlinit = $OAurl;
+
 echo '<a target="_blank" href="'.$OAurl.'">URL requête OpenAlex</a><br>';
 
 //Recherche du nombre total de notices puis traitement
