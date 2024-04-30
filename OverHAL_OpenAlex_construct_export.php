@@ -325,7 +325,15 @@ while ($cpt < ($numFound+1)) {
 				$inst_RO .= '~|~';
 				$inst_CY .= '~|~';
 				$inst_TY .= '~|~';
-				$inst_RW .= expcsv(str_replace(array(",", "'"), array("~troliv~", "~trolia~"), $resOA->results[$i]->authorships[$j]->raw_affiliation_string)).'~|~';
+				
+				$ras = '';
+				$k = 0;
+				while (isset($resOA->results[$i]->authorships[$j]->raw_affiliation_strings[$k])) {
+					$ras .= $resOA->results[$i]->authorships[$j]->raw_affiliation_strings[$k].' - ';
+					$k++;
+				}
+				$ras = (substr($ras, -3) == ' - ') ? substr($ras, 0, -3) : $ras;
+				$inst_RW .= expcsv(str_replace(array(",", "'"), array("~troliv~", "~trolia~"), $ras)).'~|~';
 				$j++;
 			}
 		}
