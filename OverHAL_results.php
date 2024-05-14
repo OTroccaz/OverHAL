@@ -6330,7 +6330,7 @@ foreach ($souBib as $key => $subTab)
 							$aut = explode("~|~", $papers[$key][$key2]['Author_DN']);
 							$crp = explode("~|~", $papers[$key][$key2]['Is_cor']);//Auteur correspondant
 							$orc = explode("~|~", $papers[$key][$key2]['ORCID']);//ORCID
-							//Récupération du 'raw_affiliation_string' pour insertion dans un noeud temporaire
+							//Récupération du 'raw_affiliation_strings' pour insertion dans un noeud temporaire
 							$raw = explode("~|~", str_replace(array("~troliv~", "~trolia~"), array(",", "'"), supprAmp($papers[$key][$key2]['Inst_RW'])));
 							$iTp = 0;
 							$a = 0;
@@ -6341,8 +6341,6 @@ foreach ($souBib as $key => $subTab)
 								$nom = supprAmp(str_replace($prenom.' ', '', $qui) ?? ''); 
 								$nompre = $prenom ." ".$nom;
 								$role = ($crp[$a] == 1) ? '"crp"':'"aut"';
-								//Récupération du 'raw_affiliation_string' pour insertion dans un noeud temporaire
-								$rawAffs = str_replace(array("~troliv~", "~trolia~"), array(",", "'"), supprAmp($papers[$key][$key2]['Inst_RW']));
 								if ($prenom != "") {
 									$chaine .= '                <author role='.$role.'>'."\r\n";
 									$chaine .= '                  <persName>'."\r\n";
@@ -6352,8 +6350,13 @@ foreach ($souBib as $key => $subTab)
 									if (!empty($orc[$a])) {//ORCID présent
 										$chaine .= '                  <idno type="ORCID">https://orcid.org/'.$orc[$a].'</idno>'."\r\n";
 									}
-									if (!empty($raw[$a])) {//Raw affiliation string
-										$chaine .= '                  <rawAffs>'.$raw[$a].'</rawAffs>'."\r\n";
+									if (!empty($raw[$a])) {//Raw affiliation strings
+										$tabRaw = explode ('~\/~', $raw[$a]);
+										$r = 0;
+										while (isset($tabRaw[$r])) {
+											$chaine .= '                  <rawAffs>'.$tabRaw[$r].'</rawAffs>'."\r\n";
+											$r++;
+										}
 									}
 									$kT = array_search($nompre, $autTab);
 									//echo $kT." - ".$nom."<br>";

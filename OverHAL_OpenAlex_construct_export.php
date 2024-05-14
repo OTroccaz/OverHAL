@@ -329,7 +329,7 @@ while ($cpt < ($numFound+1)) {
 				$ras = '';
 				$k = 0;
 				while (isset($resOA->results[$i]->authorships[$j]->raw_affiliation_strings[$k])) {
-					$ras .= $resOA->results[$i]->authorships[$j]->raw_affiliation_strings[$k].' - ';
+					$ras .= $resOA->results[$i]->authorships[$j]->raw_affiliation_strings[$k].'~\/~';
 					$k++;
 				}
 				$ras = (substr($ras, -3) == ' - ') ? substr($ras, 0, -3) : $ras;
