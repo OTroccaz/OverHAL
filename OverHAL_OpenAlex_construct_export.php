@@ -332,7 +332,7 @@ while ($cpt < ($numFound+1)) {
 					$ras .= $resOA->results[$i]->authorships[$j]->raw_affiliation_strings[$k].'~\/~';
 					$k++;
 				}
-				$ras = (substr($ras, -3) == ' - ') ? substr($ras, 0, -3) : $ras;
+				$ras = (substr($ras, -4) == '~\/~') ? substr($ras, 0, -4) : $ras;
 				$inst_RW .= expcsv(str_replace(array(",", "'"), array("~troliv~", "~trolia~"), $ras)).'~|~';
 				$j++;
 			}

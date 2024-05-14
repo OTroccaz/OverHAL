@@ -676,7 +676,7 @@ function testLab($labElt) {
 	$orgName = $eltTab[2];
 	$orgName = str_replace(array("UR1", " UR1"), "", $orgName);
 	if ($eltTab[3] == "institution") {//abbreviation between crochet
-		if (strpos($orgName, "CHU") !== false) {
+		if ((strpos($orgName, "CHU") !== false) && (substr_count($orgName, ',') > 2)) {
 			$nameTab = explode(",", $orgName);
 			$ville = $nameTab[count($nameTab)-2];
 			$ville = str_ireplace(" cedex", "", $ville);
@@ -3960,7 +3960,7 @@ foreach ($souBib as $key => $subTab)
 									$orgName = $eltTab[2];
 									$orgName = str_replace(array("UR1", " UR1"), "", $orgName);
 									if ($eltTab[3] == "institution") {//abbreviation between crochet
-										if (strpos($orgName, "CHU") !== false) {
+										if ((strpos($orgName, "CHU") !== false) && (substr_count($orgName, ',') > 2)) {
 											$nameTab = explode(",", $orgName);
 											$ville = $nameTab[count($nameTab)-2];
 											$ville = str_ireplace(" cedex", "", $ville);
@@ -4591,7 +4591,7 @@ foreach ($souBib as $key => $subTab)
 									$chaine .= '          <org type="'.$eltTab[3].'" xml:id="localStruct-Aff'.$indT.'">'."\r\n";
 									$orgName = $eltTab[2];
 									if ($eltTab[3] == "institution") {//abbreviation between crochet
-										if (strpos($orgName, "CHU") !== false) {
+										if ((strpos($orgName, "CHU") !== false) && (substr_count($orgName, ',') > 2)) {
 											$nameTab = explode(",", $orgName);
 											$ville = trim(netNum($nameTab[count($nameTab)-2]));
 											$ville = str_ireplace(" cedex", "", $ville);
@@ -5143,7 +5143,7 @@ foreach ($souBib as $key => $subTab)
 									$orgName = $eltTab[2];
 									$orgName = str_replace(array("UR1", " UR1"), "", $orgName);
 									if ($eltTab[3] == "institution") {//abbreviation between crochet
-										if (strpos($orgName, "CHU") !== false) {
+										if ((strpos($orgName, "CHU") !== false) && (substr_count($orgName, ',') > 2)) {
 											$nameTab = explode(",", $orgName);
 											$ville = $nameTab[count($nameTab)-2];
 											$ville = str_ireplace(" cedex", "", $ville);
@@ -5535,7 +5535,7 @@ foreach ($souBib as $key => $subTab)
 									$orgName = $eltTab[2];
 									$orgName = str_replace(array("UR1", " UR1"), "", $orgName);
 									if ($eltTab[3] == "institution") {//abbreviation between crochet
-										if (strpos($orgName, "CHU") !== false) {
+										if ((strpos($orgName, "CHU") !== false) && (substr_count($orgName, ',') > 2)) {
 											$nameTab = explode(",", $orgName);
 											$ville = $nameTab[count($nameTab)-2];
 											$ville = str_ireplace(" cedex", "", $ville);
@@ -6032,7 +6032,7 @@ foreach ($souBib as $key => $subTab)
 									$orgName = $eltTab[2];
 									$orgName = str_replace(array("UR1", " UR1"), "", $orgName);
 									if ($eltTab[3] == "institution") {//abbreviation between crochet
-										if (strpos($orgName, "CHU") !== false) {
+										if ((strpos($orgName, "CHU") !== false) && (substr_count($orgName, ',') > 2)) {
 											$nameTab = explode(",", $orgName);
 											$ville = $nameTab[count($nameTab)-2];
 											$ville = str_ireplace(" cedex", "", $ville);
@@ -6507,7 +6507,7 @@ foreach ($souBib as $key => $subTab)
 									$orgName = $eltTab[2];
 									$orgName = str_replace(array("UR1", " UR1"), "", $orgName);
 									if ($eltTab[3] == "institution") {//abbreviation between crochet
-										if (strpos($orgName, "CHU") !== false) {
+										if ((strpos($orgName, "CHU") !== false) && (substr_count($orgName, ',') > 2)) {
 											$nameTab = explode(",", $orgName);
 											$ville = $nameTab[count($nameTab)-2];
 											$ville = str_ireplace(" cedex", "", $ville);
