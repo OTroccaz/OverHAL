@@ -6355,6 +6355,21 @@ foreach ($souBib as $key => $subTab)
 										$r = 0;
 										while (isset($tabRaw[$r])) {
 											$chaine .= '                  <rawAffs>'.$tabRaw[$r].'</rawAffs>'."\r\n";
+											$extRaw = '';
+											$e = 0;
+											$tabExt = explode(",", $tabRaw[$r]);
+											foreach ($tabExt as $ext) {
+												//Recherche du terme 'UMR'
+												if (stripos($ext, 'UMR') !== false) {
+													$pos = strripos($ext, 'UMR');
+													$extRaw = trim(substr($ext, $pos, (strlen($ext) - $pos)));
+												}
+												$e++;
+											}
+											if ($extRaw != '') {
+												$e -= 1;
+												$labTab[$nompre][] = '~|~~|~'.$extRaw.'~|~researchteam~|~'.$tabExt[$e];
+											}
 											$r++;
 										}
 									}
@@ -6565,14 +6580,16 @@ foreach ($souBib as $key => $subTab)
 										$orgName = substr($orgName, 0, (strlen($orgName) - 2));
 									}
 									$keyCO = array_search($orgName, $affModTab);
-									$pays = $couTab[$keyCO];
-									$ror = $rorTab[$keyCO];
+									$pays = ($keyCO != '') ? $couTab[$keyCO] : '';
+									$ror = ($keyCO != '') ? $rorTab[$keyCO]: '';
+									//Si UMR, pays = France
+									if (stripos($orgName, 'UMR') !== false) {$pays = 'FR';}
 									//ROR
-									if (!empty($ror)) {
+									if ($ror != '') {
 										$chaine .= '            <idno type="ROR">'.$ror.'</idno>'."\r\n";
 									}
 									$orgName = str_replace(array("~troliv~", "~trolia~"), array(",", "'"), $orgName);
-									$chaine .= '            <orgName>'.$orgName.'</orgName>'."\r\n";
+									$chaine .= '            <orgName>'.trim($orgName).'</orgName>'."\r\n";
 									if ($pays != "")
 									{
 										//$keyP = array_search($pays, $countries, true); 
