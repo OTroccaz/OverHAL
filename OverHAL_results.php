@@ -6357,18 +6357,28 @@ foreach ($souBib as $key => $subTab)
 											$chaine .= '                  <rawAffs>'.$tabRaw[$r].'</rawAffs>'."\r\n";
 											$extRaw = '';
 											$e = 0;
+											//Recherche du terme 'UMR, xxxx' ou 'umr, xxxx'
+											if (preg_match('/UMR, [0-9]{4}/', strtoupper($tabRaw[$r]), $match)) {$tabRaw[$r] = str_ireplace('UMR, ', 'UMR ', $tabRaw[$r]);}
 											$tabExt = explode(",", $tabRaw[$r]);
 											foreach ($tabExt as $ext) {
-												//Recherche du terme 'UMR'
-												if (stripos($ext, 'UMR') !== false) {
-													$pos = strripos($ext, 'UMR');
-													$extRaw = trim(substr($ext, $pos, (strlen($ext) - $pos)));
-												}
-												$e++;
-											}
-											if ($extRaw != '') {
-												$e -= 1;
-												$labTab[$nompre][] = '~|~~|~'.$extRaw.'~|~researchteam~|~'.$tabExt[$e];
+												//Recherche du terme 'UMR xxxx' ou 'umr xxxx'
+												if (preg_match('/UMR [0-9]{4}/', strtoupper($ext), $match)) {$labTab[$nompre][] = '~|~~|~'.$match[0].'~|~researchteam~|~'.$tabExt[$e]; $e++;}
+												//Recherche du terme 'UMR CNRS xxxx' ou 'umr cnrs xxxx'
+												if (preg_match('/UMR CNRS [0-9]{4}/', strtoupper($ext), $match)) {$labTab[$nompre][] = '~|~~|~'.str_ireplace('CNRS ', '', $match[0]).'~|~researchteam~|~'.$tabExt[$e]; $e++;}
+												//Recherche du terme 'UMRxxxx' ou 'umrxxxx'
+												if (preg_match('/UMR[0-9]{4}/', strtoupper($ext), $match)) {$labTab[$nompre][] = '~|~~|~'.$match[0].'~|~researchteam~|~'.$tabExt[$e]; $e++;}
+												//Recherche du terme 'UPR xxxx' ou 'upr xxxx'
+												if (preg_match('/UPR [0-9]{4}/', strtoupper($ext), $match)) {$labTab[$nompre][] = '~|~~|~'.$match[0].'~|~researchteam~|~'.$tabExt[$e]; $e++;}
+												//Recherche du terme 'UPRxxxx' ou 'uprxxxx'
+												if (preg_match('/UPR[0-9]{4}/', strtoupper($ext), $match)) {$labTab[$nompre][] = '~|~~|~'.$match[0].'~|~researchteam~|~'.$tabExt[$e]; $e++;}
+												//Recherche du terme 'UR xxxx' ou 'ur xxxx'
+												if (preg_match('/UR [0-9]{4}/', strtoupper($ext), $match)) {$labTab[$nompre][] = '~|~~|~'.$match[0].'~|~researchteam~|~'.$tabExt[$e]; $e++;}
+												//Recherche du terme 'URxxxx' ou 'urxxxx'
+												if (preg_match('/UR[0-9]{4}/', strtoupper($ext), $match)) {$labTab[$nompre][] = '~|~~|~'.$match[0].'~|~researchteam~|~'.$tabExt[$e]; $e++;}
+												//Recherche du terme 'U xxxx' ou 'u xxxx'
+												if (preg_match('/U [0-9]{4}/', strtoupper($ext), $match)) {$labTab[$nompre][] = '~|~~|~'.$match[0].'~|~researchteam~|~'.$tabExt[$e]; $e++;}
+												//Recherche du terme 'Uxxxx' ou 'uxxxx'
+												if (preg_match('/U[0-9]{4}/', strtoupper($ext), $match)) {$labTab[$nompre][] = '~|~~|~'.$match[0].'~|~researchteam~|~'.$tabExt[$e]; $e++;}
 											}
 											$r++;
 										}
@@ -6582,8 +6592,8 @@ foreach ($souBib as $key => $subTab)
 									$keyCO = array_search($orgName, $affModTab);
 									$pays = ($keyCO != '') ? $couTab[$keyCO] : '';
 									$ror = ($keyCO != '') ? $rorTab[$keyCO]: '';
-									//Si UMR, pays = France
-									if (stripos($orgName, 'UMR') !== false) {$pays = 'FR';}
+									//Si UMR ou UPR, pays = France
+									if (stripos($orgName, 'UMR') !== false || stripos($orgName, 'UPR') !== false) {$pays = 'FR';}
 									//ROR
 									if ($ror != '') {
 										$chaine .= '            <idno type="ROR">'.$ror.'</idno>'."\r\n";
