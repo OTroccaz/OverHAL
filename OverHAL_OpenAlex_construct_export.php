@@ -282,7 +282,7 @@ while ($cpt < ($numFound+1)) {
 						}
 					}
 					
-					//Institutions étrangères : on recherche d'abord 21, puis 22, puis 23
+					//Institutions étrangères : on recherche d'abord 21, puis 22, puis 23, puis 24
 					if (array_keys($tabInst['AR'], '21')) {
 						$keysE = array_keys($tabInst['AR'], '21');
 					}else{
@@ -291,6 +291,10 @@ while ($cpt < ($numFound+1)) {
 						}else{
 							if (array_keys($tabInst['AR'], '23')) {
 								$keysE = array_keys($tabInst['AR'], '23');
+							}else{
+								if (array_keys($tabInst['AR'], '24')) {
+									$keysE = array_keys($tabInst['AR'], '24');
+								}
 							}
 						}
 					}
