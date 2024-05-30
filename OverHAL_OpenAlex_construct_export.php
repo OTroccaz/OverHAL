@@ -238,8 +238,11 @@ while ($cpt < ($numFound+1)) {
 								case 'education':
 									$tabInst['AR'][$k] .= '3';
 									break;
-								case 'government':
+								case 'company':
 									$tabInst['AR'][$k] .= '4';
+									break;
+								case 'government':
+									$tabInst['AR'][$k] .= '5';
 									break;
 							}
 						}else{//Institutions étrangères
@@ -254,8 +257,17 @@ while ($cpt < ($numFound+1)) {
 								case 'education':
 									$tabInst['AR'][$k] .= '2';
 									break;
+								case 'company':
+									$tabInst['AR'][$k] .= '5';
+									break;
 								case 'government':
 									$tabInst['AR'][$k] .= '3';
+									break;
+								case 'archive':
+									$tabInst['AR'][$k] .= '5';
+									break;
+								case 'nonprofit':
+									$tabInst['AR'][$k] .= '6';
 									break;
 							}
 						}
@@ -269,7 +281,7 @@ while ($cpt < ($numFound+1)) {
 				}
 				
 				if (!empty($tabInst)) {
-					//Institutions françaises : on recherche d'abord 11, puis 12, puis 13
+					//Institutions françaises : on recherche d'abord 11, puis 12, puis 13, puis 14
 					if (array_keys($tabInst['AR'], '11')) {
 						$keysF = array_keys($tabInst['AR'], '11');
 					}else{
@@ -278,11 +290,15 @@ while ($cpt < ($numFound+1)) {
 						}else{
 							if (array_keys($tabInst['AR'], '13')) {
 								$keysF = array_keys($tabInst['AR'], '13');
+							}else{
+								if (array_keys($tabInst['AR'], '14')) {
+									$keysF = array_keys($tabInst['AR'], '14');
+								}
 							}
 						}
 					}
 					
-					//Institutions étrangères : on recherche d'abord 21, puis 22, puis 23, puis 24
+					//Institutions étrangères : on recherche d'abord 21, puis 22, puis 23, puis 24, puis 25, puis 26
 					if (array_keys($tabInst['AR'], '21')) {
 						$keysE = array_keys($tabInst['AR'], '21');
 					}else{
@@ -294,6 +310,14 @@ while ($cpt < ($numFound+1)) {
 							}else{
 								if (array_keys($tabInst['AR'], '24')) {
 									$keysE = array_keys($tabInst['AR'], '24');
+								}else{
+									if (array_keys($tabInst['AR'], '25')) {
+										$keysE = array_keys($tabInst['AR'], '25');
+									}else{
+										if (array_keys($tabInst['AR'], '26')) {
+											$keysE = array_keys($tabInst['AR'], '26');
+										}
+									}
 								}
 							}
 						}
