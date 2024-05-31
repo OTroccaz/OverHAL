@@ -876,7 +876,7 @@ function affilId($diffQuoi, $docid, $label, $code, $type, $pays, $validHAL) {
 		//if ($pres == 0 && $validAut != "")
 		if ($pres == 0)
 		{
-			$autTab[$autInd] = trim($autQui[$aut]);
+			$autTab[$autInd] = str_replace(array('[', ']'), '', trim($autQui[$aut]));
 			$labTab[trim($autQui[$aut])][$autInd] = $docid."~|~".$label."~|~".$code."~|~".$type."~|~".$pays;
 			$autInd++;
 		}
@@ -6385,7 +6385,6 @@ foreach ($souBib as $key => $subTab)
 									}
 									$kT = array_search($nompre, $autTab);
 									//echo $kT." - ".$nom."<br>";
-									
 									
 									//var_dump($labTab);
 									if ($kT !== FALSE) {
