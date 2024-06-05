@@ -6291,7 +6291,7 @@ foreach ($souBib as $key => $subTab)
 									//if ($compNC != "") {$avail .= '-nc';}
 									//if ($compND != "") {$avail .= '-nd';}
 									//if ($compSA != "") {$avail .= '-sa';}
-									if ($papers[$key][$key2]['License'] == 'cc-by') $avail = "https://creativecommons.org/licenses/by/4.0/";
+									if ($papers[$key][$key2]['License'] == 'cc-by') $avail = "http://creativecommons.org/licenses/by/";
 									$chaine .= '          <publicationStmt>'."\r\n".
 														 '            <availability>'."\r\n".
 														 '              <licence target="'.$avail.'"/>'."\r\n".
