@@ -194,15 +194,15 @@ if (strpos($_SERVER['HTTP_HOST'], '127.0.0.1') === false) {
                                 <div class="card w-100 d-block shadow-lg">
                                     <div class="card-body">
                                         
-																				<form enctype="multipart/form-data" action="OverHAL_results.php" method="post" accept-charset="UTF-8">
-																				<!-- <input type="hidden" name="MAX_FILE_SIZE" value="900000"> -->
+										<form enctype="multipart/form-data" action="OverHAL_results.php" method="post" accept-charset="UTF-8">
+										<input type="hidden" name="MAX_FILE_SIZE" value="2097152"><!-- 2 Mo max > 1024 * (1024 * 2)) > 2097152 octets -->
 																				
                                         <h5 class="badge badge-primary badge-pill">Paramétrage</h5>
 																				
 																				<div class="row mb-3">
                                             <div class="col-sm-12">
                                                 <div class="border border-dark rounded p-2 mb-2">
-                                                    <div class='h4 text-uppercase text-secondary mb-3'>Étape 1 : Charger le fichier</div>
+                                                    <div class='h4 text-uppercase text-secondary mb-3'>Étape 1 : Charger le fichier (2 Mo max)</div>
 
                                                     <!-- <div class="border p-2 small text-primary mb-2">
                                                         Envoyez les fichiers résultat (900 Ko maximum, voir ci-dessus le "mode d'emploi") :
@@ -252,15 +252,15 @@ if (strpos($_SERVER['HTTP_HOST'], '127.0.0.1') === false) {
                                                             <input class="form-control mb-1" id="pubmed_xml" name="pubmed_xml" type="file">
 
 																														<?php
-																														include("./Glob_IP_list.php");
-																														if (in_array($ip, $IP_aut)) {
+																														//include("./Glob_IP_list.php");
+																														//if (in_array($ip, $IP_aut)) {
 																															echo '<label for="dimensions" class="badge badge-secondary-lighten">Dimensions (CSV) :</label>';
 																															echo '<input class="form-control mb-1" id="dimensions" name="dimensions" type="file" />';
 																															
 																															echo '<label for="openalex" class="badge badge-secondary-lighten">OpenAlex :</label>';
 																															echo '<input class="form-control mb-1" id="openalex" name="openalex" type="file">';
 																															echo '<span><a target="_blank" rel="noopener noreferrer" href="OverHAL_OpenAlex_construct_import.php"> Construire un fichier CSV à partir d\'une URL OpenAlex</a>, puis l\'envoyer à OverHAL avec le formulaire ci-dessus.</span>';
-																														}
+																														//}
 																														?>
                                                         </div>
                                                     </div> <!-- .row -->
