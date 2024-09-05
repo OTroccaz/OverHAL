@@ -6432,6 +6432,9 @@ foreach ($souBib as $key => $subTab)
 								switch(strtolower($type))
 								{
 									case "article"://article
+									case "review":
+									case "editorial":
+									case "letter":
 										$chaine .= '                <title level="j">'.supprAmp(minRev($papers[$key][$key2]['Titre revue'])).'</title>'."\r\n";
 										$chaine .= '                <imprint>'."\r\n";
 										$chaine .= '                  <publisher>'.supprAmp($papers[$key][$key2]['Editor']).'</publisher>'."\r\n";
