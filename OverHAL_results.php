@@ -1800,10 +1800,10 @@ foreach ($souBib as $key => $subTab)
 				echo "<td colspan='9'><strong>Informations diverses collectées grâce à l'API SHERPA/RoMEO</strong></td>";
 				echo "</tr>";
 				echo "<tr>";
-				echo "<td align='center'><img alt='Emargo 6 mois' src='./img/embargo-6.jpg'></td>";
-				echo "<td align='center'><img alt='Emargo 12 mois' src='./img/embargo-12.jpg'></td>";
-				echo "<td align='center'><img alt='Emargo 24 mois' src='./img/embargo-24.jpg'></td>";
-				echo "<td align='center'><img alt='Emargo possible sous certaines conditions' src='./img/embargo-e.jpg'></td>";
+				echo "<td align='center'><img alt='Embargo 6 mois' src='./img/embargo-6.jpg'></td>";
+				echo "<td align='center'><img alt='Embargo 12 mois' src='./img/embargo-12.jpg'></td>";
+				echo "<td align='center'><img alt='Embargo 24 mois' src='./img/embargo-24.jpg'></td>";
+				echo "<td align='center'><img alt='Embargo possible sous certaines conditions' src='./img/embargo-e.jpg'></td>";
 				echo "<td align='center'><img alt='Dépôt du post-print auteur autorisé' src='./img/post-print.png'></td>";
 				echo "<td align='center'><img alt='Dépôt du PDF éditeur autorisé' src='./img/pdf.png'></td>";
 				echo "<td align='center'><img alt='Aucun dépôt autorisé' src='./img/red-cross.png'></td>";
@@ -2170,6 +2170,39 @@ foreach ($souBib as $key => $subTab)
 					}
 					//echo "<tr><td colspan='4'>".$k." - ".$url."</td></tr>";
 				}
+				$deb = "";
+				$fin = "";
+				$mailOK = "";
+				//Si "Requête uniquement sur le texte intégral", vérifier si notice présente dans CRAC
+				if (isset($_POST['txtint']) && $_POST['txtint'] == 'ok') {
+					$reqAPIC = '';
+					$titTEI = str_replace('-', ' ', $data[$colTitle]);
+					if($yearPaper != "") {$special = "%20AND%20(publicationDateY_i:".$yearPaper."%20OR%20inPress_bool:true)%20AND%20status_i:%220%22";}else{$special = "%20AND%20status_i:%220%22";}
+					//Quand on a que le titre et pas le DOI, il faut trouver une correspondance exacte sur tout le titre pour considérer qu'il s'agit d'un doublon
+					if ($refdoi != "") {
+						$tabTit = explode(' ', $titTEI);
+						$critere = '';
+						if (isset($tabTit[0])) {$critere .= strtolower($tabTit[0]."%20");}
+						if (isset($tabTit[1])) {$critere .= strtolower($tabTit[1]."%20");}
+						if (isset($tabTit[2])) {$critere .= strtolower($tabTit[2]."%20");}
+						$reqAPIC = "https://api.archives-ouvertes.fr/crac/hal/?fq=(title_t:%22".urlencode(trim($critere))."*%22%20OR%20doiId_s:".$refdoi.")".$special."&rows=10000";
+					}else{
+						$reqAPIC = "https://api.archives-ouvertes.fr/crac/hal/?fq=title_t:%22".urlencode(trim($titTEI))."*%22".$special."&rows=10000";
+						$reqAPIC = str_replace(" ", "%20", $reqAPIC);
+					}
+					$contAPIC = file_get_contents($reqAPIC);
+					$resAPIC = json_decode($contAPIC);
+					$numFoundAPIC = 0;
+					if(isset($resAPIC->response->numFound)) {$numFoundAPIC = $resAPIC->response->numFound;}
+					//echo $numFoundAPIC.' - '.$reqAPIC.'<br>';
+					if ($numFoundAPIC != 0) {
+						//Mettre la notice en évidence en la surlignant
+						$deb .= "<span style='background:#C5FF4A'>";
+						$fin .= "</span>";
+						//Bloquer l'envoi de mail
+						$mailOK = "MOD";
+					}
+				}
 				echo "<tbody><tr>";
 				echo "<td valign=\"top\">".$k."</td>";
 				if ($desactivSR == "non")
@@ -2196,11 +2229,8 @@ foreach ($souBib as $key => $subTab)
 					$nbaut = explode(";", $data[$colAuthors]);
 				}
 				if (count($nbaut) > $limTEI) {//If more than $limTEI authors, records will not be taken into account in the TEI export and we have to adopt a special marking
-				 $deb = "<s>";
-				 $fin = "</s>";
-				}else{
-				 $deb = "";
-				 $fin = "";
+				 $deb .= "<s>";
+				 $fin .= "</s>";
 				}
 				if (count($nbaut) > 50)
 				{
@@ -2322,7 +2352,7 @@ foreach ($souBib as $key => $subTab)
 					include ('./OverHAL_mails_envoyes.php');
 					$nouvelEnvoiM = "non";
 					$nouvelEnvoiP = "non";
-					$mailOK = "";
+					//$mailOK = "";
 					$file = "";
 
 					if ($key == "zotero" && isset($papers[$key][$key2]['Call Number']) && $papers[$key][$key2]['Call Number'] == "ISCR-AP") {
@@ -2449,8 +2479,8 @@ foreach ($souBib as $key => $subTab)
 							$linkMailP = "<div id=\"".$titreNorm."P\"><a href=\"#".$titreNorm."\" onClick=\"majMailsP('".$adr."','".$titreNorm."','".$refdoi."','P','','".strtoupper($lang)."','".$callNumber."','".str_replace("'", "\'", $data[$colTitle])."'); mailto('".$file."','".$adr."','".$subjectP."','".$bodyP."');\"><img alt='".$adr."' title='".$adr."' src='".$imgMailP."'></a></div>";
 						}
 					}else{
-						$linkMailM = "<strong>OK</strong>";
-						$linkMailP = "<strong>OK</strong>";
+						$linkMailM = "<strong>".$mailOK."</strong>";
+						$linkMailP = "<strong>".$mailOK."</strong>";
 					}
 					if ($mailValide == "non")
 					{
@@ -6387,7 +6417,7 @@ foreach ($souBib as $key => $subTab)
 									//echo $kT." - ".$nom."<br>";
 									
 									//var_dump($labTab);
-									if ($kT !== FALSE) {
+									if ($kT !== FALSE && isset($labTab[$nompre])) {
 										foreach ($labTab[$nompre] as $lab) {
 											$orgName = testLab($lab);
 											//echo $orgName;
