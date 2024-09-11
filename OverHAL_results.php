@@ -1789,7 +1789,9 @@ foreach ($souBib as $key => $subTab)
 		<a name='Références de <?php echo $nomSouBib;?> non trouvées dans HAL'></a><h4>Références de <?php echo $nomSouBib;?> non trouvées dans HAL - <a href='#Resultats'><em>Retour aux résultats</em></a></h4>
 		<p><strong>Attention, il est possible que la référence soit présente dans HAL mais qu'elle n'ait pas été trouvée en raison d'une légère différence dans le titre.</strong>
 		<br>
-		Par ailleurs, les notices avec plus de <?php echo $limTEI;?> auteurs ne seront pas prises en compte dans l'export TEI et apparaîtront <s>barrées</s>.</p>
+		Par ailleurs :<br>
+		&nbsp;&nbsp;&nbsp;. les notices avec plus de <?php echo $limTEI;?> auteurs ne seront pas prises en compte dans l'export TEI et apparaîtront <s>barrées</s>,<br>
+		&nbsp;&nbsp;&nbsp;. les dépôts en modération apparaîtront <span style='background:#C5FF4A'>surlignés</span> et les éventuelles fonctions de mails seront donc volontairement absentes.</p>
 		<?php
 		//var_dump($papers[$key]);
 		if (!empty($papers[$key])) {//Affichage des tableaux uniquement si présence de résultats !
