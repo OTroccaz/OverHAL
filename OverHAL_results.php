@@ -2200,7 +2200,7 @@ foreach ($souBib as $key => $subTab)
 					if ($numFoundAPIC != 0) {
 						//Mettre la notice en évidence en la surlignant
 						$deb .= "<span style='background:#C5FF4A'>";
-						$fin .= "</span>";
+						$fin .= " - <a target='_blank' href='".$reqAPIC."'>Modération</a></span>";
 						//Bloquer l'envoi de mail
 						$mailOK = "MOD";
 					}
