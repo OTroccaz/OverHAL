@@ -7,13 +7,13 @@
  *
  * Contenu du corps du premier mail envoyé en anglais - Content of the body of the first e-mail sent in English
  */
- 
+
 //M
-$subjectM = "Copy request for deposit in Rennes 1 Open Access Repository";
+$subjectM = "Copy request for deposit in Rennes Open Access Repository";
 $body = "<font face='corbel'>Dear Colleague,\
 <br>\
 <br>\
-I am the manager of the University of Rennes 1 <a href=&quot;https://hal-univ-rennes1.archives-ouvertes.fr/index/index/lang/en/&quot;>Open Access Repository</a>, containing the research output of the University's academic community.<br>\
+I am the manager of the University of Rennes <a href=&quot;https://univ-rennes.hal.science/&quot;>Open Access Repository</a>, containing the research output of the University's academic community.<br>\
 ";
 
 switch($team)
@@ -25,7 +25,7 @@ switch($team)
     $body .= "We work in collaboration with the FOTON UMR CNRS 6082 research unit.<br>\\";
     break;
   case "LTSI":
-    $body .= "We work in collaboration with the Signal and Image Processing research unit (LTSI) - U Inserm 1099.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Mirelle Garreau</b>, director of the Signal and Image Processing research unit (LTSI) - U Inserm 1099.<br>\\";
     break;
   case "ISCR":
     $body .= "We work in collaboration with <b>Prof Marc Fourmigue</b>, director of the Chemical Institute of Rennes - UMR CNRS 6226.<br>\\";
@@ -34,7 +34,7 @@ switch($team)
     $body .= "We work in collaboration with the <b>Geosciences / OSUR research unit</b> at the University of Rennes 1.<br>\\";
     break;
   case "IPR":
-    $body .= "We work in collaboration with <b>Prof Jean-Christophe Sangleboeuf</b>, director of the Institute of Physics - Rennes (IPR) UMR CNRS 6251.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Jean-Luc Autran</b>, director of the Institute of Physics - Rennes (IPR) UMR CNRS 6251.<br>\\";
     break;
   case "LGCGM":
     $body .= "We work in collaboration with <b>Prof Christophe Lanos</b>, co-director of the Mechanical and Civil Engineering research unit(LGCGM) EA 3913.<br>\\";
@@ -43,34 +43,34 @@ switch($team)
     $body .= "We work in collaboration with <b>Prof Joan van Baaren</b>, director of the Ecosystems, Biodiversity, Evolution (ECOBIO) research unit UMR CNRS 6553.<br>\\";
     break;
   case "IGEPP":
-    $body .= "";
+    $body .= "We work in collaboration with the IGEPP Research unit.<br>\\";
     break;
   case "ETHOS":
-    $body .= "We work in collaboration with <b>Prof Alban Lemasson</b>, director of the Animal and Human Ethology (EthoS) research unit UMR CNRS 6552.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Ludovic Dickel</b>, director of the Animal and Human Ethology (EthoS) research unit UMR CNRS 6552.<br>\\";
     break;
   case "CNGC":
-    $body .= "We work in collaboration with <b>Rennes University Hospital</b>.";
+    $body .= "We work in collaboration with <b>Rennes University Hospital.</b>.<br>\\";
     break;
   case "IGDR":
     $body .= "We work in collaboration with <b>Prof Reynald Gillet</b>, director of the Institute of Genetics and Development of Rennes (IGDR) UMR CNRS 6290.<br>\\";
     break;
-  case "BGC":
+  case "IGDR":
     $body .= "We work in collaboration with <b>Prof Reynald Gillet</b>, director of the Biology Genetics and Cancer research unit ERL U 1305.<br>\\";
     break;
   case "IRSET":
     $body .= "We work in collaboration with <b>Prof Michel Samson</b>, director of the Research Institute in Health, Environment and Occupation (IRSET) U Inserm 1085.<br>\\";
     break;
   case "U991":
-    $body .= "We work in collaboration with <b>Prof Bruno Clement</b> (Liver, Metabolisms and Cancer - U inserm 991 research unit) at the University of Rennes 1.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Olivier Loreal</b> (Liver, Metabolisms and Cancer - U inserm 991 research unit) at the University of Rennes 1.<br>\\";
     break;
   case "U835":
-    $body .= "We work in collaboration with the <b>UMR_S Inserm 1230 research unit - Bacterial regulatory RNAs and Medicine</b>.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Vincent Cattoir</b>, director of the <b>UMR_S Inserm 1230 research unit - Bacterial regulatory RNAs and Medicine</b>.<br>\\";
     break;
   case "U1230":
-    $body .= "We work in collaboration with the <b>UMR_S Inserm 1230 research unit - Bacterial regulatory RNAs and Medicine</b>.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Vincent Cattoir</b>, director of the <b>UMR_S Inserm 1230 research unit - Bacterial regulatory RNAs and Medicine</b>.<br>\\";
     break;
   case "BRM":
-    $body .= "We work in collaboration with the <b>UMR_S Inserm 1230 research unit - Bacterial regulatory RNAs and Medicine</b>.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Vincent Cattoir</b>, director of the <b>UMR_S Inserm 1230 research unit - Bacterial regulatory RNAs and Medicine</b>.<br>\\";
     break;
   case "U917":
     $body .= "We work in collaboration with <b>Prof Karin Tarte</b>, director of the Microenvironment, Cell Differentiation, Immunology and Cancer (MICMAC) - U Inserm 1236 research unit.<br>\\";
@@ -91,36 +91,36 @@ switch($team)
     $body .= "We work in collaboration with <b>Rennes University Hospital</b>.";
     break;
   case "OSS":
-    $body .= "We work in collaboration with <b>Prof Eric Chevet</b>, director of the U Inserm 1242 - Chemistry, Oncogenesis, Stress and Signaling (COSS) research unit.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Eric Chevet</b>, director of the U Inserm 1242 - Oncogenesis, Stress and Signaling (OSS) research unit.<br>\\";
     break;
   case "COSS":
-    $body .= "We work in collaboration with <b>Prof Eric Chevet</b>, director of the U Inserm 1242 - Chemistry, Oncogenesis, Stress and Signaling (COSS) research unit.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Eric Chevet</b>, director of the U Inserm 1242 - Oncogenesis, Stress and Signaling (OSS) research unit.<br>\\";
     break;
   case "U1242":
-    $body .= "We work in collaboration with <b>Prof Eric Chevet</b>, director of the U Inserm 1242 - Chemistry, Oncogenesis, Stress and Signaling (COSS) research unit.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Eric Chevet</b>, director of the U Inserm 1242 - Oncogenesis, Stress and Signaling (OSS) research unit.<br>\\";
     break;
   case "NUMECAN":
-    $body .= "We work in collaboration with <b>Prof Bruno Clement</b>, director of the Nutrition, Metabolisms and Cancer (NUMECAN) research unit U Inserm 1241.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Olivier Loreal</b>, director of the Nutrition, Metabolisms and Cancer (NUMECAN) research unit U Inserm 1317.<br>\\";
     break;
   case "U1241":
-    $body .= "We work in collaboration with <b>Prof Bruno Clement</b>, director of the Nutrition, Metabolisms and Cancer (NUMECAN) research unit U Inserm 1241.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Olivier Loreal</b>, director of the Nutrition, Metabolisms and Cancer (NUMECAN) research unit U Inserm 1317.<br>\\";
     break;
   case "CREM":
     $body .= "We work in collaboration with the <b>UMR CNRS 6211 - CREM</b> research unit.<br>\\";
     break;
   case "CREAAH":
-    $body .= "We work in collaboration with <b>Prof Marie-Yvane Daire</b>, director of the Archaeology, Archaeoscience and History (CReAAH) research unit UMR CNRS 6566.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Luc Laporte</b>, director of the Archaeology, Archaeoscience and History (CReAAH) research unit UMR CNRS 6566.<br>\\";
     break;
   case "CRAPE":
-    $body .= "We work in collaboration with <b>Prof Jean-Pierre Le Bourhis</b>, director of the Centre For Research On Political Action in Europe (ARENES) UMR CNRS 6051.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Jean-Pierre Le Bourhis</b>, director of the Politics, Public Health, Environment, Media (ARENES) research unit UMR CNRS 6051.<br>\\";
+    break;
+  case "IODE":
+    $body .= "We work in collaboration with <b>Mrs Moisdon-Chataigner</b>, director of Lab CNRS 6262 IODE</b>.<br>\\";
     break;
   case "XXXX":
     $body .= "We work in collaboration with the <b>Centre Atlantique de Philosophie EA 7463</b>.<br>\\";
     break;
-  case "XXXX":
-    $body .= "We work in collaboration with the <b>Centre Atlantique de Philosophie EA 7463</b>.<br>\\";
-    break;
-  case "UNIV-RENNES1":
+  case "UNIV-RENNES":
     $body .= "We work in collaboration with the <b>University research units</b>.<br>\\";
     break;
   case "SCANMAT":
@@ -155,30 +155,32 @@ $body .= "<br><b>Would you please send us <a href=&quot;https://ecm.univ-rennes1
 <br>\
 It is usually a doc file, which does not bear the look and feel of the journal, nor the publisher's copyright notice on it. (2)<br>\
 <br>\
-If you could also please send us the <b>supplementary data</b> along the manuscript, that would be perfect.<br>\
+If you could also please send us the <b>supplementary data (RAW data)</b> along the manuscript, that would be perfect. (3)<br>\
 <br>\
 Making your manuscripts open access will enhance their visibility on the Internet, through search engines (Google Scholar, PubMed and so forth) and social networks (ResearchGate...).<br>\
 <br>\
 Best Regards,<br>\
 <br>\
 Laurent Jonchère<br>\
-University of Rennes 1<br>\
+= = = = = = = = = = <br>\
+Université de Rennes<br>\
 Tel : + 33 (0)2 23 23 34 78<br>\
-<a href=&quot;https://openaccess.univ-rennes1.fr/&quot;>https://openaccess.univ-rennes1.fr/</a><br>\
+<a href=&quot;https://scienceouverte.univ-rennes.fr/&quot;>https://scienceouverte.univ-rennes.fr/</a><br>\
 <br>\
 (1) Publisher and journal archiving policies can be checked in the <a href=&quot;http://www.sherpa.ac.uk/romeo/&quot;>Sherpa Romeo</a> database. We always check publisher policies for any deposit. Moreover, no article will be visible before the end of the embargo period, depending on journal policies.<br>\
-(2) If you need help to <b>get your manuscript from the journal submission system</b>, please check <a href=&quot;https://openaccessbutton.org/direct2aam&quot;>Direct2AAM</a>. Please, do not send the publisher's PDF nor the proof version, since such versions cannot be deposited in a repository.</font><br>\
+(2) If you need help to <b>get your manuscript from the journal submission system</b>, please check <a href=&quot;https://openaccessbutton.org/direct2aam&quot;>Direct2AAM</a>. Please, do not send the publisher's PDF nor the proof version, since such versions cannot be deposited in a repository.<br>\
+(3) With your consent, we will deposit them in the <a href=&quot;https://entrepot.recherche.data.gouv.fr/dataverse/univ-rennes/&quot;>Research Data Gouv data repository</a> if this proves relevant.</font><br>\
 ";
 
 $bodyM = str_replace("'", "\'", $body);
 
 //P
-$subjectP = "POSTPRINT Copy request for deposit in Rennes 1 Open Access Repository";
+$subjectP = "POSTPRINT Copy request for deposit in Rennes Open Access Repository";
 
 $body = "<font face='corbel'>Dear Colleague,\
 <br>\
 <br>\
-I am the manager of the University of Rennes 1 <a href=&quot;https://hal-univ-rennes1.archives-ouvertes.fr/index/index/lang/en/&quot;>Open Access Repository</a>, containing the research output of the University's academic community.<br>\
+I am the manager of the University of Rennes <a href=&quot;https://univ-rennes.hal.science/&quot;>Open Access Repository</a>, containing the research output of the University's academic community.<br>\
 ";
 
 switch($team)
@@ -190,7 +192,7 @@ switch($team)
     $body .= "We work in collaboration with the FOTON UMR CNRS 6082 research unit.<br>\\";
     break;
   case "LTSI":
-    $body .= "We work in collaboration with the Signal and Image Processing research unit (LTSI) - U Inserm 1099.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Mirelle Garreau</b>, director of the Signal and Image Processing research unit (LTSI) - U Inserm 1099.<br>\\";
     break;
   case "ISCR":
     $body .= "We work in collaboration with <b>Prof Marc Fourmigue</b>, director of the Chemical Institute of Rennes - UMR CNRS 6226.<br>\\";
@@ -199,7 +201,7 @@ switch($team)
     $body .= "We work in collaboration with the <b>Geosciences / OSUR</b> research unit at the University of Rennes 1.<br>\\";
     break;
   case "IPR":
-    $body .= "We work in collaboration with <b>Prof Jean-Christophe Sangleboeuf</b>, director of the Institute of Physics - Rennes (IPR) UMR CNRS 6251.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Jean-Luc Autran</b>, director of the Institute of Physics - Rennes (IPR) UMR CNRS 6251.<br>\\";
     break;
   case "LGCGM":
     $body .= "We work in collaboration with <b>Prof Christophe Lanos</b>, co-director of the Mechanical and Civil Engineering research unit(LGCGM) EA 3913.<br>\\";
@@ -208,10 +210,10 @@ switch($team)
     $body .= "We work in collaboration with <b>Prof Joan van Baaren</b>, director of the Ecosystems, Biodiversity, Evolution (ECOBIO) research unit UMR CNRS 6553.<br>\\";
     break;
   case "IGEPP":
-    $body .= "";
+    $body .= "We work in collaboration with the IGEPP Research unit.<br>\\";
     break;
   case "ETHOS":
-    $body .= "We work in collaboration with <b>Prof Alban Lemasson</b>, director of the Animal and Human Ethology (EthoS) research unit UMR CNRS 6552.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Ludovic Dickel</b>, director of the Animal and Human Ethology (EthoS) research unit UMR CNRS 6552.<br>\\";
     break;
   case "CNGC":
     $body .= "We work in collaboration with <b>Rennes University Hospital</b>.";
@@ -226,13 +228,13 @@ switch($team)
     $body .= "We work in collaboration with <b>Prof Bruno Clement</b> (Liver, Metabolisms and Cancer - U inserm 991 research unit) at the University of Rennes 1.<br>\\";
     break;
   case "U835":
-    $body .= "We work in collaboration with the <b>UMR_S Inserm 1230 research unit - Bacterial regulatory RNAs and Medicine</b>.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Vincent Cattoir</b>, director of the <b>UMR_S Inserm 1230 research unit - Bacterial regulatory RNAs and Medicine</b>.<br>\\";
     break;
   case "U1230":
-    $body .= "We work in collaboration with the <b>UMR_S Inserm 1230 research unit - Bacterial regulatory RNAs and Medicine</b>.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Vincent Cattoir</b>, director of the <b>UMR_S Inserm 1230 research unit - Bacterial regulatory RNAs and Medicine</b>.<br>\\";
     break;
   case "BRM":
-    $body .= "We work in collaboration with the <b>UMR_S Inserm 1230 research unit - Bacterial regulatory RNAs and Medicine</b>.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Vincent Cattoir</b>, director of the <b>UMR_S Inserm 1230 research unit - Bacterial regulatory RNAs and Medicine</b>.<br>\\";
     break;
   case "U917":
     $body .= "We work in collaboration with <b>Prof Karin Tarte</b>, director of the Microenvironment, Cell Differentiation, Immunology and Cancer (MICMAC) - U Inserm 1236 research unit.<br>\\";
@@ -253,31 +255,31 @@ switch($team)
     $body .= "We work in collaboration with <b>Rennes University Hospital</b>.";
     break;
   case "OSS":
-    $body .= "We work in collaboration with <b>Prof Eric Chevet</b>, director of the U Inserm 1242 - Chemistry, Oncogenesis, Stress and Signaling (COSS) research unit.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Eric Chevet</b>, director of the U Inserm 1242 - Oncogenesis, Stress and Signaling (COSS) research unit.<br>\\";
     break;
   case "COSS":
-    $body .= "We work in collaboration with <b>Prof Eric Chevet</b>, director of the U Inserm 1242 - Chemistry, Oncogenesis, Stress and Signaling (COSS) research unit.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Eric Chevet</b>, director of the U Inserm 1242 - Oncogenesis, Stress and Signaling (COSS) research unit.<br>\\";
     break;
   case "U1242":
-    $body .= "We work in collaboration with <b>Prof Eric Chevet</b>, director of the U Inserm 1242 - Chemistry, Oncogenesis, Stress and Signaling (COSS) research unit.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Eric Chevet</b>, director of the U Inserm 1242 - Oncogenesis, Stress and Signaling (COSS) research unit.<br>\\";
     break;
   case "NUMECAN":
-    $body .= "We work in collaboration with <b>Prof Bruno Clement</b>, director of the Nutrition, Metabolisms and Cancer (NUMECAN) research unit U Inserm 1241.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Olivier Loreal</b>, director of the Nutrition, Metabolisms and Cancer (NUMECAN) research unit U Inserm 1317.<br>\\";
     break;
   case "U1241":
-    $body .= "We work in collaboration with <b>Prof Bruno Clement</b>, director of the Nutrition, Metabolisms and Cancer (NUMECAN) research unit U Inserm 1241.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Olivier Loreal</b>, director of the Nutrition, Metabolisms and Cancer (NUMECAN) research unit U Inserm 1317.<br>\\";
     break;
   case "CREM":
     $body .= "We work in collaboration with the <b>UMR CNRS 6211 - CREM</b> research unit.<br>\\";
     break;
   case "CREAAH":
-    $body .= "We work in collaboration with <b>Prof Marie-Yvane Daire</b>, director of the Archaeology, Archaeoscience and History (CReAAH) research unit UMR CNRS 6566.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Luc Laporte</b>, director of the Archaeology, Archaeoscience and History (CReAAH) research unit UMR CNRS 6566.<br>\\";
     break;
   case "CRAPE":
-    $body .= "We work in collaboration with <b>Prof Jean-Pierre Le Bourhis</b>, director of the Centre For Research On Political Action in Europe (ARENES) UMR CNRS 6051.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Jean-Pierre Le Bourhis</b>, director of the Politics, Public Health, Environment, Media (ARENES) research unit UMR CNRS 6051.<br>\\";
     break;
-  case "XXXX":
-    $body .= "We work in collaboration with the <b>Centre Atlantique de Philosophie EA 7463</b>.<br>\\";
+  case "IODE":
+    $body .= "We work in collaboration with <b>Mrs Moisdon-Chataigner</b>, directror of lab CNRS 6262 IODE.<br>\\";
     break;
   case "XXXX":
     $body .= "We work in collaboration with the <b>Centre Atlantique de Philosophie EA 7463</b>.<br>\\";
@@ -320,12 +322,15 @@ I shall deposit it in our institutional repository, as is authorized by the publ
 <br>\
 Making your manuscripts open access will enhance their visibility on the Internet, through search engines (Google Scholar, PubMed...) and social networks (ResearchGate...).<br>\
 <br>\
+With your consent, we will also deposit the supplementary data in the <a href=&quot;https://entrepot.recherche.data.gouv.fr/dataverse/univ-rennes/&quot;>Research Data Gouv data repository</a>, if applicable.<br>\
+<br>\
 Best Regards,<br>\
 <br>\
 Laurent Jonchère<br>\
-University of Rennes 1<br>\
+= = = = = = = = = = <br>\
+Université de Rennes<br>\
 Tel : + 33 (0)2 23 23 34 78<br>\
-<a href=&quot;https://openaccess.univ-rennes1.fr/&quot;>https://openaccess.univ-rennes1.fr/</a><br>\
+<a href=&quot;https://scienceouverte.univ-rennes.fr/&quot;>https://scienceouverte.univ-rennes.fr/</a><br>\
 <br>\
 (*) Publisher and journal archiving policies can be checked in the <a href=&quot;http://www.sherpa.ac.uk/romeo/&quot;>Sherpa Romeo</a> database. We always check publisher policies for any deposit. Moreover, no article will be visible before the end of the embargo period, depending on journal policies. We also add the supplementary data whenever possible.<br>\
 ";
