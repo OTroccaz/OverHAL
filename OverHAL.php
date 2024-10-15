@@ -158,7 +158,7 @@ if (strpos($_SERVER['HTTP_HOST'], '127.0.0.1') === false) {
                                         </p>
 																				
 																				<p class="mb-4">
-                                            Contacts : <a target='_blank' rel='noopener noreferrer' href="https://scienceouverte.univ-rennes.fr/interlocuteurs/laurent-jonchere">Laurent Jonchère</a> (Université de Rennes 1) / <a target='_blank' rel='noopener noreferrer' href="https://scienceouverte.univ-rennes.fr/interlocuteurs/olivier-troccaz">Olivier Troccaz</a> (CNRS CReAAH/OSUR).
+                                            Contacts : <a target='_blank' rel='noopener noreferrer' href="https://scienceouverte.univ-rennes.fr/interlocuteurs/laurent-jonchere">Laurent Jonchère</a> (Université de Rennes) / <a target='_blank' rel='noopener noreferrer' href="https://scienceouverte.univ-rennes.fr/interlocuteurs/olivier-troccaz">Olivier Troccaz</a> (CNRS CReAAH/OSUR).
                                         </p>
 
                                     </div> <!-- end card-body-->
@@ -172,13 +172,12 @@ if (strpos($_SERVER['HTTP_HOST'], '127.0.0.1') === false) {
                                         <h5 class="badge badge-primary badge-pill">Mode d'emploi</h5>
                                         <div class=" mb-2">
                                             <ul class="list-group">
+												<li class="list-group-item">
+                                                    <a target="_blank" rel="noopener noreferrer" href="https://halur.univ-rennes.fr/OverHAL-Zip2HAL.pdf"><i class="mdi mdi-file-pdf-box-outline mr-1"></i> Importer des références par lots dans HAL</a><br>
+                                                </li>
                                                 <li class="list-group-item">
-                                                    <a target="_blank" rel="noopener noreferrer" href="https://halur1.univ-rennes1.fr/Manuel-OverHAL.pdf"><i class="mdi mdi-file-pdf-box-outline mr-1"></i> Télécharger le manuel</a><br>
+                                                    <a target="_blank" rel="noopener noreferrer" href="https://halur.univ-rennes.fr/Manuel-OverHAL.pdf"><i class="mdi mdi-file-pdf-box-outline mr-1"></i> Prise en main rapide</a><br>
                                                 </li>
-																								<li class="list-group-item">
-																										<a target="_blank" rel="noopener noreferrer" href="https://halur1.univ-rennes1.fr/Installer-OverHAL.pdf"><i class="mdi mdi-file-pdf-box-outline mr-1"></i> Installer OverHAL</a>
-                                                </li>
-                                               
                                             </ul> 
                                         </div>
                                     </div>
