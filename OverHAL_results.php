@@ -1348,7 +1348,8 @@ $halWhere=array();
 
 if(isset($_POST['hal']))
 {
-	 $hal = htmlspecialchars($_POST['hal']);
+	 $hal = str_replace(' ', '%20', $_POST['hal']);
+	 $hal = htmlspecialchars($hal);
 	 $team = htmlspecialchars($_POST['team']);
 	 $teamInit = $team;
 	 if ($limzot == "non")
