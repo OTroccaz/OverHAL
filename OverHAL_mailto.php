@@ -71,7 +71,7 @@ if (!empty($fic)) {
 $email_message .= "\r\n"."--".$boundary."--"."\r\n"; //Séparateur de fermeture
 
 // Envoi
-//$adr = "olivier.troccaz@univ-rennes1.fr";
+//$adr = "olivier.troccaz@univ-rennes.fr";
 //$adr = "laurent.jonchere@univ-rennes.fr";
 $sub = mb_encode_mimeheader($sub, "UTF-8");
 

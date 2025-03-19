@@ -173,10 +173,10 @@ if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
                                         <div class=" mb-2">
                                             <ul class="list-group">
 												<li class="list-group-item">
-                                                    <a target="_blank" rel="noopener noreferrer" href="https://halur.univ-rennes.fr/OverHAL-Zip2HAL.pdf"><i class="mdi mdi-file-pdf-box-outline mr-1"></i> Importer des références par lots dans HAL</a><br>
+                                                    <a target="_blank" rel="noopener noreferrer" href="./OverHAL-Zip2HAL.pdf"><i class="mdi mdi-file-pdf-box-outline mr-1"></i> Importer des références par lots dans HAL</a><br>
                                                 </li>
                                                 <li class="list-group-item">
-                                                    <a target="_blank" rel="noopener noreferrer" href="https://halur.univ-rennes.fr/Manuel-OverHAL.pdf"><i class="mdi mdi-file-pdf-box-outline mr-1"></i> Prise en main rapide</a><br>
+                                                    <a target="_blank" rel="noopener noreferrer" href="./Manuel-OverHAL.pdf"><i class="mdi mdi-file-pdf-box-outline mr-1"></i> Prise en main rapide</a><br>
                                                 </li>
                                             </ul> 
                                         </div>

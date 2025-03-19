@@ -608,7 +608,7 @@ foreach ($souBib as $key => $subTab)
                                         <p class=" mb-2">
                                             <ul class="list-group">
                                                 <li class="list-group-item">
-                                                    <a href="https://halur1.univ-rennes1.fr/Manuel-OverHAL.pdf"><i class="mdi mdi-file-pdf-box-outline mr-1"></i> Télécharger le manuel</a>
+                                                    <a href="./Manuel-OverHAL.pdf"><i class="mdi mdi-file-pdf-box-outline mr-1"></i> Télécharger le manuel</a>
                                                 </li>
                                                
                                             </ul> 
@@ -2137,8 +2137,7 @@ foreach ($souBib as $key => $subTab)
 							curl_setopt($ch, CURLOPT_URL, $urlisn);
 							curl_setopt($ch, CURLOPT_HEADER, 0);
 							curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-							curl_setopt($ch, CURLOPT_USERAGENT, 'SCD (https://halur1.univ-rennes1.fr)');
-							curl_setopt($ch, CURLOPT_USERAGENT, 'PROXY (http://siproxy.univ-rennes1.fr)');
+							curl_setopt($ch, CURLOPT_USERAGENT, 'SCD (https://halur.univ-rennes.fr)');
 							if (isset ($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on")	{
 								curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, TRUE);
 								curl_setopt($ch, CURLOPT_CAINFO, "cacert.pem");
