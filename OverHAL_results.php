@@ -6306,24 +6306,26 @@ foreach ($souBib as $key => $subTab)
 								$datT = $papers[$key][$key2]['Date'];
 								$urlPDF = $papers[$key][$key2]['PDF'];
 								$isoa = $papers[$key][$key2]['OA'];
+								$pdfCR = "";//Eventual URL PDF file found with crossRef via CrosHAL.php > null here
 
-								//testOALic($urlT, $volT, $issT, $pagT, $datT, $pdfCR, $evd, $titLic, $typLic, $compNC, $compND, $compSA, $urlPDF);
+								testOALic($urlT, $volT, $issT, $pagT, $datT, $pdfCR, $evd, $titLic, $typLic, $compNC, $compND, $compSA, $urlPDF);
 
 								if ($urlPDF != "" && $isoa == 1)//an OA PDF file has benn found
 								{
-									$evd = "greenPublisher";
+									//$evd = "greenPublisher";
 									$urlPDF = htmlspecialchars($urlPDF);
 									$chaine .= '          <editionStmt>'."\r\n".
 														 '            <edition>'."\r\n".
 														 '              <ref type="file" subtype="'.$evd.'" n="1" target="'.$urlPDF.'"></ref>'."\r\n".
 														 '            </edition>'."\r\n".
 														 '          </editionStmt>'."\r\n";
-									$avail = '';
-									//$avail = 'https://creativecommons.org/licenses/by';
-									//if ($compNC != "") {$avail .= '-nc';}
-									//if ($compND != "") {$avail .= '-nd';}
-									//if ($compSA != "") {$avail .= '-sa';}
-									if ($papers[$key][$key2]['License'] == 'cc-by') $avail = "http://creativecommons.org/licenses/by/";
+									//$avail = '';
+									$avail = 'http://creativecommons.org/licenses/by';
+									if ($compNC != "") {$avail .= '-nc';}
+									if ($compND != "") {$avail .= '-nd';}
+									if ($compSA != "") {$avail .= '-sa';}
+									$avail .= '/';
+									//if ($papers[$key][$key2]['License'] == 'cc-by') $avail = "http://creativecommons.org/licenses/by/";
 									$chaine .= '          <publicationStmt>'."\r\n".
 														 '            <availability>'."\r\n".
 														 '              <licence target="'.$avail.'"/>'."\r\n".

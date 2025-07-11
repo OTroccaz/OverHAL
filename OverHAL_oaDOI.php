@@ -126,12 +126,8 @@ function testOALic($url, $vol, $iss, $pag, $dat, $pdfCR, &$evd, &$titLic, &$typL
   {
     //echo 'Invalid DOI?';
   }else{
-    if ($parsed_json->{'is_oa'} !== false)//is_oa true
-    {
-      //some tests on the license type
-      if (isset($parsed_json->{'best_oa_location'}->{'license'}))
-      {
-        //Le champ best_oa_location > evidence n'est plus utilisé ("deprecated"), il est remplacé par "oa_status" (4 valeurs possibles).
+    if ($parsed_json->{'is_oa'} == true) {//is_oa true
+		//Le champ best_oa_location > evidence n'est plus utilisé ("deprecated"), il est remplacé par "oa_status" (4 valeurs possibles).
 		switch ($parsed_json->{'oa_status'}) {
 			case "gold":
 				$evd = "greenPublisher";
@@ -164,63 +160,6 @@ function testOALic($url, $vol, $iss, $pag, $dat, $pdfCR, &$evd, &$titLic, &$typL
 				$compCC = "bronze";
 				break;
 		}
-		//Old test
-		/*
-		if (substr($parsed_json->{'best_oa_location'}->{'license'}, 0, 2) == "cc")//type licence oa
-        {
-          $oa = "ok";
-          if (strpos($parsed_json->{'best_oa_location'}->{'license'} ?? '', "nc") !== false) {$compNC = "ok";}
-          if (strpos($parsed_json->{'best_oa_location'}->{'license'} ?? '', "nd") !== false) {$compND = "ok";}
-          if (strpos($parsed_json->{'best_oa_location'}->{'license'} ?? '', "sa") !== false) {$compSA = "ok";}
-          
-		  
-		  
-		  if ($parsed_json->{'best_oa_location'}->{'evidence'} !== false)
-          {
-            $evdCont = $parsed_json->{'best_oa_location'}->{'evidence'};
-            if (stripos($evdCont, "oa") !== false) {$evd = "greenPublisher";}
-            if (stripos($evdCont, "open") !== false) {$evd = "greenPublisher";}
-            if (stripos($evdCont, "hybrid") !== false) {$evd = "publisherPaid";}
-          }
-        }
-		*/
-      }else{//license = null
-        if (isset($parsed_json->{'journal_issns'}))
-        {
-          $issn = $parsed_json->{'journal_issns'};
-          $doajUrl = "https://doaj.org/api/v1/search/journals/issn%3A".$issn;
-          //echo $url.' - '.$doajUrl;
-          $doaj = curl_init();
-          curl_setopt($doaj, CURLOPT_URL, $doajUrl);
-          curl_setopt($doaj, CURLOPT_HEADER, 0);
-          curl_setopt($doaj, CURLOPT_RETURNTRANSFER, 1);
-          curl_setopt($doaj, CURLOPT_USERAGENT, 'SCD (https://halur.univ-rennes.fr)');
-          if (isset ($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on")	{
-						curl_setopt($doaj, CURLOPT_SSL_VERIFYPEER, TRUE);
-						curl_setopt($doaj, CURLOPT_CAINFO, "cacert.pem");
-					}else{
-						curl_setopt($doaj, CURLOPT_SSL_VERIFYPEER, false);
-					}
-          $doajJson = curl_exec($doaj);
-          //echo $doajJson;
-          curl_close($doaj);
-          $doajParsed_json = json_decode($doajJson);
-          //var_dump($doajParsed_json);
-          if (isset($doajParsed_json->{'total'}) && $doajParsed_json->{'total'} != 0)//oa review
-          {
-            //var_dump($doajParsed_json->{'results'}[0]->{'bibjson'}->{'license'});
-            if($doajParsed_json->{'results'}[0]->{'bibjson'}->{'license'}[0]->{'open_access'})
-            {
-              $oa = "ok";
-              $titLic = $doajParsed_json->{'results'}[0]->{'bibjson'}->{'license'}[0]->{'title'};
-              $tipLic = $doajParsed_json->{'results'}[0]->{'bibjson'}->{'license'}[0]->{'type'};
-              $compNC = $doajParsed_json->{'results'}[0]->{'bibjson'}->{'license'}[0]->{'NC'};
-              $compND = $doajParsed_json->{'results'}[0]->{'bibjson'}->{'license'}[0]->{'ND'};
-              $compSA = $doajParsed_json->{'results'}[0]->{'bibjson'}->{'license'}[0]->{'SA'};
-            }
-          }
-        }
-      }
     }
   }
   //echo $urlPDF.'<br>';
