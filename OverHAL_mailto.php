@@ -37,7 +37,10 @@ $headers .= "Content-Transfer-Encoding: 8bit"."\r\n";
 // En-têtes additionnels
 //$headers .= $adr."\r\n";
 $laurent = stripAccents(mb_encode_mimeheader("Laurent Jonchere", "UTF-8"));
-$headers .= 'From: '.$laurent.' <laurent.jonchere@univ-rennes.fr>'."\r\n";
+//$headers .= 'From: '.$laurent.' <laurent.jonchere@univ-rennes.fr>'."\r\n";
+$headers .= 'From: '.$laurent.' <halur@ccsd.cnrs.fr>'."\r\n";
+//$headers .= '-f halur@ccsd.cnrs.fr'."\r\n";
+//$headers .= '-f halur@ccsd.cnrs.fr'."\r\n";
 $headers .= 'Reply-to: '.$laurent.' <laurent.jonchere@univ-rennes.fr>'."\r\n";
 $headers .= 'Cc: laurent.jonchere@univ-rennes.fr'."\r\n";
 //$headers .= 'BCc: olivier.troccaz@univ-rennes.fr'."\r\n";
