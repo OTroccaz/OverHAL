@@ -39,10 +39,11 @@ $headers .= "Content-Transfer-Encoding: 8bit"."\r\n";
 $laurent = stripAccents(mb_encode_mimeheader("Laurent Jonchere", "UTF-8"));
 //$headers .= 'From: '.$laurent.' <laurent.jonchere@univ-rennes.fr>'."\r\n";
 $headers .= 'From: '.$laurent.' <halur@ccsd.cnrs.fr>'."\r\n";
-//$headers .= '-f halur@ccsd.cnrs.fr'."\r\n";
 $headers .= 'Reply-to: '.$laurent.' <laurent.jonchere@univ-rennes.fr>'."\r\n";
 $headers .= 'Cc: laurent.jonchere@univ-rennes.fr'."\r\n";
 //$headers .= 'BCc: olivier.troccaz@univ-rennes.fr'."\r\n";
+
+$params = '-f halur@ccsd.cnrs.fr'."\r\n";
 
 //Message
 $email_message = '--' . $boundary."\r\n"; //Séparateur d'ouverture
@@ -77,7 +78,7 @@ $email_message .= "\r\n"."--".$boundary."--"."\r\n"; //Séparateur de fermeture
 //$adr = "laurent.jonchere@univ-rennes.fr";
 $sub = mb_encode_mimeheader($sub, "UTF-8");
 
-$success = mail($adr, $sub, $email_message, $headers);
+$success = mail($adr, $sub, $email_message, $headers, $params);
 if (!$success) {
 	//$errorMessage = error_get_last()['message'];
 	//var_dump(error_get_last());
