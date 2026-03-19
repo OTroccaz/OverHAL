@@ -118,7 +118,7 @@ function testOALic($url, $vol, $iss, $pag, $dat, $pdfCR, &$evd, &$titLic, &$typL
 	}
   $json = curl_exec($ch);
   //echo 'toto : '.$json;
-  curl_close($ch);
+  //curl_close($ch);
   $parsed_json = json_decode($json);
   //var_dump($parsed_json);
 
@@ -126,7 +126,7 @@ function testOALic($url, $vol, $iss, $pag, $dat, $pdfCR, &$evd, &$titLic, &$typL
   {
     //echo 'Invalid DOI?';
   }else{
-    if ($parsed_json->{'is_oa'} == true) {//is_oa true
+    if (isset($parsed_json->{'is_oa'}) && $parsed_json->{'is_oa'} == true) {//is_oa true
 		//Le champ best_oa_location > evidence n'est plus utilisé ("deprecated"), il est remplacé par "oa_status" (4 valeurs possibles).
 		switch ($parsed_json->{'oa_status'}) {
 			case "gold":

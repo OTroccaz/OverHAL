@@ -44,7 +44,7 @@ if (isset ($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on")	{
 	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 }
 $contOA = curl_exec($ch);
-curl_close($ch);
+//curl_close($ch);
 //echo $contOA;
 $resOA = json_decode($contOA);
 //var_dump($resOA);
@@ -391,7 +391,7 @@ while ($cpt < ($numFound+1)) {
 		$chaine .= (isset($resOA->results[$i]->primary_location->source->type)) ? expcsv($resOA->results[$i]->primary_location->source->type).";" : ";";
 		
 		//Titre de la revue
-		$chaine .= (isset($resOA->results[$i]->primary_location->source->display_name)) ? expcsv($resOA->results[$i]->primary_location->source->display_name).";" : ";";
+		$chaine .= (isset($resOA->results[$i]->primary_location->raw_source_name)) ? expcsv($resOA->results[$i]->primary_location->raw_source_name).";" : ";";
 		
 		//Nom de l'éditeur
 		$chaine .= (isset($resOA->results[$i]->primary_location->source->host_organization_lineage_names[0])) ? expcsv($resOA->results[$i]->primary_location->source->host_organization_lineage_names[0]).";" : ";";

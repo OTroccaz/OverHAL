@@ -1515,7 +1515,7 @@ foreach ($souBib as $key => $subTab)
 		$handle = fopen("./HAL/new_xml.csv","r");
 		//Extraction of the columns name
 		if ($handle) {
-			if (($data = fgetcsv($handle, 0, $typSep)) !== FALSE)
+			if (($data = fgetcsv($handle, 0, $typSep, '"', "")) !== FALSE)
 			{
 				$imax = count($data);
 				for ($i = 0; $i < $imax ; $i++)
@@ -1529,7 +1529,7 @@ foreach ($souBib as $key => $subTab)
 		$handle = fopen("./HAL/new_xml.csv","r");
 		$j = 0;
 		if ($handle) {
-			while (($data = fgetcsv($handle, 0, $typSep)) !== FALSE)
+			while (($data = fgetcsv($handle, 0, $typSep, '"', "")) !== FALSE)
 			{
 				for ($i = 0; $i < $imax ; $i++)
 				{
@@ -6529,7 +6529,7 @@ foreach ($souBib as $key => $subTab)
 							$codeP = $papers[$key][$key2]['Language'];
 							if ($codeP != "en")
 							{
-								array_search(strtolower($codeP), $languages);
+								$keyP = array_search(strtolower($codeP), $languages);
 							}else{
 								$keyP = "English";
 							}
