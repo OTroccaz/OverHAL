@@ -194,14 +194,14 @@ if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
                                     <div class="card-body">
                                         
 										<form enctype="multipart/form-data" action="OverHAL_results.php" method="post" accept-charset="UTF-8">
-										<input type="hidden" name="MAX_FILE_SIZE" value="2097152"><!-- 2 Mo max > 1024 * (1024 * 2)) > 2097152 octets -->
+										<input type="hidden" name="MAX_FILE_SIZE" value="3145728"><!-- 3 Mo max > 1024 * (1024 * 3)) > 3145728 octets -->
 																				
                                         <h5 class="badge badge-primary badge-pill">Paramétrage</h5>
 																				
 																				<div class="row mb-3">
                                             <div class="col-sm-12">
                                                 <div class="border border-dark rounded p-2 mb-2">
-                                                    <div class='h4 text-uppercase text-secondary mb-3'>Étape 1 : Charger le fichier (2 Mo max)</div>
+                                                    <div class='h4 text-uppercase text-secondary mb-3'>Étape 1 : Charger le fichier (3 Mo max)</div>
 
                                                     <!-- <div class="border p-2 small text-primary mb-2">
                                                         Envoyez les fichiers résultat (900 Ko maximum, voir ci-dessus le "mode d'emploi") :
