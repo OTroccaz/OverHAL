@@ -27,7 +27,7 @@ function majReqHAL() {
     txtintplus = ",arxivId_s";
   }
   if(document.getElementById("aparai").checked == true){
-    var aparai = "";
+    var aparai = "%20OR%20inPress_bool:%22true%22";
   }else{
     var aparai = "%20AND%20NOT%20inPress_bool:%22true%22";
   }
