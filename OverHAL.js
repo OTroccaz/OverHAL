@@ -16,7 +16,7 @@ function majReqHAL() {
   var year = "";
   while (iann <= year2) {
     if (iann == year1) {year += "&fq=(";}else{year += "%20OR%20";}
-    year += 'producedDateY_i:"'+iann+'"';
+    year += 'producedDateY_i:"'+iann+'"%20OR%20publicationDateY_i:"'+iann+'"';
     iann++;
   }
   year += ")";
