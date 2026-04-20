@@ -10,28 +10,23 @@
 function majReqHAL() {
   //var reqHAL = document.getElementById("reqHAL").value;
   var team = document.getElementById("team").value;
-  var year1 = document.getElementById("year1").value;
-  var year2 = document.getElementById("year2").value;
-  var iann = year1;
-  var year = "";
-  while (iann <= year2) {
-    if (iann == year1) {year += "&fq=(";}else{year += "%20OR%20";}
-    year += 'producedDateY_i:"'+iann+'"%20OR%20publicationDateY_i:"'+iann+'"';
-    iann++;
-  }
-  year += ")";
   if(document.getElementById("aparai").checked == true){
     var aparai = "%20OR%20inPress_bool:%22true%22";
   }else{
     var aparai = "%20AND%20NOT%20inPress_bool:%22true%22";
   }
+  var year1 = document.getElementById("year1").value;
+  var year2 = document.getElementById("year2").value;
+  var iann = year1;
+  var year = "&fq=(";
+  year += 'producedDate_tdate:['+year1+'-01-01T00:00:00Z%20TO%20'+year2+'-12-31T00:00:00Z]%20OR%20publicationDate_tdate:['+year1+'-01-01T00:00:00Z%20TO%20'+year2+'-12-31T00:00:00Z]';
+  year += aparai+")";
+  
   var txtint = "";
   var txtintplus = "";
   if(document.getElementById("txtint").checked == true){
-    txtint = "%20AND%20NOT%20docType_s:UNDEFINED"+aparai+"%20AND%20(submitType_s:file%20OR%20arxivId_s:?*)";
+    txtint = "%20AND%20NOT%20docType_s:UNDEFINED%20AND%20(submitType_s:file%20OR%20arxivId_s:?*)";
     txtintplus = ",arxivId_s";
-  }else{
-	txtint = aparai;
   }
   var hal = "https://api.archives-ouvertes.fr/search/?q=collCode_s:";
   hal += '\"'+team+'\"';

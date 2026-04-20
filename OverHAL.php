@@ -301,7 +301,11 @@ if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
                                                         Requête libre
                                                         </label>
 																												<?php
-																												$reqHAL = "https://api.archives-ouvertes.fr/search/?q=collCode_s:\"IRSET\"&fq=(producedDateY_i:\"".date('Y', time())."\"%20OR%20publicationDateY_i:\"".date('Y', time())."\")%20OR%20inPress_bool:%22true%22&rows=10000&fl=docType_s,docid,halId_s,authFullName_s,title_s,subTitle_s,journalTitle_s,volume_s,issue_s,page_s,producedDateY_i,proceedings_s,files_s,label_s,citationFull_s,bookTitle_s,doiId_s,conferenceStartDateY_i,publisherLink_s,seeAlso_s";
+																												$anneeencours = date('Y', time());
+																												$anneedeb = str_replace('+00:00', 'Z', date('c', mktime(0, 0, 0, 1, 1, $anneeencours)));
+																												$anneefin = str_replace('+00:00', 'Z', date('c', mktime(0, 0, 0, 12, 31, $anneeencours)));
+																												$periodeval = '['.$anneedeb.'%20TO%20'.$anneefin.']';
+																												$reqHAL = "https://api.archives-ouvertes.fr/search/?q=collCode_s:\"IRSET\"&fq=(producedDate_tdate:".$periodeval."%20OR%20publicationDate_tdate:".$periodeval."%20OR%20inPress_bool:%22true%22)&rows=10000&fl=docType_s,docid,halId_s,authFullName_s,title_s,subTitle_s,journalTitle_s,volume_s,issue_s,page_s,producedDateY_i,proceedings_s,files_s,label_s,citationFull_s,bookTitle_s,doiId_s,conferenceStartDateY_i,publisherLink_s,seeAlso_s";
 																												?>                                                        
                                                         <div class="col-12 col-md-10">
                                                             <div class="input-group">
