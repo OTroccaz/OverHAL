@@ -30,6 +30,8 @@ function majReqHAL() {
   if(document.getElementById("txtint").checked == true){
     txtint = "%20AND%20NOT%20docType_s:UNDEFINED"+aparai+"%20AND%20(submitType_s:file%20OR%20arxivId_s:?*)";
     txtintplus = ",arxivId_s";
+  }else{
+	txtint = aparai;
   }
   var hal = "https://api.archives-ouvertes.fr/search/?q=collCode_s:";
   hal += '\"'+team+'\"';

@@ -310,7 +310,7 @@ if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
                                                                     <i class="mdi mdi-help text-white"></i>
                                                                     </button>
                                                                 </div>
-                                                                <input type="text" id="reqHAL" name="hal" class="form-control"  value='<?php echo $reqHAL;?>'>
+                                                                <textarea id="reqHAL" name="hal" class="form-control" rows="5"><?php echo $reqHAL;?></textarea>
                                                            
                                                         </div>
                                                     
