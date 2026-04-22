@@ -19,7 +19,7 @@ function majReqHAL() {
   var year2 = document.getElementById("year2").value;
   var iann = year1;
   var year = "&fq=(";
-  year += 'producedDate_tdate:['+year1+'-01-01T00:00:00Z%20TO%20'+year2+'-12-31T00:00:00Z]%20OR%20publicationDate_tdate:['+year1+'-01-01T00:00:00Z%20TO%20'+year2+'-12-31T00:00:00Z]';
+  year += 'producedDate_tdate:['+year1+'-01-01T00:00:00Z%20TO%20'+year2+'-12-31T23:59:59Z]%20OR%20publicationDate_tdate:['+year1+'-01-01T00:00:00Z%20TO%20'+year2+'-12-31T23:59:59Z]';
   year += aparai+")";
   
   var txtint = "";
