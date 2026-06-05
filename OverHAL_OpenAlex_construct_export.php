@@ -132,7 +132,7 @@ while ($cpt < ($numFound+1)) {
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 	}
 	$contOA = curl_exec($ch);
-	curl_close($ch);
+	//curl_close($ch);
 	$resOA = json_decode($contOA);
 
 	//Export CSV
@@ -199,7 +199,9 @@ while ($cpt < ($numFound+1)) {
 				//$author_DN .= expcsv($resOA->results[$i]->authorships[$j]->author->display_name).'~|~';
 				$author_DN .= expcsv($resOA->results[$i]->authorships[$j]->raw_author_name).'~|~';
 				//$orcid .= str_replace('https://orcid.org/', '', expcsv($resOA->results[$i]->authorships[$j]->author->orcid) ?? '').'~|~';
-				$orcid .= str_replace('https://orcid.org/', '', expcsv($resOA->results[$i]->authorships[$j]->raw_orcid) ?? '').'~|~';
+				if (isset($resOA->results[$i]->authorships[$j]->raw_orcid)) {
+					$orcid .= str_replace('https://orcid.org/', '', expcsv($resOA->results[$i]->authorships[$j]->raw_orcid) ?? '').'~|~';
+				}
 				$is_cor .= expcsv($resOA->results[$i]->authorships[$j]->is_corresponding).'~|~';
 				
 				//Domaine mail de l'auteur
