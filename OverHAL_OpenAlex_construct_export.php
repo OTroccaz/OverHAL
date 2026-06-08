@@ -201,6 +201,8 @@ while ($cpt < ($numFound+1)) {
 				//$orcid .= str_replace('https://orcid.org/', '', expcsv($resOA->results[$i]->authorships[$j]->author->orcid) ?? '').'~|~';
 				if (isset($resOA->results[$i]->authorships[$j]->raw_orcid)) {
 					$orcid .= str_replace('https://orcid.org/', '', expcsv($resOA->results[$i]->authorships[$j]->raw_orcid) ?? '').'~|~';
+				}else{
+					$orcid .= '~|~';
 				}
 				$is_cor .= expcsv($resOA->results[$i]->authorships[$j]->is_corresponding).'~|~';
 				
