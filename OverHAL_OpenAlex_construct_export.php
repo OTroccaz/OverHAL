@@ -286,44 +286,36 @@ while ($cpt < ($numFound+1)) {
 				if (!empty($tabInst)) {
 					//Institutions françaises : on recherche d'abord 11, puis 12, puis 13, puis 14
 					if (array_keys($tabInst['AR'], '11')) {
-						$keysF = array_keys($tabInst['AR'], '11');
-					}else{
-						if (array_keys($tabInst['AR'], '12')) {
-							$keysF = array_keys($tabInst['AR'], '12');
-						}else{
-							if (array_keys($tabInst['AR'], '13')) {
-								$keysF = array_keys($tabInst['AR'], '13');
-							}else{
-								if (array_keys($tabInst['AR'], '14')) {
-									$keysF = array_keys($tabInst['AR'], '14');
-								}
-							}
-						}
+						array_push($keysF, array_search('11', $tabInst['AR']));
+					}
+					if (array_keys($tabInst['AR'], '12')) {
+						array_push($keysF, array_search('12', $tabInst['AR']));
+					}
+					if (array_keys($tabInst['AR'], '13')) {
+						array_push($keysF, array_search('13', $tabInst['AR']));
+					}
+					if (array_keys($tabInst['AR'], '14')) {
+						array_push($keysF, array_search('14', $tabInst['AR']));
 					}
 					
 					//Institutions étrangères : on recherche d'abord 21, puis 22, puis 23, puis 24, puis 25, puis 26
 					if (array_keys($tabInst['AR'], '21')) {
-						$keysE = array_keys($tabInst['AR'], '21');
-					}else{
-						if (array_keys($tabInst['AR'], '22')) {
-							$keysE = array_keys($tabInst['AR'], '22');
-						}else{
-							if (array_keys($tabInst['AR'], '23')) {
-								$keysE = array_keys($tabInst['AR'], '23');
-							}else{
-								if (array_keys($tabInst['AR'], '24')) {
-									$keysE = array_keys($tabInst['AR'], '24');
-								}else{
-									if (array_keys($tabInst['AR'], '25')) {
-										$keysE = array_keys($tabInst['AR'], '25');
-									}else{
-										if (array_keys($tabInst['AR'], '26')) {
-											$keysE = array_keys($tabInst['AR'], '26');
-										}
-									}
-								}
-							}
-						}
+						array_push($keysE, array_search('21', $tabInst['AR']));
+					}
+					if (array_keys($tabInst['AR'], '22')) {
+						array_push($keysE, array_search('22', $tabInst['AR']));
+					}
+					if (array_keys($tabInst['AR'], '23')) {
+						array_push($keysE, array_search('23', $tabInst['AR']));
+					}
+					if (array_keys($tabInst['AR'], '24')) {
+						array_push($keysE, array_search('24', $tabInst['AR']));
+					}
+					if (array_keys($tabInst['AR'], '25')) {
+						array_push($keysE, array_search('25', $tabInst['AR']));
+					}
+					if (array_keys($tabInst['AR'], '26')) {
+						array_push($keysE, array_search('26', $tabInst['AR']));
 					}
 				}
 
