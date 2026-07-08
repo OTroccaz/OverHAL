@@ -4975,7 +4975,7 @@ foreach ($souBib as $key => $subTab)
 										$chaine .= '                  <biblScope unit="issue">'.supprAmp($papers[$key][$key2]['Numero']).'</biblScope>'."\r\n";
 										$chaine .= '                  <biblScope unit="pp">'.supprAmp($papers[$key][$key2]['Pagination']).'</biblScope>'."\r\n";
 										$chaine .= '                  <date type="datePub">'.supprAmp($papers[$key][$key2]['DatePub']).'</date>'."\r\n";
-										$chaine .= '                  <date type="dateEpub">'.supprAmp($papers[$key][$key2]['DateMel']).'</date>'."\r\n";
+										if (isset($papers[$key][$key2]['DateMel'])) {$chaine .= '                  <date type="dateEpub">'.supprAmp($papers[$key][$key2]['DateMel']).'</date>'."\r\n";}
 										$chaine .= '                </imprint>'."\r\n";
 										$typeDoc = "ART";
 										$typeDocp = "Journal articles";
