@@ -22,7 +22,7 @@ switch($team)
     $body .= "Nous travaillons en collaboration avec <b>Ronan Sauleau</b>, directeur de l'IETR UMR CNRS 6164.<br>\\";
     break;
   case "FOTON":
-    $body .= "Nous travaillons en collaboration avec <b>Pascal Besnard</b>, directeur de FOTON UMR CNRS 6082.<br>\\";
+    $body .= "Nous travaillons en collaboration avec <b>Mehdi Alouini</b>, directeur de FOTON UMR CNRS 6082.<br>\\";
     break;
   case "LTSI":
     $body .= "Nous travaillons en collaboration avec <b>Mireille Garreau</b>, directrice du LTSI, Laboratoire traitement du signal et de l'image - U Inserm 1099.<br>\\";
@@ -31,7 +31,7 @@ switch($team)
     $body .= "Nous travaillons en collaboration avec <b>Marc Fourmigué</b>, directeur de l'Institut des Sciences chimiques de Rennes UMR CNRS 6226.<br>\\";
     break;
   case "GR":
-    $body .= "Nous travaillons en collaboration avec <b>l'UMR CNRS 6118 - Géosciences / OSUR</b>.<br>\\";
+    $body .= "Nous travaillons en collaboration avec <b>Olivier Bour</b>, directeur de l'UMR CNRS 6118 - Géosciences / OSUR</b>.<br>\\";
     break;
   case "IPR":
     $body .= "Nous travaillons en collaboration avec <b>Jean-Luc Autran</b>, directeur de l'Institut de Physique de Rennes - UMR CNRS 6251.<br>\\";
@@ -40,7 +40,7 @@ switch($team)
     $body .= "Nous travaillons en collaboration avec <b>Christophe Lanos</b>, co-directeur du Laboratoire de génie civil et génie mécanique (LGCGM) EA 3913.<br>\\";
     break;
   case "ECOBIO":
-    $body .= "Nous travaillons en collaboration avec <b>Joan van Baaren</b>, directrice de l'UMR CNRS 6553 (ECOBIO).<br>\\";
+    $body .= "Nous travaillons en collaboration avec <b>Julien Pétillon</b>, directeur de l'UMR CNRS 6553 (ECOBIO).<br>\\";
     break;
   case "IGEPP":
     $body .= "Nous travaillons en collaboration avec <b>l'IGEPP</b> - UMR INRAE 1349 - Institut de génétique, environnement et protection des plantes.<br>\\";
@@ -154,9 +154,13 @@ $body .= "<br>Le manuscrit auteur &quot;pre-proof&quot; (<a href=&quot;https://s
 <br>\
 <b>Merci de bien vouloir déposer cette version du manuscrit</b> dans HAL (3), <b>ou si vous préférez, nous la transmettre</b>. Nous la déposerons pour vous, après publication de l'article.<br>\
 <br>\
-L'intérêt de cette démarche est principalement de renforcer la visibilité de vos travaux sur le web : les documents ainsi déposés dans HAL sont visibles et accessibles au monde entier, à partir des principaux moteurs de recherche (Google Scholar, PubMed, Base, etc.) et des réseaux de recherche (ResearchGate...).<br>\
+Si ce n'est pas déjà le cas, sachez que <b>vos données brutes</b> peuvent être déposées dans <a href=&quot;https://scienceouverte.univ-rennes.fr/deposer-ses-donnees-dans-un-entrepot#p-476/&quot;>un entrepôt thématique de votre domaine</a><br>\
 <br>\
-Merci également d'ajouter si possible les <b>données de recherche</b> - supplementary data <b>(données brutes)</b> (4)<br>\
+Si aucun entrepôt ne convient, nous sommes à votre disposition pour vous aider à les déposer dans l'entrepôt <a href=&quot;https://entrepot.recherche.data.gouv.fr/dataverse/univ-rennes/&quot;>Recherche Data Gouv repository</a> (4).<br>\
+<br>\
+N'hésitez pas dans ce cas à <a href=&quot;https://scienceouverte.univ-rennes.fr/interlocuteurs/guichet-ardoise/&quot;>contacter le guichet ardoise</a>.<br>\
+<br>\
+L'intérêt de cette démarche est principalement de renforcer la visibilité de vos travaux sur le web : les documents ainsi déposés dans HAL sont visibles et accessibles au monde entier, à partir des principaux moteurs de recherche (Google Scholar, PubMed, Base, etc.) et des réseaux de recherche (ResearchGate...).<br>\
 <br>\
 Merci de votre contribution à la science ouverte.<br>\
 <br>\
@@ -171,7 +175,7 @@ Tél : (0)2 23 23 34 78<br>\
 (1) Les dépôts en texte intégral et avec par défaut une licence non commerciale de type <a href=&quot;https://creativecommons.org/licenses/by-nc/4.0/&quot;>CC-BY-NC</a> sont effectués dans le respect des <a href=&quot;https://scienceouverte.univ-rennes.fr/connaitre-la-politique-des-editeurs&quot;>politiques d'éditeurs</a> et de la Loi sur le numérique (<a href=&quot;https://scienceouverte.univ-rennes.fr/que-dit-la-loi&quot;>article 30</a>) en vigueur depuis septembre 2016.<br>\
 (2) La diffusion du PDF publisher ou des proofs n'est pas autorisée. <b>Si vous avez perdu votre manuscrit</b>, consultez cette <a href=&quot;https://scienceouverte.univ-rennes.fr/je-nai-plus-mon-manuscrit/&quot;>page</a> pour le récupérer. Merci d'inclure figures, tables et, si possible, données supplémentaires.<br>\
 (3) Voir le <a href=&quot;https://doc.archives-ouvertes.fr/deposer/&quot;>tutoriel du CCSD</a><br>\
-(4) <b>Sauf opposition de votre part</b>, nous les déposerons dans l'entrepôt <a href=&quot;https://entrepot.recherche.data.gouv.fr/dataverse/univ-rennes/&quot;>Recherche Data Gouv</a> si cela s'avère pertinent.</font><br>\
+(4) Pour le cas où les jeux de données n'ont pas déjà été déposés dans un entrepôt de données. Recherche Data Gouv est un écosystème construit par et pour les établissements de l’enseignement supérieur et de la recherche pour vous accompagner à la gestion, au partage et à l’ouverture de vos données de recherche.</font><br>\
 ";
 
 $bodyM = str_replace("'", "\'", $body);
@@ -200,7 +204,7 @@ switch($team)
     $body .= "Nous travaillons en collaboration avec <b>Marc Fourmigué</b>, directeur de l'Institut des Sciences chimiques de Rennes UMR CNRS 6226.<br>\\";
     break;
   case "GR":
-    $body .= "Nous travaillons en collaboration avec <b>l'UMR CNRS 6118 - Géosciences / OSUR</b>.<br>\\";
+    $body .= "Nous travaillons en collaboration avec <b>Olivier Bour</b>, directeur de l'UMR CNRS 6118 - Géosciences / OSUR</b>.<br>\\";
     break;
   case "IPR":
     $body .= "Nous travaillons en collaboration avec <b>Jean-Luc Autran</b>, directeur de l'Institut de Physique de Rennes - UMR CNRS 6251.<br>\\";
@@ -209,7 +213,7 @@ switch($team)
     $body .= "Nous travaillons en collaboration avec <b>Christophe Lanos</b>, co-directeur du Laboratoire de génie civil et génie mécanique (LGCGM) EA 3913.<br>\\";
     break;
   case "ECOBIO":
-    $body .= "Nous travaillons en collaboration avec <b>Joan van Baaren</b>, directrice de l'UMR CNRS 6553 (ECOBIO).<br>\\";
+    $body .= "Nous travaillons en collaboration avec <b>Julien Pétillon</b>, directeur de l'UMR CNRS 6553 (ECOBIO).<br>\\";
     break;
   case "IGEPP":
     $body .= "Nous travaillons en collaboration avec l'IGEPP.<br>\\";
@@ -310,7 +314,7 @@ switch($team)
 }
 
 $body .= "<br>\
-Vous êtes l'auteur d'un article récent, dont la diffusion du <a href=&quot;https://scienceouverte.univ-rennes.fr/quelles-versions-deposer-dans-hal&quot;>manuscrit auteur final (pre-proof)</a> est autorisée dans HAL (*) :<br>\
+Vous êtes l'auteur d'un article récent, dont la diffusion du <a href=&quot;https://scienceouverte.univ-rennes.fr/quelles-versions-deposer-dans-hal&quot;>manuscrit auteur final (pre-proof)</a> est autorisée dans HAL (1) :<br>\
 ";
 
 if ($refdoi != "")
@@ -325,9 +329,13 @@ $body .= "<br>Le manuscrit auteur &quot;pre-proof&quot; (<a href=&quot;https://s
 <b>J'ai pu récupérer le manuscrit</b> de votre article sur le site de l'éditeur.<br>\
 <b>Sauf opposition de votre part, je le déposerai dans HAL</b>, à moins que vous ne préfériez vous en charger vous-même.<br>\
 <br>\
-L'intérêt de cette démarche est principalement de renforcer la visibilité de vos travaux sur le web : les documents ainsi déposés dans HAL sont visibles et accessibles au monde entier, à partir des principaux moteurs de recherche (Google Scholar, PubMed, Base, etc.) et des réseaux de recherche (ResearchGate...).<br>\
+Si ce n'est pas déjà le cas, sachez que <b>vos données brutes</b> peuvent être déposées dans <a href=&quot;https://scienceouverte.univ-rennes.fr/deposer-ses-donnees-dans-un-entrepot#p-476/&quot;>un entrepôt thématique de votre domaine</a><br>\
 <br>\
-Sauf opposition de votre part, nous déposerons également les données de recherche, s'il y en a, dans l'entrepôt <a href=&quot;https://entrepot.recherche.data.gouv.fr/dataverse/univ-rennes/&quot;>Recherche Data Gouv</a>, si cela s'avère pertinent.<br>\
+Si aucun entrepôt ne convient, nous sommes à votre disposition pour vous aider à les déposer dans l'entrepôt <a href=&quot;https://entrepot.recherche.data.gouv.fr/dataverse/univ-rennes/&quot;>Recherche Data Gouv repository</a> (2).<br>\
+<br>\
+N'hésitez pas dans ce cas à <a href=&quot;https://scienceouverte.univ-rennes.fr/interlocuteurs/guichet-ardoise/&quot;>contacter le guichet ardoise</a>.<br>\
+<br>\
+L'intérêt de cette démarche est principalement de renforcer la visibilité de vos travaux sur le web : les documents ainsi déposés dans HAL sont visibles et accessibles au monde entier, à partir des principaux moteurs de recherche (Google Scholar, PubMed, Base, etc.) et des réseaux de recherche (ResearchGate...).<br>\
 <br>\
 Merci de votre contribution à la science ouverte.<br>\
 <br>\
@@ -339,7 +347,8 @@ Université de Rennes<br>\
 Tél : (0)2 23 23 34 78<br>\
 <a href=&quot;https://scienceouverte.univ-rennes.fr/&quot;>https://scienceouverte.univ-rennes.fr/</a><br>\
 <br>\
-(*) Les dépôts en texte intégral et avec par défaut une licence non commerciale de type <a href=&quot;https://creativecommons.org/licenses/by-nc/4.0/&quot;>CC-BY-NC</a> sont effectués dans le respect des <a href=&quot;https://scienceouverte.univ-rennes.fr/connaitre-la-politique-des-editeurs&quot;>politiques d'éditeurs</a> et de la Loi sur le numérique (<a href=&quot;https://scienceouverte.univ-rennes.fr/que-dit-la-loi&quot;>article 30</a>) en vigueur depuis septembre 2016. La diffusion du PDF publisher ou des proofs n'est pas autorisée. Nous ajoutons au manuscrit les données de recherche (supplementary data) chaque fois que possible.<br>\
+(1) Les dépôts en texte intégral et avec par défaut une licence non commerciale de type <a href=&quot;https://creativecommons.org/licenses/by-nc/4.0/&quot;>CC-BY-NC</a> sont effectués dans le respect des <a href=&quot;https://scienceouverte.univ-rennes.fr/connaitre-la-politique-des-editeurs&quot;>politiques d'éditeurs</a> et de la Loi sur le numérique (<a href=&quot;https://scienceouverte.univ-rennes.fr/que-dit-la-loi&quot;>article 30</a>) en vigueur depuis septembre 2016. La diffusion du PDF publisher ou des proofs n'est pas autorisée. Nous ajoutons au manuscrit les données de recherche (supplementary data) chaque fois que possible.<br>\
+(2) Pour le cas où les jeux de données n'ont pas déjà été déposés dans un entrepôt de données. Recherche Data Gouv est un écosystème construit par et pour les établissements de l’enseignement supérieur et de la recherche pour vous accompagner à la gestion, au partage et à l’ouverture de vos données de recherche.</font><br>\
 ";
 
 $bodyP = str_replace("'", "\'", $body);

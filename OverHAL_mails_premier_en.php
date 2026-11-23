@@ -31,7 +31,7 @@ switch($team)
     $body .= "We work in collaboration with <b>Prof Marc Fourmigue</b>, director of the Chemical Institute of Rennes - UMR CNRS 6226.<br>\\";
     break;
   case "GR":
-    $body .= "We work in collaboration with the <b>Geosciences / OSUR research unit</b> at the University of Rennes 1.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Olivier Bour</b>, director of the Geosciences Rennes research unit.<br>\\";
     break;
   case "IPR":
     $body .= "We work in collaboration with <b>Prof Jean-Luc Autran</b>, director of the Institute of Physics - Rennes (IPR) UMR CNRS 6251.<br>\\";
@@ -40,7 +40,7 @@ switch($team)
     $body .= "We work in collaboration with <b>Prof Christophe Lanos</b>, co-director of the Mechanical and Civil Engineering research unit(LGCGM) EA 3913.<br>\\";
     break;
   case "ECOBIO":
-    $body .= "We work in collaboration with <b>Prof Joan van Baaren</b>, director of the Ecosystems, Biodiversity, Evolution (ECOBIO) research unit UMR CNRS 6553.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Julien Pétillon</b>, director of the Ecosystems, Biodiversity, Evolution (ECOBIO) research unit UMR CNRS 6553.<br>\\";
     break;
   case "IGEPP":
     $body .= "We work in collaboration with the IGEPP Research unit.<br>\\";
@@ -61,7 +61,7 @@ switch($team)
     $body .= "We work in collaboration with <b>Prof Michel Samson</b>, director of the Research Institute in Health, Environment and Occupation (IRSET) U Inserm 1085.<br>\\";
     break;
   case "U991":
-    $body .= "We work in collaboration with <b>Prof Olivier Loreal</b> (Liver, Metabolisms and Cancer - U inserm 991 research unit) at the University of Rennes 1.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Olivier Loreal</b> (Liver, Metabolisms and Cancer - U inserm 991 research unit) at the University of Rennes.<br>\\";
     break;
   case "U835":
     $body .= "We work in collaboration with <b>Prof Vincent Cattoir</b>, director of the <b>UMR_S Inserm 1230 research unit - Bacterial regulatory RNAs and Medicine</b>.<br>\\";
@@ -155,7 +155,11 @@ $body .= "<br><b>Would you please send us <a href=&quot;https://ged.univ-rennes1
 <br>\
 It is usually a doc file, which does not bear the look and feel of the journal, nor the publisher's copyright notice on it. (2)<br>\
 <br>\
-If you could also please send us the <b>supplementary data (RAW data)</b> along the manuscript, that would be perfect. (3)<br>\
+If this has not already been done, please note that <b>your raw data</b> can be deposited in <a href=&quot;https://scienceouverte.univ-rennes.fr/en/data-repositories#p-504/&quot;>a subject-specific repository in your field</a><br>\
+<br>\
+If no suitable repository is available, we would be happy to assist you in depositing your data in the <a href=&quot;https://entrepot.recherche.data.gouv.fr/dataverse/univ-rennes/&quot;>Recherche Data Gouv repository</a> (3).<br>\
+<br>\
+In this case, please do not hesitate <a href=&quot;https://scienceouverte.univ-rennes.fr/interlocuteurs/guichet-ardoise/&quot;>to contact the Ardoise helpdesk</a>.<br>\
 <br>\
 Making your manuscripts open access will enhance their visibility on the Internet, through search engines (Google Scholar, PubMed and so forth) and social networks (ResearchGate...).<br>\
 <br>\
@@ -169,7 +173,7 @@ Tel : + 33 (0)2 23 23 34 78<br>\
 <br>\
 (1) Publisher and journal archiving policies can be checked in the <a href=&quot;http://www.sherpa.ac.uk/romeo/&quot;>Sherpa Romeo</a> database. We always check publisher policies for any deposit. Moreover, no article will be visible before the end of the embargo period, depending on journal policies.<br>\
 (2) If you need help to <b>get your manuscript from the journal submission system</b>, please check <a href=&quot;https://openaccessbutton.org/direct2aam&quot;>Direct2AAM</a>. Please, do not send the publisher's PDF nor the proof version, since such versions cannot be deposited in a repository.<br>\
-(3) With your consent, we will deposit them in the <a href=&quot;https://entrepot.recherche.data.gouv.fr/dataverse/univ-rennes/&quot;>Research Data Gouv data repository</a> if this proves relevant.</font><br>\
+(3) If the research datasets have not already been deposited in a data repository. Recherche Data Gouv is an ecosystem for sharing and opening research data.</font><br>\
 ";
 
 $bodyM = str_replace("'", "\'", $body);
@@ -198,7 +202,7 @@ switch($team)
     $body .= "We work in collaboration with <b>Prof Marc Fourmigue</b>, director of the Chemical Institute of Rennes - UMR CNRS 6226.<br>\\";
     break;
   case "GR":
-    $body .= "We work in collaboration with the <b>Geosciences / OSUR</b> research unit at the University of Rennes 1.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Olivier Bour</b>, director of the Geosciences Rennes research unit.<br>\\";
     break;
   case "IPR":
     $body .= "We work in collaboration with <b>Prof Jean-Luc Autran</b>, director of the Institute of Physics - Rennes (IPR) UMR CNRS 6251.<br>\\";
@@ -207,7 +211,7 @@ switch($team)
     $body .= "We work in collaboration with <b>Prof Christophe Lanos</b>, co-director of the Mechanical and Civil Engineering research unit(LGCGM) EA 3913.<br>\\";
     break;
   case "ECOBIO":
-    $body .= "We work in collaboration with <b>Prof Joan van Baaren</b>, director of the Ecosystems, Biodiversity, Evolution (ECOBIO) research unit UMR CNRS 6553.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Julien Pétillon</b>, director of the Ecosystems, Biodiversity, Evolution (ECOBIO) research unit UMR CNRS 6553.<br>\\";
     break;
   case "IGEPP":
     $body .= "We work in collaboration with the IGEPP Research unit.<br>\\";
@@ -225,7 +229,7 @@ switch($team)
     $body .= "We work in collaboration with <b>Prof Michel Samson</b>, director of the Research Institute in Health, Environment and Occupation (IRSET) U Inserm 1085.<br>\\";
     break;
   case "U991":
-    $body .= "We work in collaboration with <b>Prof Bruno Clement</b> (Liver, Metabolisms and Cancer - U inserm 991 research unit) at the University of Rennes 1.<br>\\";
+    $body .= "We work in collaboration with <b>Prof Bruno Clement</b> (Liver, Metabolisms and Cancer - U inserm 991 research unit) at the University of Rennes.<br>\\";
     break;
   case "U835":
     $body .= "We work in collaboration with <b>Prof Vincent Cattoir</b>, director of the <b>UMR_S Inserm 1230 research unit - Bacterial regulatory RNAs and Medicine</b>.<br>\\";
@@ -305,7 +309,7 @@ switch($team)
 }
 
 $body .= "<br>\
-You are the author of an article that was published in a journal allowing deposit of revised author manuscripts in open access repositories (*):<br>\
+You are the author of an article that was published in a journal allowing deposit of revised author manuscripts in open access repositories (1):<br>\
 ";
 
 if ($refdoi != "")
@@ -315,14 +319,18 @@ if ($refdoi != "")
   $body .= "<br><b>".$data[$colTitle]."</b><br>\\";
 }
 
-$body .= "<br>This journal allows use of accepted manuscripts in repositories, ie. <a href=&quot;https://ged.univ-rennes1.fr/nuxeo/site/esupversions/a4f17fcd-8301-407f-b53b-14053a7362f6&quot;>final drafts post-refereeing (clean copy)</a> that haven't been formatted by the publisher (2).<br>\
+$body .= "<br>This journal allows use of accepted manuscripts in repositories, ie. <a href=&quot;https://ged.univ-rennes1.fr/nuxeo/site/esupversions/a4f17fcd-8301-407f-b53b-14053a7362f6&quot;>final drafts post-refereeing (clean copy)</a> that haven't been formatted by the publisher.<br>\
 <br>\
 <b>I was able to retrieve the accepted manuscript from the publisher's platform.<br>\
 I shall deposit it in our institutional repository, as is authorized by the publisher, unless you tell us otherwise.</b><br>\
 <br>\
 Making your manuscripts open access will enhance their visibility on the Internet, through search engines (Google Scholar, PubMed...) and social networks (ResearchGate...).<br>\
 <br>\
-With your consent, we will also deposit the supplementary data in the <a href=&quot;https://entrepot.recherche.data.gouv.fr/dataverse/univ-rennes/&quot;>Research Data Gouv data repository</a>, if applicable.<br>\
+If this has not already been done, please note that <b>your raw data</b> can be deposited in <a href=&quot;https://scienceouverte.univ-rennes.fr/en/data-repositories#p-504/&quot;>a subject-specific repository in your field</a><br>\
+<br>\
+If no suitable repository is available, we would be happy to assist you in depositing your data in the <a href=&quot;https://entrepot.recherche.data.gouv.fr/dataverse/univ-rennes/&quot;>Recherche Data Gouv repository</a> (2).<br>\
+<br>\
+In this case, please do not hesitate <a href=&quot;https://scienceouverte.univ-rennes.fr/interlocuteurs/guichet-ardoise/&quot;>to contact the Ardoise helpdesk</a>.<br>\
 <br>\
 Best Regards,<br>\
 <br>\
@@ -332,7 +340,8 @@ Université de Rennes<br>\
 Tel : + 33 (0)2 23 23 34 78<br>\
 <a href=&quot;https://scienceouverte.univ-rennes.fr/&quot;>https://scienceouverte.univ-rennes.fr/</a><br>\
 <br>\
-(*) Publisher and journal archiving policies can be checked in the <a href=&quot;http://www.sherpa.ac.uk/romeo/&quot;>Sherpa Romeo</a> database. We always check publisher policies for any deposit. Moreover, no article will be visible before the end of the embargo period, depending on journal policies. We also add the supplementary data whenever possible.<br>\
+(1) Publisher and journal archiving policies can be checked in the <a href=&quot;http://www.sherpa.ac.uk/romeo/&quot;>Sherpa Romeo</a> database. We always check publisher policies for any deposit. Moreover, no article will be visible before the end of the embargo period, depending on journal policies. We also add the supplementary data whenever possible.<br>\
+(2) If the research datasets have not already been deposited in a data repository. Recherche Data Gouv is an ecosystem for sharing and opening research data.</font><br>\
 ";
 
 $bodyP = str_replace("'", "\'", $body);
