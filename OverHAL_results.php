@@ -6347,7 +6347,13 @@ foreach ($souBib as $key => $subTab)
 								}
 							}
 							$chaine .= '            <note type="popular" n="0">No</note>'."\r\n";
-							$chaine .= '            <note type="peer" n="1">Yes</note>'."\r\n";
+							
+							$type = $papers[$key][$key2]['Type notice'];
+							if (strtolower($type) == "conference-abstract") {
+								$chaine .= '            <note type="peer" n="0">No</note>'."\r\n";
+							}else{
+								$chaine .= '            <note type="peer" n="1">Yes</note>'."\r\n";
+							}
 							$chaine .= '          </notesStmt>'."\r\n".
 												 '          <sourceDesc>'."\r\n".
 												 '            <biblStruct>'."\r\n".
@@ -6483,6 +6489,8 @@ foreach ($souBib as $key => $subTab)
 										break;
 									
 									case "comm"://communication
+									case "conference-paper":
+									case "conference-abstract":
 										$chaine .= '                <title level="j">'.supprAmp(minRev($papers[$key][$key2]['Titre revue'])).'</title>'."\r\n";
 										$chaine .= '                <imprint>'."\r\n";
 										$chaine .= '                  <publisher>'.supprAmp($papers[$key][$key2]['Editor']).'</publisher>'."\r\n";
